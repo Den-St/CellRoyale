@@ -6,12 +6,14 @@ import { MatchT } from '../types/match';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { collectionsKeys } from '../firebase/db/collectionsKeys';
 import { db } from '../firebase/firebaseInit';
+import { cancelSearch } from '../firebase/db/matches/edit/cancelSearch';
 
 export const useSearchMatch = () => {
-    const [match,setMatch] = useState<MatchT>();
+    const [match,setMatch] = useState<MatchT | null>();
     const [matchId,setMatchId] = useState<string>('');
     const [loading,setLoading] = useState(false);
     const [isSearchStarted,setIsSearchStarted] = useState(false);
+    const [isSearchCanceled,setIsSearchCanceled] = useState(false);
     const userId = useAppSelector(state => state.user.id);
 
     const onStartSearch = async () => {
@@ -21,20 +23,31 @@ export const useSearchMatch = () => {
         setLoading(false);
         if(!foundMatch) return;
         setMatchId(foundMatch);
+        setIsSearchCanceled(false);
         setIsSearchStarted(true);
     }
     
+    const onCancelSearch = async () => {
+        if(!userId) return;
+        await cancelSearch(matchId,userId);
+        setMatch(null);
+        setIsSearchStarted(false);
+        setIsSearchCanceled(true);
+    }
+    
     useEffect(() => {
-        if(!isSearchStarted) return;
+        if(!isSearchStarted && !isSearchCanceled) return;
         const unsubscribe = onSnapshot(doc(db,collectionsKeys.matches,matchId),(doc) => {
             const match = {...doc.data(),id:doc.id};
             setMatch(match as MatchT);
         });
+        if(isSearchCanceled) unsubscribe();
         if(match?.playersInQueue?.length === 4) {
             unsubscribe();
             setIsSearchStarted(false);
         }
-    },[isSearchStarted]);
+        return () => unsubscribe();
+    },[isSearchStarted,isSearchCanceled]);
 
-    return {onStartSearch,isSearchStarted,match,matchId,loading}
+    return {onStartSearch,isSearchStarted,match,matchId,loading,onCancelSearch}
 }

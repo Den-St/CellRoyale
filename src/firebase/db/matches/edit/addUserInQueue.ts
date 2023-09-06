@@ -5,11 +5,11 @@ import { collectionsKeys } from "../../collectionsKeys";
 export const addUserInQueue = async (matchId:string,userId:string) => {
     try{
         const matchRef = doc(db,collectionsKeys.matches,matchId);
-        const document = doc(db,collectionsKeys.matches,matchId);
-        const match = (await getDoc(document)).data();
+        const match = (await getDoc(matchRef)).data();
         await updateDoc(matchRef,
             {
-                playersInQueue:[...match?.playersInQueue,userId]
+                playersInQueue:[...match?.playersInQueue,userId],
+                numberOfPlayers:match?.numberOfPlayers + 1
             });
     }catch(err){
         console.error(err);
