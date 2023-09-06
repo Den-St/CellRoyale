@@ -4,7 +4,7 @@ import { UserT } from "../types/user";
 
 const initialState:UserT = {
     email:'',
-    createdAt:new Timestamp(0,0),
+    createdAt:'',
     displayName:'',
     photoURL:'',   
     id:'',

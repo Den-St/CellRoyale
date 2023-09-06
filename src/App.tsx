@@ -1,13 +1,15 @@
 import { Normalize } from "styled-normalize";
-import { Game } from "./components/Game";
 import { RoutesSwitch } from "./routes";
 import {useAppSelector} from "./hooks/redux";
+import { AuthProvider } from "./providers/authProvider";
 
 function App() {
   console.log(useAppSelector(state => state.user));
   return <>
-    <Normalize/>
-    <RoutesSwitch/>
+    <AuthProvider>
+      <Normalize/>
+      <RoutesSwitch/>
+    </AuthProvider>
   </>
 }
 
