@@ -7,9 +7,11 @@ const colors = [
     'red',
     'blue',
     'orange',
+    '#8bc34a',
     '#e2aae2',
     '#75b4f79b',
     '#f7c64ab7',
+    '#00e2ff',
 ]
 
 const HexSpan = styled.button<{$isBooster:boolean,value:number}>`

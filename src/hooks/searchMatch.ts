@@ -14,6 +14,7 @@ export const useSearchMatch = () => {
     const [loading,setLoading] = useState(false);
     const [isSearchStarted,setIsSearchStarted] = useState(false);
     const [isSearchCanceled,setIsSearchCanceled] = useState(false);
+    const [isMatchReady,setIsMatchReady] = useState(false);
     const userId = useAppSelector(state => state.user.id);
 
     const onStartSearch = async () => {
@@ -42,12 +43,13 @@ export const useSearchMatch = () => {
             setMatch(match as MatchT);
         });
         if(isSearchCanceled) unsubscribe();
-        if(match?.playersInQueue?.length === 4) {
-            unsubscribe();
+        if(match?.playersInQueue?.length === 2) {
+            console.log(',')
             setIsSearchStarted(false);
+            setIsMatchReady(true);
+            return () => unsubscribe();
         }
-        return () => unsubscribe();
-    },[isSearchStarted,isSearchCanceled]);
+    },[isSearchStarted,isSearchCanceled,match?.playersInQueue?.length]);
 
-    return {onStartSearch,isSearchStarted,match,matchId,loading,onCancelSearch}
+    return {onStartSearch,isSearchStarted,match,matchId,loading,onCancelSearch,isMatchReady}
 }
