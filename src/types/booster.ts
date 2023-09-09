@@ -3,3 +3,9 @@ export type BoosterT = {
     location:number[],
     type:string
 }
+
+export type CreateBoosterT = {
+    location:number[],
+    type:string,
+    // match:string
+}

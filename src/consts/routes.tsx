@@ -1,8 +1,8 @@
 import { Route, Routes } from "react-router-dom";
-import { Login } from "./components/Login";
-import { MainSearchPage } from "./components/MainSearchPage";
-import { Match } from "./components/Match";
-import { Registration } from "./components/Registration";
+import { Login } from "../components/Login";
+import { MainSearchPage } from "../components/MainSearchPage";
+import { Match } from "../components/Match";
+import { Registration } from "../components/Registration";
 
 export const navRoutes = {
 

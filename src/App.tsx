@@ -1,5 +1,5 @@
 import { Normalize } from "styled-normalize";
-import { RoutesSwitch } from "./routes";
+import { RoutesSwitch } from "./consts/routes";
 import {useAppSelector} from "./hooks/redux";
 import { AuthProvider } from "./providers/authProvider";
 

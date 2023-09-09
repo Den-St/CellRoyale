@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Navigate } from "react-router-dom";
 import { Display } from "../../assets/Display"
-import { emailPattern } from "../../emailPattern";
+import { emailPattern } from "../../consts/emailPattern";
 import { useRegistration } from "../../hooks/registration.hook";
 import { RegistrationInterface } from "../../types/registration";
 

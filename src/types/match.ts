@@ -9,4 +9,5 @@ export type MatchT = {
     playersInQueue?:string[],
     alivePlayers?:string[],
     roundNumber?:number,
+    creator?:string
 }

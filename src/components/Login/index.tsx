@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { Navigate } from "react-router-dom";
-import { emailPattern } from "../../emailPattern";
+import { emailPattern } from "../../consts/emailPattern";
 import { useLogin } from "../../hooks/login.hook";
 import { RegistrationInterface } from "../../types/registration";
 import {GoogleOutlined} from '@ant-design/icons';

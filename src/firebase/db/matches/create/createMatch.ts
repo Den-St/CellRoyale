@@ -4,14 +4,15 @@ import { addDoc } from "firebase/firestore";
 export const createMatch = async (userId:string) => {
     try{
         return await addDoc(matchesCollection,{
-            activePlayer:'',
-            activePlayers:[],
+            activePlayer:userId,
+            alivePlayers:[],
             boosters:[],
             createdAt:new Date(),
             loadedPlayers:[],
             numberOfPlayers:1,
             playersInQueue:[userId],
-            roundNumber:0
+            roundNumber:0,
+            creator:userId
         });
     }catch(err){
         console.error(err);

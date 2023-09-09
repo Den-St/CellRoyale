@@ -10,7 +10,9 @@ export const cancelSearch = async (matchId:string,userId:string) => {
         await updateDoc(matchRef,
             {
                 playersInQueue:match?.playersInQueue.filter((id:string) => id !== userId),
-                numberOfPlayers:match?.numberOfPlayers - 1 
+                numberOfPlayers:match?.numberOfPlayers - 1,
+                creator:match?.playersInQueue[1],
+                activePlayer:match?.playersInQueue[1]
             });
     }catch(err){
         console.error(err);

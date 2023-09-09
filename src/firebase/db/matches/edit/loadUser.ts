@@ -6,13 +6,14 @@ export const loadUser = async (matchId:string,playerId:string) => {
     try{
         const document = doc(db,collectionsKeys.matches,matchId);
         const match = (await getDoc(document)).data();
+        if(match?.loadedPlayers.includes(playerId) || match?.alivePlayers.includes(playerId)) return;
 
         await updateDoc(document,
             {
                 playersInQueue:match?.playersInQueue.filter((player:string) => player !== playerId),
                 loadedPlayers:[...match?.loadedPlayers,playerId],
-                activePlayers:[...match?.activePlayers,playerId],
-            })
+                alivePlayers:[...match?.alivePlayers,playerId],
+            });
     }catch(err){
         console.error(err);
     }
