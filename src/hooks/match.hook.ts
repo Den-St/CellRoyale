@@ -10,7 +10,6 @@ import { useParams } from 'react-router-dom';
 import { loadUser } from '../firebase/db/matches/edit/loadUser';
 import { getUserById } from '../firebase/db/users/get/getUserById';
 import { getBoosterById } from '../firebase/db/boosters/get/getBoosterById';
-import { setActivePlayer } from '../firebase/db/matches/edit/setActivePlayer';
 
 export const useMatch = () => {
     const [match,setMatch] = useState<MatchT | null>(null);

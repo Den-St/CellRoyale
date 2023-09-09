@@ -43,13 +43,13 @@ export const useSearchMatch = () => {
             setMatch(match as MatchT);
         });
         if(isSearchCanceled) unsubscribe();
-        if(match?.playersInQueue?.length === 2) {
+        if(match?.numberOfPlayers === 2) {
             console.log(',')
             setIsSearchStarted(false);
             setIsMatchReady(true);
             return () => unsubscribe();
         }
-    },[isSearchStarted,isSearchCanceled,match?.playersInQueue?.length]);
+    },[isSearchStarted,isSearchCanceled,match?.numberOfPlayers]);
 
     return {onStartSearch,isSearchStarted,match,matchId,loading,onCancelSearch,isMatchReady}
 }
