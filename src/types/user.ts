@@ -6,6 +6,8 @@ export type UserT = {
     displayName?:string | null,
     photoURL?:string | null,
     id?:string,
+    location?:number[] | null,
+    color?:string | null
 }
 
 export type CreateUserT = {

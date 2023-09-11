@@ -1,5 +1,6 @@
+import { nextTurn } from './../firebase/db/matches/edit/nextTurn';
 import { addBoosters } from './../firebase/db/matches/edit/addBoosters';
-import { useAppSelector } from './redux';
+import { useAppSelector, useAppDispacth } from './redux';
 import { collectionsKeys } from './../firebase/db/collectionsKeys';
 import {db} from "./../firebase/firebaseInit";
 import { doc, onSnapshot } from 'firebase/firestore';
@@ -10,22 +11,28 @@ import { useParams } from 'react-router-dom';
 import { loadUser } from '../firebase/db/matches/edit/loadUser';
 import { getUserById } from '../firebase/db/users/get/getUserById';
 import { getBoosterById } from '../firebase/db/boosters/get/getBoosterById';
+import { setMatch } from '../store/matchSlice';
 
 export const useMatch = () => {
-    const [match,setMatch] = useState<MatchT | null>(null);
+    // const [match,setMatch] = useState<MatchT | null>(null);
     const [boosters,setBoosters] = useState(false);
     const [loading,setLoading] = useState(false);
     const matchId = useParams().id;
     const userId = useAppSelector(state => state.user.id);
-
+    const match = useAppSelector(state => state.match);
+    const dispatch = useAppDispacth();
+    
+    const onNextTurn = async () => {
+        if(!userId || !matchId) return;
+        await nextTurn(matchId,userId);
+    }
     useEffect(() => {
-        if(!matchId || !userId || match?.loadedPlayers?.includes(userId) || match?.alivePlayers?.includes(userId)) return;
+        if(!matchId || !userId || match?.loadedPlayers?.includes(userId) || match?.alivePlayers?.some(user => user.id === userId)) return;
         loadUser(matchId,userId);
     },[matchId,userId,match]);
 
     useEffect(() => {
         if(boosters || !match?.id || match.boosters?.length || !userId || match.creator !== userId) return;
-        console.log('boo',userId,match.creator)
         addBoosters(match?.id);
         setBoosters(true);
     },[match,userId]);
@@ -45,10 +52,10 @@ export const useMatch = () => {
             match.boosters = await Promise.all(boostersQ);
             match.id = doc.id;
             
-            setMatch(match);
+            dispatch(setMatch(match));
         });
 
     },[matchId]);
 
-    return {};
+    return {match,onNextTurn};
 }
