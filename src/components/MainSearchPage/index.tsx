@@ -5,7 +5,6 @@ import { useSearchMatch } from "../../hooks/searchMatch"
 export const MainSearchPage = () => {
     const {onStartSearch,isSearchStarted,match,matchId,loading,onCancelSearch,isMatchReady} = useSearchMatch();
 
-    console.log(isMatchReady)
     if(isMatchReady) return <Navigate to={`/match/${matchId}`}/>
     
     return <Display width={'200px'} direction={'column'} gap={'10px'} padding={'20px'}>

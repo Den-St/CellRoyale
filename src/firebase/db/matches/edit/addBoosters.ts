@@ -16,7 +16,6 @@ export const addBoosters = async (matchId:string) => {
         if(!boosterTypes) return;
         shuffle(boosterTypes);
 
-        console.log(boosterTypes);
         const boostersQ = boostersLocations.map(async (boostersLocation,i) => {
             return await createBooster({
                 location:boostersLocation,
@@ -25,7 +24,6 @@ export const addBoosters = async (matchId:string) => {
         });
         const boosters = await Promise.all(boostersQ);
 
-        console.log('ff',boosters)
         await updateDoc(doc(db,collectionsKeys.matches,matchId),{
             boosters
         });

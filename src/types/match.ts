@@ -6,7 +6,7 @@ export type MatchT = {
     id?:string,
     activePlayer?:UserT | null,
     boosters?:BoosterT[],
-    createdAt?:string | null,
+    createdAt?:Timestamp | null,
     loadedPlayers?:string[],
     playersInQueue?:string[],
     alivePlayers?:UserT[],

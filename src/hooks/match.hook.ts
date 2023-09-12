@@ -43,7 +43,6 @@ export const useMatch = () => {
         const unsubscribe = onSnapshot(doc(db,collectionsKeys.matches,matchId),async (doc) => {
             const match = doc.data();
             if(!match) return;
-            console.log('f',match)
             match.activePlayer = await getUserById(match.activePlayer);
             const alivePlayersQ = match.alivePlayers.map(async (alivePlayer:string) => await getUserById(alivePlayer));
             match.alivePlayers = await Promise.all(alivePlayersQ);
@@ -51,6 +50,7 @@ export const useMatch = () => {
             const boostersQ = match.boosters.map(async (booster:string) => await getBoosterById(booster));
             match.boosters = await Promise.all(boostersQ);
             match.id = doc.id;
+            console.log('match updated',match)
             
             dispatch(setMatch(match));
         });

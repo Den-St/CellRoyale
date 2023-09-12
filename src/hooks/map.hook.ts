@@ -1,3 +1,4 @@
+import { changePlayersLocation } from './../firebase/db/users/edit/changeLocation';
 import { useEffect } from 'react';
 import { BoosterT } from './../types/booster';
 import { useState } from 'react';
@@ -5,9 +6,10 @@ import { nextTurn } from './../firebase/db/matches/edit/nextTurn';
 import { useAppSelector } from './redux';
 import { useParams } from 'react-router-dom';
 import { UserT } from '../types/user';
+import { MapT } from '../types/map';
 
 export const useMap = () => {
-    const [MapCoords,setMapCoords] = useState<Record<number, Record<number, {type:'cell' | 'player' | 'booster' ,value:number | UserT | BoosterT}>>>({
+    const [MapCoords,setMapCoords] = useState<MapT>({
         0:{0:{type:'cell',value:7}, 1:{type:'cell',value:7}, 2:{type:'cell',value:7}, 3:{type:'cell',value:7}, 4:{type:'cell',value:7}, 5:{type:'cell',value:7}, 6:{type:'cell',value:7}, 7:{type:'cell',value:7},},
         1:{0:{type:'cell',value:7}, 1:{type:'cell',value:0}, 2:{type:'cell',value:0}, 3:{type:'cell',value:0}, 4:{type:'cell',value:0}, 5:{type:'cell',value:0}, 6:{type:'cell',value:0}, 7:{type:'cell',value:0}, 8:{type:'cell',value:7}},
         2:{0:{type:'cell',value:7}, 1:{type:'cell',value:0}, 2:{type:'cell',value:0}, 3:{type:'cell',value:0}, 4:{type:'cell',value:0}, 5:{type:'cell',value:0}, 6:{type:'cell',value:0}, 7:{type:'cell',value:0}, 8:{type:'cell',value:0}, 9:{type:'cell',value:7}},
@@ -27,8 +29,26 @@ export const useMap = () => {
     const matchId = useParams().id;
     const user = useAppSelector(state => state.user);
     const match = useAppSelector(state => state.match);
-    useEffect(() => {
+
+    const clearMap = () => {
+        setMapCoords(prev => {
+            const clearedMap:MapT = prev;
+
+            Object.keys(prev).forEach(
+                x => Object.keys(prev[+x]).forEach(y => {
+                    if(clearedMap[+x][+y].type === 'player'){
+                        clearedMap[+x][+y] = {type:'cell',value:0};
+                    }
+                }));
+
+                return clearedMap;
+        });
+    }
+
+    const loadMap = () => {
         if(!match) return;
+        
+        clearMap();
 
         match.alivePlayers?.forEach(player => setMapCoords(prev => {
             const x = player.location?.[0];
@@ -45,14 +65,15 @@ export const useMap = () => {
 
             return ({...prev,[x]:{...prev[x], [y]: {type:'booster',value:booster}}});
         }));
+    }
+    useEffect(() => {
+        loadMap();
     },[match]);
 
-    const [myCoord,setMyCoord] = useState([9,1]);
     const onStep = async (destinationCoord:number[]) => {
-        if(!matchId || !user.id) return;
-        if(destinationCoord[0] === myCoord[0] && destinationCoord[1] === myCoord[1]) return;
-
-        await nextTurn(matchId,user.id)
+        if(!match.id || !user.id) return;
+        if(match?.activePlayer?.id !== user.id) return;
+        if(destinationCoord[0] === user?.location?.[0] && destinationCoord[1] === user?.location[1]) return;
 
         setMapCoords(prev => {
             const x = destinationCoord[0];
@@ -60,12 +81,14 @@ export const useMap = () => {
             return ({...prev,[x]:{...prev[x], [y]: {type:'player',value:user}}});
         });
         setMapCoords(prev => {
-            const myCordX = myCoord[0];
-            const myCordY = myCoord[1];
+            const myCordX = user?.location?.[0];
+            const myCordY = user?.location?.[1]; 
+            console.log(myCordX,myCordY);
+            if(!myCordX || !myCordY) return prev;
             return ({...prev,[myCordX]:{...prev[myCordX], [myCordY]:{type:'cell',value:0}}});
         });
-
-        setMyCoord(destinationCoord);
+        await changePlayersLocation(user.id,destinationCoord);
+        await nextTurn(match.id,user.id);
     }
 
     return {MapCoords,onStep,match}

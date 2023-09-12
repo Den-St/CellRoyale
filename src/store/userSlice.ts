@@ -8,6 +8,8 @@ const initialState:UserT = {
     displayName:'',
     photoURL:'',   
     id:'',
+    location:[],
+    color:''
 }
 
 const userSlice = createSlice({
@@ -20,6 +22,8 @@ const userSlice = createSlice({
             state.displayName = payload?.payload.displayName;
             state.photoURL = payload?.payload.photoURL;
             state.id = payload?.payload.id;
+            state.location = payload?.payload.location;
+            state.color = payload?.payload.color;
         }
     }
 });
