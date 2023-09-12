@@ -29,6 +29,11 @@ export const useMap = () => {
     const matchId = useParams().id;
     const user = useAppSelector(state => state.user);
     const match = useAppSelector(state => state.match);
+    const [myCoord,setMyCoord] = useState<number[]>();
+
+    useEffect(() => {
+        if(user.location) setMyCoord(user.location);
+    },[user.location]);
 
     const clearMap = () => {
         setMapCoords(prev => {
@@ -78,18 +83,22 @@ export const useMap = () => {
         setMapCoords(prev => {
             const x = destinationCoord[0];
             const y = destinationCoord[1];
-            return ({...prev,[x]:{...prev[x], [y]: {type:'player',value:user}}});
+
+            return ({...prev,[x]:{...prev[x], [y]: {type:'player',value:user}},
+            });
         });
+
         setMapCoords(prev => {
-            const myCordX = user?.location?.[0];
-            const myCordY = user?.location?.[1]; 
-            console.log(myCordX,myCordY);
-            if(!myCordX || !myCordY) return prev;
-            return ({...prev,[myCordX]:{...prev[myCordX], [myCordY]:{type:'cell',value:0}}});
+            const x = myCoord?.[0];
+            const y = myCoord?.[1]; 
+
+            if(!x || !y) return prev;
+            return ({...prev,[x]:{...prev[x], [y]:{type:'cell',value:0}}});
         });
+
+        setMyCoord(destinationCoord);
         await changePlayersLocation(user.id,destinationCoord);
         await nextTurn(match.id,user.id);
     }
-
     return {MapCoords,onStep,match}
 }
