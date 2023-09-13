@@ -76,10 +76,60 @@ export const useMap = () => {
     },[match]);
 
     const onStep = async (destinationCoord:number[]) => {
+        if(!myCoord) return;
         if(!match.id || !user.id) return;
         if(match?.activePlayer?.id !== user.id) return;
-        if(destinationCoord[0] === user?.location?.[0] && destinationCoord[1] === user?.location[1]) return;
-
+        // if(!((destinationCoord[0] === myCoord?.[0] - 1 
+        //    || destinationCoord[0] === myCoord?.[0] + 1) 
+        //    && (destinationCoord[1] === myCoord?.[1] + 1
+        //    || destinationCoord[1] === myCoord?.[1] 
+        //    ))) return;
+        if(!(destinationCoord[0] === myCoord[0] || destinationCoord[0] === myCoord[0] + 1 || destinationCoord[0] === myCoord[0] - 1)) return;
+        if(myCoord[0] < 7){
+            if(destinationCoord[0] === myCoord?.[0] - 1 ){
+                if(!(destinationCoord[1] === myCoord?.[1] - 1 || destinationCoord[1] === myCoord?.[1])){
+                    return;
+                }
+            }
+            if(destinationCoord[0] === myCoord[0] + 1){
+                if(!(destinationCoord[1] === myCoord?.[1] + 1 || destinationCoord[1] === myCoord?.[1])){
+                    return;
+                }
+            }
+            if(destinationCoord[0] === myCoord[0]){
+                if(!(destinationCoord[1] === myCoord?.[1] + 1 || destinationCoord[1] === myCoord?.[1] - 1)){
+                    return;
+                }
+            }
+        }else if(myCoord[0] > 7){
+            if(destinationCoord[0] === myCoord?.[0] - 1 ){
+                if(!(destinationCoord[1] === myCoord?.[1] + 1 || destinationCoord[1] === myCoord?.[1])){
+                    return;
+                }
+            }
+            if(destinationCoord[0] === myCoord[0] + 1){
+                if(!(destinationCoord[1] === myCoord?.[1] - 1 || destinationCoord[1] === myCoord?.[1])){
+                    return;
+                }
+            }
+            if(destinationCoord[0] === myCoord[0]){
+                if(!(destinationCoord[1] === myCoord?.[1] + 1 || destinationCoord[1] === myCoord?.[1] - 1)){
+                    return;
+                }
+            }
+        }else{
+            if(destinationCoord[0] === myCoord?.[0] - 1 || destinationCoord[0] === myCoord[0] + 1){
+                if(!(destinationCoord[1] === myCoord?.[1] - 1 || destinationCoord[1] === myCoord?.[1])){
+                    return;
+                }
+            }
+            if(destinationCoord[0] === myCoord[0]){
+                if(!(destinationCoord[1] === myCoord?.[1] - 1 || destinationCoord[1] === myCoord?.[1] + 1)){
+                    return;
+                }
+            }
+        }
+        // if((Math.abs(destinationCoord[0] - user?.location?.[0]) + Math.abs(destinationCoord[1] - user?.location?.[1])) >= 2) return
         setMapCoords(prev => {
             const x = destinationCoord[0];
             const y = destinationCoord[1];
