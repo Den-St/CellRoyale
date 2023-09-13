@@ -4,16 +4,8 @@ import { UserT } from "../../types/user";
 
 const colors = [
     '#9fa79f',
-    'green',
-    'purple',
-    'red',
-    'blue',
-    'orange',
-    '#8bc34a',
-    '#e2aae2',
     '#75b4f79b',
-    '#f7c64ab7',
-    '#00e2ff',
+    '#eb52eb90'
 ]
 
 const HexSpan = styled.button<{value:number,}>`
@@ -22,7 +14,7 @@ const HexSpan = styled.button<{value:number,}>`
     background:transparent;
     padding:0;
     cursor:pointer;
-    color:#9fa79f;
+    ${({value}) => `color:${colors[value]}`};
     font-size: 55px;
     border-radius:100%;
     transition:0.1s;
