@@ -10,6 +10,8 @@ export const Container = styled.div`
     height:100vh;
     background-image:url('./../../assets/background.jpg');
     overflow:hidden;
+    box-sizing:border-box;
+    padding-top:87px;
 `;
 
 export const LoginLink = styled(Link)`

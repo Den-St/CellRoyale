@@ -31,6 +31,7 @@ export const Background = () => {
         [1,1,1,1,1]
     ]
     return <Display
+    zIndex="-1"
     top={'-180px'} left={"-450px"} position="absolute"
     >
         <Display  direction="column">

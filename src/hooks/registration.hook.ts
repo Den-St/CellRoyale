@@ -9,11 +9,15 @@ import { RegistrationInterface } from "../types/registration";
 export const useRegistration = () => {
     const [success,setSuccess] = useState(false);
     const [messageApi, contextHolder] = message.useMessage();
-    const showError = (message:string) => {
+    const showError = (message:string,key:string) => {
         messageApi.open({
           type: 'error',
           content: message,
+          key
         });
+      }
+      const clearError = (key:string) => {
+        messageApi.destroy(key);
       }
 
     const onSubmit:SubmitHandler<RegistrationInterface> = async (data:RegistrationInterface) => {
@@ -24,14 +28,14 @@ export const useRegistration = () => {
             const {creationTime} = googleAuthProvider.currentUser.metadata;
             await createUser({
                               email,
-                              displayName,
+                              displayName: displayName || data.displayName,
                               photoURL,
                               createdAt:creationTime
                             });
             setSuccess(true);
         }catch(err){
             if(AuthErrorCodes.EMAIL_EXISTS === JSON.parse(JSON.stringify(err)).code){
-              showError('Email already in use');
+              showError('Email already in use','google');
             }
         }
       }
@@ -54,5 +58,5 @@ export const useRegistration = () => {
         }
     }
 
-    return {signInWithGoogle,onSubmit,success,contextHolder,showError};
+    return {signInWithGoogle,onSubmit,success,contextHolder,showError,clearError};
 }
