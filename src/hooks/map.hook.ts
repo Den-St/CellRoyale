@@ -77,13 +77,13 @@ export const useMap = () => {
             return ({...prev,[x]:{...prev[x], [y]: {type:'player',value:player}}});
         }));
 
-        match.boosters?.forEach(booster => setMapCoords(prev => {
-            const x = booster.location?.[0];
-            const y = booster.location?.[1];
-            if(!x || !y) return prev;
+        // match.boosters?.forEach(booster => setMapCoords(prev => {
+        //     const x = booster.location?.[0];
+        //     const y = booster.location?.[1];
+        //     if(!x || !y) return prev;
 
-            return ({...prev,[x]:{...prev[x], [y]: {type:'booster',value:booster}}});
-        }));
+        //     return ({...prev,[x]:{...prev[x], [y]: {type:'booster',value:booster}}});
+        // }));
 
         setAvailableCells();
     }
@@ -96,7 +96,7 @@ export const useMap = () => {
 
             Object.keys(prev).forEach(
                 x => Object.keys(prev[+x]).forEach(y => {
-                    if(newMap[+x][+y].type !== 'player' || newMap[+x][+y].type !== 'booster'){
+                    if(newMap[+x][+y].type !== 'player' && newMap[+x][+y].type !== 'booster'){
                         if(myCoord[0] < 7){
                             if(+x === myCoord?.[0] - 1 ){
                                 if(+y === myCoord?.[1] - 1 || +y === myCoord?.[1]){

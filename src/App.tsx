@@ -1,4 +1,5 @@
 import { Normalize } from "styled-normalize";
+import { Layout } from "./components/Layout";
 import { RoutesSwitch } from "./consts/routes";
 import {useAppSelector} from "./hooks/redux";
 import { AuthProvider } from "./providers/authProvider";
@@ -8,7 +9,9 @@ function App() {
   return <>
     <AuthProvider>
       <Normalize/>
-      <RoutesSwitch/>
+      <Layout>
+        <RoutesSwitch/>
+      </Layout>
     </AuthProvider>
   </>
 }

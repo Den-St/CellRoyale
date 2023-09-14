@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const Display = styled.div<{width?:string,height?:string,direction?:"column",position?:'relative' | 'absolute' | 'fixed',background?:string,fontSize?:string,maxHeight?:string,
+export const Display = styled.div<{width?:string,height?:string,direction?:"column",position?:'relative' | 'absolute' | 'fixed',background?:string,fontSize?:string,maxHeight?:string,zIndex?:string,
                                    gap?:string,align?:'center' | 'start' | 'end',padding?:string,top?:string,bottom?:string,borderRadius?:string,margin?:string,maxWidth?:string,minWidth?:string,
                                    justify?:'center' | 'start' | 'end' | 'space-between' | 'space-around',left?:string,right?:string,color?:string,minHeight?:string,border?:string}>`
     display:flex;
@@ -27,4 +27,6 @@ export const Display = styled.div<{width?:string,height?:string,direction?:"colu
     ${({maxWidth})=> maxWidth && `max-width:${maxWidth};`}
     ${({minWidth})=> minWidth && `min-width:${minWidth};`}
     ${({border})=> border && `border:${border};`}
+    ${({zIndex})=> zIndex && `z-index:${zIndex};`}
+    overflow:hidden;
 `;
