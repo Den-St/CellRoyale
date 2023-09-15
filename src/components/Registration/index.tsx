@@ -5,7 +5,7 @@ import { Display } from "../../assets/Display"
 import { emailPattern } from "../../consts/emailPattern";
 import { useRegistration } from "../../hooks/registration.hook";
 import { RegistrationInterface } from "../../types/registration";
-import { ChangeSignType, Google, GoToLogIn, Header, Input, PasswordInput, SubmitButton } from "./styles";
+import { ChangeSignType, GoogleAuthButton, GoToLogIn, Header, Input, PasswordInput, SubmitButton } from "./../../assets/Authorization/Components";
 import GoogleOutlined from "@ant-design/icons/GoogleOutlined";
 
 export const Registration = () => {
@@ -45,11 +45,11 @@ export const Registration = () => {
                 <Display justify="space-between" >
                     <PasswordInput {...register('password',{required:"Password is required",
                                     minLength:{message:"Password must be longer than 6 symbols.",value:6}})} placeholder="Password"/>
-                    <PasswordInput onChange={(e) => setConfirmPassword(e.target.value)}  placeholder="Confirm password"/>
+                    <PasswordInput onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Confirm password"/>
                 </Display>
                 <Display align="center" width="100%" direction="column" gap={'10px'}>
                     <SubmitButton disabled={disabled} type={'submit'} value={'Submit'}/>
-                    <Google onClick={signInWithGoogle}><GoogleOutlined /></Google>
+                    <GoogleAuthButton onClick={signInWithGoogle}><GoogleOutlined /></GoogleAuthButton>
                     <ChangeSignType>Already a member? <GoToLogIn to={'/login'}>Log in</GoToLogIn></ChangeSignType>
                 </Display>
             </Display>

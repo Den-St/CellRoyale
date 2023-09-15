@@ -35,7 +35,7 @@ export const useRegistration = () => {
             setSuccess(true);
         }catch(err){
             if(AuthErrorCodes.EMAIL_EXISTS === JSON.parse(JSON.stringify(err)).code){
-              showError('Email already in use','google');
+              showError('Email already in use','auth');
             }
         }
       }

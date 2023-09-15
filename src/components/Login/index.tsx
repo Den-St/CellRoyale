@@ -7,9 +7,10 @@ import {GoogleOutlined} from '@ant-design/icons';
 import { useEffect } from "react";
 import { Display } from "../../assets/Display";
 import { Link } from "react-router-dom";
+import { ChangeSignType, GoogleAuthButton, GoToLogIn, Header, Input, SubmitButton } from "../../assets/Authorization/Components";
 
 export const Login = () => {
-    const {success,contextHolder,onSubmit,signInWithGoogle,showError} = useLogin();
+    const {success,contextHolder,onSubmit,signInWithGoogle,showError,clearError} = useLogin();
     const {
         register,
         handleSubmit,
@@ -17,22 +18,30 @@ export const Login = () => {
     } = useForm<RegistrationInterface>();
 
     useEffect(() => {
-        if(errors.email?.message) showError(errors.email.message);
-        if(errors.password?.message) showError(errors.password.message);
+        if(errors.email?.message) {
+            clearError('email');
+            showError(errors.email.message,'email');
+        }
+        if(errors.password?.message) {
+            clearError('password');
+            showError(errors.password.message,'password');
+        }
     },[errors.email, errors.password]);
     
   if(success) return <Navigate to={'/'}/>
-  return <form onSubmit={handleSubmit(onSubmit)}>
-        {contextHolder}
-        <Display direction="column" gap={'10px'} width={'250px'} padding={'20px'}>
-            <input {...register('email',{required:true, pattern:{message:"Incorrect email form",value:emailPattern}})}
-            placeholder="Login"/>
-            <input {...register('password',{required:"Incorrect password form", minLength:6})}
-            type={"password"} placeholder="Password"/>
-            <input type={'submit'} value={'Submit'}/>
-            <Link to={'/registration'}>Registration</Link>
-            <button onClick={signInWithGoogle}><GoogleOutlined/></button>
-        </Display>
-    </form>
-   
+  return <Display>
+        <form onSubmit={handleSubmit(onSubmit)}>
+            {contextHolder}
+            <Display align="center" borderRadius="20px" direction="column" gap={'15px'}  padding={'35px 50px'} background={'white'}>
+                <Header>Log in account</Header>
+                <Input  {...register('email',{required:"Email is required",pattern:emailPattern,})} placeholder="E-mail"/>
+                <Input  {...register('password',{required:"Password is required",
+                        minLength:{message:"Password must be longer than 6 symbols.",value:6}})}
+                        type={"password"} placeholder="Password"/>
+                <SubmitButton type={'submit'} value={'Submit'}/>
+                <ChangeSignType>Dont have an account?<GoToLogIn to={'/registration'}>Create account</GoToLogIn></ChangeSignType>
+                <GoogleAuthButton onClick={signInWithGoogle}><GoogleOutlined/></GoogleAuthButton>
+            </Display>
+        </form>
+    </Display>
 }
