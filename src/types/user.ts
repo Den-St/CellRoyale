@@ -1,5 +1,3 @@
-import { Timestamp } from "firebase/firestore";
-
 export type UserT = {
     email:string | null,
     createdAt?:string | null,
@@ -8,6 +6,7 @@ export type UserT = {
     id?:string,
     location?:number[] | null,
     color?:string | null
+    matchQueue?:string | null
 }
 
 export type CreateUserT = {

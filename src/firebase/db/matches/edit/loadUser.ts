@@ -20,7 +20,8 @@ export const loadUser = async (matchId:string,playerId:string) => {
             }),
             await updateDoc(documentUser,{
                 location:playersSpawnLocations[match?.alivePlayers.length],
-                color:playersColors[match?.alivePlayers.length]
+                color:playersColors[match?.alivePlayers.length],
+                matchQueue:''
             })
         ])
         

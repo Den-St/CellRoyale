@@ -10,6 +10,7 @@ export const searchMatch = async (userId:string) => {
         const matchDoc = docs.docs[0];
         if(matchDoc){
             await addUserInQueue(matchDoc.id,userId);
+            
             return matchDoc.id;
         }else{
             const createdMatch =  await createMatch(userId);

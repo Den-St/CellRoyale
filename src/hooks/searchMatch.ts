@@ -15,12 +15,12 @@ export const useSearchMatch = () => {
     const [isSearchStarted,setIsSearchStarted] = useState(false);
     const [isSearchCanceled,setIsSearchCanceled] = useState(false);
     const [isMatchReady,setIsMatchReady] = useState(false);
-    const userId = useAppSelector(state => state.user.id);
+    const user = useAppSelector(state => state.user);
 
     const onStartSearch = async () => {
-        if(!userId) return;
+        if(!user.id) return;
         setLoading(true)
-        const foundMatch = await searchMatch(userId);
+        const foundMatch = await searchMatch(user.id);
         setLoading(false);
         if(!foundMatch) return;
         setMatchId(foundMatch);
@@ -29,13 +29,20 @@ export const useSearchMatch = () => {
     }
     
     const onCancelSearch = async () => {
-        if(!userId) return;
-        await cancelSearch(matchId,userId);
+        if(!user.id) return;
+        await cancelSearch(matchId,user.id);
         setMatch(null);
         setIsSearchStarted(false);
         setIsSearchCanceled(true);
     }
-    
+    useEffect(() => {
+        if(!isSearchStarted && user.matchQueue){
+            setMatchId(user.matchQueue);
+            setIsSearchCanceled(false);
+            setIsSearchStarted(true);
+        }
+    },[user]);
+
     useEffect(() => {
         if(!isSearchStarted && !isSearchCanceled) return;
         const unsubscribe = onSnapshot(doc(db,collectionsKeys.matches,matchId),(doc) => {

@@ -1,6 +1,7 @@
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../../firebaseInit";
 import { collectionsKeys } from "../../collectionsKeys";
+import { addMatchInQueue } from "../../users/edit/addMatchInQueue";
 
 export const addUserInQueue = async (matchId:string,userId:string) => {
     try{
@@ -11,6 +12,7 @@ export const addUserInQueue = async (matchId:string,userId:string) => {
                 playersInQueue:[...match?.playersInQueue,userId],
                 numberOfPlayers:match?.numberOfPlayers + 1,
             });
+        await addMatchInQueue(matchId,userId);
     }catch(err){
         console.error(err);
     }

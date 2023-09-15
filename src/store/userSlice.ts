@@ -9,7 +9,8 @@ const initialState:UserT = {
     photoURL:'',   
     id:'',
     location:[],
-    color:''
+    color:'',
+    matchQueue:''
 }
 
 const userSlice = createSlice({
@@ -24,6 +25,7 @@ const userSlice = createSlice({
             state.id = payload?.payload.id;
             state.location = payload?.payload.location;
             state.color = payload?.payload.color;
+            state.matchQueue = payload?.payload.matchQueue;
         }
     }
 });

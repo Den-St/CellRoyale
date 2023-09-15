@@ -251,7 +251,7 @@ export const useMap = () => {
         setMyCoord(destinationCoord);
         clearMapFromAvailableCells();
         await changePlayersLocation(user.id,destinationCoord);
-        if(enemyId) eliminatePlayer(match.id,enemyId);
+        if(enemyId) await eliminatePlayer(match.id,enemyId);
         await nextTurn(match.id,user.id);
     }
     return {MapCoords,onStep,match}
