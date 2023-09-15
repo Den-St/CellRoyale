@@ -29,11 +29,14 @@ export const Background = () => {
         [0,0,0,0,0,0,1],
         [0,0,0,0,0,1],
         [1,1,1,1,1]
-    ]
+    ];
+
     return <Display
-    zIndex="-1"
-    top={'-180px'} left={"-450px"} position="absolute"
-    >
+        zIndex="-1"
+        top={'-180px'} left={"-450px"} position="absolute"
+        width="131.2vw;" height="125.4vh"
+        minWidth="100%" minHeight="100%"
+        >
         <Display  direction="column">
             {MapCoords.map((row,i) => 
                 <Row marginleft={i * 125}>

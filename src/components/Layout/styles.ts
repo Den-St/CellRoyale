@@ -1,17 +1,15 @@
 import { Link } from 'react-router-dom';
 import styled from "styled-components";
 
-export const Container = styled.div`
+export const Container = styled.div<{$excludedRoute:boolean}>`
     display:flex;
     flex-direction:column;
     justify-content:center;
     gap:150px;
     width:100vw;
     height:100vh;
-    background-image:url('./../../assets/background.jpg');
-    overflow:hidden;
     box-sizing:border-box;
-    padding-top:87px;
+    ${({$excludedRoute}) => !$excludedRoute && `padding-top:87px`};
 `;
 
 export const LoginLink = styled(Link)`

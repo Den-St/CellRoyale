@@ -11,7 +11,7 @@ export const createMatch = async (userId:string) => {
             loadedPlayers:[],
             numberOfPlayers:1,
             playersInQueue:[userId],
-            roundNumber:0,
+            roundNumber:1,
             creator:userId
         });
     }catch(err){

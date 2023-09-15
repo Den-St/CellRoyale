@@ -4,7 +4,8 @@ import {Map} from "./Map";
 
 export const Match = () => {
     const {match,onNextTurn} = useMatch();
-    return <Display width={'100vh'} height={'100vh'}>
+
+    return <Display width={'100vw'} height={'100vh'}>
         <Map onNextTurn={onNextTurn}/>
     </Display>
 }

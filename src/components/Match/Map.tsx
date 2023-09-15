@@ -17,6 +17,11 @@ const Container = styled.div`
     flex-direction:column;
 `;
 
+const ActivePlayerCell = styled.span<{color?:string}>`
+    font-size:50px;
+    ${({color}) => `color:${color}`};
+`;
+
 type Props = {
     onNextTurn:() => Promise<void>
 }
@@ -25,7 +30,10 @@ export const Map:React.FC<Props> = ({onNextTurn}) => {
     const {MapCoords,onStep,match} = useMap();
     console.log(MapCoords)
     return  <Container>
-            {match?.activePlayer?.id};
+            {match?.activePlayer?.color && 
+                <>
+                    <ActivePlayerCell color={match?.activePlayer?.color}>&#x2B22;</ActivePlayerCell> {match?.activePlayer?.displayName} 
+                </>}
             {Object.entries(MapCoords).map((row,i) => 
             <Row $isFirst={i === 0} marginleft={i < 8 ? (7 - i)*26 : (i - 7)*26}>
                 {Object.entries(row[1]).map((cell,j) => {

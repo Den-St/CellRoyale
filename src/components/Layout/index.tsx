@@ -1,3 +1,4 @@
+import { useLocation, useParams } from "react-router-dom"
 import { Display } from "../../assets/Display"
 import { Header } from "../Header/indes"
 import { Background } from "./Background"
@@ -8,11 +9,15 @@ type Props = {
 }
 
 export const Layout:React.FC<Props> = ({children}) => {
-    return <Container>
-        <Header/>
+    const headerExcludedRoutes = ['/login', '/registration', '/match'];
+    const route = useLocation().pathname;
+    const isOnExcludedRoute = !headerExcludedRoutes.some(exRoute => route.includes(exRoute));
+
+    return <Container $excludedRoute={!isOnExcludedRoute}>
+        {isOnExcludedRoute && <Header/>}
         <Display width="100vw" height="100%" justify="center" align="center">
             {children}
         </Display>
-        <Background/>
+        {isOnExcludedRoute && <Background/>}
     </Container>
 }
