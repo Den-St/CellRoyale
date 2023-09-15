@@ -1,3 +1,5 @@
+import { eliminatePlayer } from '../firebase/db/matches/edit/eliminatePlayer';
+import { UserT } from './../types/user';
 import { changePlayersLocation } from './../firebase/db/users/edit/changeLocation';
 import { useEffect } from 'react';
 import { useState } from 'react';
@@ -69,17 +71,24 @@ export const useMap = () => {
         clearMap();
 
         setMapCoords(prev => {
-            if(!match.roundNumber) return prev;
+            if(!match.roundNumber || !match.id) return prev;
 
             const newMap = prev;
             for(let i = 1; i < match.roundNumber; i++)
             {
-                Object.keys(newMap[i - 1]).forEach(y => newMap[i - 1][+y] = {type:'cell',value:2});
-                Object.keys(newMap[15 - i]).forEach(y => newMap[15 - i][+y] = {type:'cell',value:2});
+                Object.keys(newMap[i - 1]).forEach(y => {
+                    newMap[i - 1][+y] = {type:'cell',value:2};
+                    if(MapCoords[i - 1][+y].type === 'player') eliminatePlayer(match.id,(MapCoords[i - 1][+y].value as UserT).id)
+                });
+                Object.keys(newMap[15 - i]).forEach(y => {
+                    newMap[15 - i][+y] = {type:'cell',value:2};
+                    if(MapCoords[15 - i][+y].type === 'player') eliminatePlayer(match.id,(MapCoords[15 - i][+y].value as UserT).id)
+                });
                 Object.keys(newMap).forEach(
                     x => Object.keys(newMap[+x]).forEach(y => {
                         if(match.roundNumber !== undefined && (+y < match.roundNumber - 1 || +y > Object.keys(newMap[+x]).length - match.roundNumber)){
                             newMap[+x][+y] = {type:'cell',value:2};
+                            if(MapCoords[+x][+y].type === 'player') eliminatePlayer(match.id,(MapCoords[+x][+y].value as UserT).id)
                         }
                     }));
             }
@@ -175,7 +184,9 @@ export const useMap = () => {
         if(match?.activePlayer?.id !== user.id) return;
         
         if(!(destinationCoord[0] === myCoord[0] || destinationCoord[0] === myCoord[0] + 1 || destinationCoord[0] === myCoord[0] - 1)) return;
-        
+        let enemyId = MapCoords[destinationCoord[0]][destinationCoord[1]].type === 'player' ? (MapCoords[destinationCoord[0]][destinationCoord[1]].value as UserT).id : null;
+        console.log('bb',enemyId);
+
         if(myCoord[0] < 7){
             if(destinationCoord[0] === myCoord?.[0] - 1 ){
                 if(!(destinationCoord[1] === myCoord?.[1] - 1 || destinationCoord[1] === myCoord?.[1])){
@@ -240,6 +251,7 @@ export const useMap = () => {
         setMyCoord(destinationCoord);
         clearMapFromAvailableCells();
         await changePlayersLocation(user.id,destinationCoord);
+        if(enemyId) eliminatePlayer(match.id,enemyId);
         await nextTurn(match.id,user.id);
     }
     return {MapCoords,onStep,match}
