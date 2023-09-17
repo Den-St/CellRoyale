@@ -8,7 +8,6 @@ export const createMatch = async (userId:string) => {
             activePlayer:userId,
             alivePlayers:[],
             boosters:[],
-            createdAt:new Date(),
             loadedPlayers:[],
             numberOfPlayers:1,
             playersInQueue:[userId],

@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Timestamp } from "firebase/firestore";
 import { UserT } from "../types/user";
 
 const initialState:UserT = {
@@ -10,7 +9,9 @@ const initialState:UserT = {
     id:'',
     location:[],
     color:'',
-    matchQueue:''
+    matchQueue:'',
+    // isEliminated:false,
+    // isWinner:true
 }
 
 const userSlice = createSlice({
@@ -26,9 +27,20 @@ const userSlice = createSlice({
             state.location = payload?.payload.location;
             state.color = payload?.payload.color;
             state.matchQueue = payload?.payload.matchQueue;
+            state.matchQueue = payload?.payload.matchQueue;
+        },
+        clearPlayersMatchInfo(state){
+            // state.color = '';
+            // state.location = [];
+        },
+        setPlayerMatchInfo(state,payload:PayloadAction<{location:number[],color:string}>){
+            state.color = payload.payload.color;
+            state.location = payload.payload.location;
         }
     }
 });
 
 export const {setUser} = userSlice.actions;
+export const {clearPlayersMatchInfo} = userSlice.actions;
+export const {setPlayerMatchInfo} = userSlice.actions;
 export default userSlice.reducer;

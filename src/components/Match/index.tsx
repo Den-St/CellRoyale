@@ -3,9 +3,9 @@ import { useMatch } from "../../hooks/match.hook";
 import {Map} from "./Map";
 
 export const Match = () => {
-    const {match,onNextTurn} = useMatch();
+    useMatch();
 
     return <Display width={'100vw'} height={'100vh'}>
-        <Map onNextTurn={onNextTurn}/>
+        <Map />
     </Display>
 }

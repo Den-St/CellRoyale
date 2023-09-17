@@ -31,7 +31,7 @@ export const Login = () => {
   return <Display>
         <form onSubmit={handleSubmit(onSubmit)}>
             {contextHolder}
-            <Display align="center" borderRadius="20px" direction="column" gap={'15px'}  padding={'35px 50px'} background={'white'}>
+            <Display $align="center" borderradius="20px" direction="column" gap={'15px'} $padding={'35px 50px'} background={'white'}>
                 <Header>Log in account</Header>
                 <Input {...register('email',{required:"Email is required",pattern:emailPattern,})} placeholder="E-mail"/>
                 <Input {...register('password',{required:"Password is required",

@@ -12,7 +12,7 @@ export const AuthProvider:React.FC<Props> = ({children}) => {
    const {loading, isSignedIn} = useAuth();
    const path = useLocation().pathname;
    
-    if(loading) return <Display width="100%" height="90vh" justify="center" align="center"><Spin/></Display>
+    if(loading) return <Display width="100%" height="90vh" $justify="center" $align="center"><Spin/></Display>
     if(!loading && !isSignedIn && path !== '/registration' && path !== '/login') {
         return <Navigate to={'/registration'}/>
     }

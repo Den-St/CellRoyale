@@ -1,6 +1,5 @@
 import styled from "styled-components"
 import { Display } from "../../assets/Display"
-import { Cell } from "../Match/Cell";
 
 const colors = [
     '#D9D9D9',
@@ -32,15 +31,15 @@ export const Background = () => {
     ];
 
     return <Display
-        zIndex="-1"
-        top={'-180px'} left={"-450px"} position="absolute"
+        $zindex="-1"
+        top={'-180px'} left={"-450px"} $position="absolute"
         width="131.2vw;" height="125.4vh"
-        minWidth="100%" minHeight="100%"
+        minwidth="100%" minheight="100%"
         >
         <Display  direction="column">
             {MapCoords.map((row,i) => 
-                <Row marginleft={i * 125}>
-                    {row.map(cell => <Hex value={cell}>&#x2B22;</Hex>)}
+                <Row key={i} marginleft={i * 125}>
+                    {row.map((cell,j) => <Hex key={j} value={cell}>&#x2B22;</Hex>)}
                 </Row>
             )}
         </Display>

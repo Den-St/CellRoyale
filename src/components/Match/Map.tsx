@@ -1,9 +1,9 @@
-import { useState } from "react";
 import { styled } from "styled-components";
+import { Display } from "../../assets/Display";
 import { useMap } from "../../hooks/map.hook";
 import { BoosterT } from "../../types/booster";
-import { MatchT } from "../../types/match";
 import { UserT } from "../../types/user";
+import { MatchResultModal } from "../MatchResultModal";
 import { BoosterCell, Cell, PlayerCell } from "./Cell";
 
 const Row = styled.div<{marginleft:number,$isFirst:boolean}>`
@@ -12,35 +12,30 @@ const Row = styled.div<{marginleft:number,$isFirst:boolean}>`
     ${({marginleft}) => `margin-left:${marginleft}px`}
 `;
 
-const Container = styled.div`
-    display:flex;
-    flex-direction:column;
-`;
-
 const ActivePlayerCell = styled.span<{color?:string}>`
     font-size:50px;
     ${({color}) => `color:${color}`};
 `;
 
-type Props = {
-    onNextTurn:() => Promise<void>
-}
+export const Map = () => {
+    const {MapCoords,onStep,match,isEliminated,isWinner} = useMap();
 
-export const Map:React.FC<Props> = ({onNextTurn}) => {
-    const {MapCoords,onStep,match} = useMap();
-    console.log(MapCoords)
-    return  <Container>
+    return  <Display>
+            <MatchResultModal open={isWinner || isEliminated}/>
+            <Display direction="column">
+                {Object.entries(MapCoords).map((row,i) => 
+                <Row $isFirst={i === 0} marginleft={i < 8 ? (7 - i)*26 : (i - 7)*26} >
+                    {Object.entries(row[1]).map((cell,j) => {
+                        if(cell[1].type === 'cell') return <Cell  onStep={() => onStep([i,j])} value={cell[1].value as number} />
+                        if(cell[1].type === 'player') return <PlayerCell  onStep={() => onStep([i,j])} value={cell[1].value as UserT} />
+                        if(cell[1].type === 'booster') return <BoosterCell  onStep={() => onStep([i,j])} value={cell[1].value as BoosterT}/>
+                    })}
+                </Row>)}
+            </Display>
             {match?.activePlayer?.color && 
-                <>
+                <Display $align="center">
                     <ActivePlayerCell color={match?.activePlayer?.color}>&#x2B22;</ActivePlayerCell> {match?.activePlayer?.displayName} 
-                </>}
-            {Object.entries(MapCoords).map((row,i) => 
-            <Row $isFirst={i === 0} marginleft={i < 8 ? (7 - i)*26 : (i - 7)*26}>
-                {Object.entries(row[1]).map((cell,j) => {
-                    if(cell[1].type === 'cell') return <Cell onStep={() => onStep([i,j])} value={cell[1].value as number} />
-                    if(cell[1].type === 'player') return <PlayerCell onStep={() => onStep([i,j])} value={cell[1].value as UserT} />
-                    if(cell[1].type === 'booster') return <BoosterCell onStep={() => onStep([i,j])} value={cell[1].value as BoosterT}/>
-                })}
-            </Row>)}
-        </Container>
+                </Display>
+            }
+        </Display>
 }

@@ -6,7 +6,9 @@ export type UserT = {
     id?:string,
     location?:number[] | null,
     color?:string | null
-    matchQueue?:string | null
+    matchQueue?:string | null,
+    // isEliminated?:boolean | null,
+    // isWinner?:boolean | null,
 }
 
 export type CreateUserT = {

@@ -5,9 +5,8 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { nextTurn } from './../firebase/db/matches/edit/nextTurn';
 import { useAppSelector } from './redux';
-import { useParams } from 'react-router-dom';
 import { MapT } from '../types/map';
-import { CellT } from '../types/cell';
+import { addWinner } from '../firebase/db/matchResults/edit/addWinner';
 
 export const useMap = () => {
     const [MapCoords,setMapCoords] = useState<MapT>({
@@ -27,7 +26,9 @@ export const useMap = () => {
         13:{0:{type:'cell',value:0}, 1:{type:'cell',value:0}, 2:{type:'cell',value:0}, 3:{type:'cell',value:0}, 4:{type:'cell',value:0}, 5:{type:'cell',value:0}, 6:{type:'cell',value:0}, 7:{type:'cell',value:0}, 8:{type:'cell',value:0}},
         14:{0:{type:'cell',value:0}, 1:{type:'cell',value:0}, 2:{type:'cell',value:0}, 3:{type:'cell',value:0}, 4:{type:'cell',value:0}, 5:{type:'cell',value:0}, 6:{type:'cell',value:0}, 7:{type:'cell',value:0},}  
     });
-    const matchId = useParams().id;
+    const [isEliminated,setIsEliminated] = useState(false);
+    const [isWinner,setIsWinner] = useState(false);
+    const [activePlayersLoaded,setActivePlayersLoaded] = useState(false);
     const user = useAppSelector(state => state.user);
     const match = useAppSelector(state => state.match);
     const [myCoord,setMyCoord] = useState<number[]>();
@@ -35,6 +36,7 @@ export const useMap = () => {
     useEffect(() => {
         if(user.location) setMyCoord(user.location);
     },[user.location]);
+    console.log(MapCoords);
 
     const clearMap = () => {
         setMapCoords(prev => {
@@ -64,12 +66,7 @@ export const useMap = () => {
                 return clearedMap;
         });
     }
-
-    const loadMap = () => {
-        if(!match) return;
-        
-        clearMap();
-
+    const displayZoneCells = () => {
         setMapCoords(prev => {
             if(!match.roundNumber || !match.id) return prev;
 
@@ -77,24 +74,43 @@ export const useMap = () => {
             for(let i = 1; i < match.roundNumber; i++)
             {
                 Object.keys(newMap[i - 1]).forEach(y => {
+                    if(myCoord && i - 1 === myCoord[0] && +y === myCoord[1]){
+                        if(user.id){
+                            console.log('elim 1')
+                            setIsEliminated(true);
+                            eliminatePlayer(match.id,user.id)
+                        }
+                    }
                     newMap[i - 1][+y] = {type:'cell',value:2};
-                    if(MapCoords[i - 1][+y].type === 'player') eliminatePlayer(match.id,(MapCoords[i - 1][+y].value as UserT).id)
                 });
                 Object.keys(newMap[15 - i]).forEach(y => {
+                    if(myCoord && 15 - i === myCoord[0] && +y === myCoord[1]){
+                        if(user.id){
+                            console.log('elim 2')
+                            setIsEliminated(true);
+                            eliminatePlayer(match.id,user.id);
+                        }
+                    } 
                     newMap[15 - i][+y] = {type:'cell',value:2};
-                    if(MapCoords[15 - i][+y].type === 'player') eliminatePlayer(match.id,(MapCoords[15 - i][+y].value as UserT).id)
                 });
                 Object.keys(newMap).forEach(
                     x => Object.keys(newMap[+x]).forEach(y => {
                         if(match.roundNumber !== undefined && (+y < match.roundNumber - 1 || +y > Object.keys(newMap[+x]).length - match.roundNumber)){
+                            if(myCoord && +x === myCoord[0] && +y === myCoord[1]){
+                                if(user.id) {
+                                    console.log('elim 3')
+                                    setIsEliminated(true);
+                                    eliminatePlayer(match.id,user.id);
+                                }
+                            }
                             newMap[+x][+y] = {type:'cell',value:2};
-                            if(MapCoords[+x][+y].type === 'player') eliminatePlayer(match.id,(MapCoords[+x][+y].value as UserT).id)
                         }
                     }));
             }
             return newMap;
         })
-
+    };
+    const displayAlivePlayers = () => {
         match.alivePlayers?.forEach(player => setMapCoords(prev => {
             const x = player.location?.[0];
             const y = player.location?.[1];
@@ -102,7 +118,8 @@ export const useMap = () => {
 
             return ({...prev,[x]:{...prev[x], [y]: {type:'player',value:player}}});
         }));
-
+    }
+    const displayBoosters = () => {
         match.boosters?.forEach(booster => setMapCoords(prev => {
             const x = booster.location?.[0];
             const y = booster.location?.[1];
@@ -110,10 +127,18 @@ export const useMap = () => {
 
             return ({...prev,[x]:{...prev[x], [y]: {type:'booster',value:booster}}});
         }));
-
+    }
+    const loadMap = () => {
+        if(!match) return;
+        
+        clearMap();
+        displayZoneCells();
+        displayAlivePlayers();
+        displayBoosters();
         setAvailableCells();
     }
     const setAvailableCells = () => {
+        if(isWinner || isEliminated) return;
         if(match?.activePlayer?.id !== user.id) return;
         if(!myCoord) return;
 
@@ -173,19 +198,37 @@ export const useMap = () => {
                 return newMap;
         });
     };
+    useEffect(() => {
+        if(match?.alivePlayers && (match?.alivePlayers?.length > 1)){
+            setActivePlayersLoaded(true);
+        } 
+    },[match.alivePlayers]);
 
+    useEffect(() => {
+        if(!activePlayersLoaded) return;
+        setIsEliminated(!match.alivePlayers?.some(player => player.id === user?.id));
+        setIsWinner(match.alivePlayers?.length === 1 && match.alivePlayers?.some(player => player.id === user?.id));
+    },[match.alivePlayers,activePlayersLoaded]);
+    console.log(isWinner)
     useEffect(() => {
         loadMap();
     },[match]);
 
+    useEffect(() => {
+        if(isWinner && match.id && user.id){
+            console.log('v')
+            addWinner(match.id,user.id);
+        }
+    },[isWinner]);
+
     const onStep = async (destinationCoord:number[]) => {
+        if(isEliminated || isWinner) return;
         if(!myCoord) return;
         if(!match.id || !user.id) return;
         if(match?.activePlayer?.id !== user.id) return;
         
         if(!(destinationCoord[0] === myCoord[0] || destinationCoord[0] === myCoord[0] + 1 || destinationCoord[0] === myCoord[0] - 1)) return;
         let enemyId = MapCoords[destinationCoord[0]][destinationCoord[1]].type === 'player' ? (MapCoords[destinationCoord[0]][destinationCoord[1]].value as UserT).id : null;
-        console.log('bb',enemyId);
 
         if(myCoord[0] < 7){
             if(destinationCoord[0] === myCoord?.[0] - 1 ){
@@ -254,5 +297,6 @@ export const useMap = () => {
         if(enemyId) await eliminatePlayer(match.id,enemyId);
         await nextTurn(match.id,user.id);
     }
-    return {MapCoords,onStep,match}
+
+    return {MapCoords,onStep,match,isEliminated,isWinner};
 }

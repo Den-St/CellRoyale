@@ -5,7 +5,6 @@ const initialState:MatchT = {
     id:'',
     activePlayer:null,
     boosters:[],
-    createdAt:null,
     loadedPlayers:[],
     playersInQueue:[],
     alivePlayers:[],
@@ -22,7 +21,6 @@ const matchSlice = createSlice({
             state.id = payload.payload.id;
             state.activePlayer = payload.payload.activePlayer;
             state.boosters = payload.payload.boosters;
-            state.createdAt = payload.payload.createdAt;
             state.loadedPlayers = payload.payload.loadedPlayers;
             state.playersInQueue = payload.payload.playersInQueue;
             state.alivePlayers = payload.payload.alivePlayers;

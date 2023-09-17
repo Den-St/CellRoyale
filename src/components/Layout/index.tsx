@@ -15,7 +15,7 @@ export const Layout:React.FC<Props> = ({children}) => {
 
     return <Container $excludedRoute={!isOnExcludedRoute}>
         {isOnExcludedRoute && <Header/>}
-        <Display width="100vw" height="100%" justify="center" align="center">
+        <Display width="100vw" height="100%" $justify="center" $align="center">
             {children}
         </Display>
         {isOnExcludedRoute && <Background/>}
