@@ -5,7 +5,7 @@ import {Map} from "./Map";
 export const Match = () => {
     useMatch();
 
-    return <Display width={'100vw'} height={'100vh'}>
+    return <Display style={{width:'100vw',height:'100vh'}}>
         <Map />
     </Display>
 }

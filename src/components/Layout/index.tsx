@@ -10,14 +10,16 @@ type Props = {
 
 export const Layout:React.FC<Props> = ({children}) => {
     const headerExcludedRoutes = ['/login', '/registration', '/match'];
+    const backgroundExcludedRoutes = ['/match'];
     const route = useLocation().pathname;
-    const isOnExcludedRoute = !headerExcludedRoutes.some(exRoute => route.includes(exRoute));
+    const isOnHeaderExcludedRoute = !headerExcludedRoutes.some(exRoute => route.includes(exRoute));
+    const isOnBackgroundExcludedRoute = !backgroundExcludedRoutes.some(exRoute => route.includes(exRoute));
 
-    return <Container $excludedRoute={!isOnExcludedRoute}>
-        {isOnExcludedRoute && <Header/>}
-        <Display width="100vw" height="100%" $justify="center" $align="center">
+    return <Container $excludedRoute={!isOnHeaderExcludedRoute}>
+        {isOnHeaderExcludedRoute && <Header/>}
+        <Display style={{width:'100vw',height:'100%',justifyContent:"center",alignItems:"center"}} >
             {children}
         </Display>
-        {isOnExcludedRoute && <Background/>}
+        {isOnBackgroundExcludedRoute && <Background/>}
     </Container>
 }

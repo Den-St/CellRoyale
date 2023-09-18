@@ -15,9 +15,9 @@ const Logo = () => <svg xmlns="http://www.w3.org/2000/svg" width="65" height="73
 </svg>
 
 export const Header = () => {
-    return <Display $justify="space-between" $padding="0 100px" $zindex="1" $position="fixed" top={'0'} width="100vw" height="87px" background="white" $align="center">
+    return <Display style={{justifyContent:"space-between",padding:"0 100px",zIndex:'1',position:'fixed',top:0,width:"100vw",height:"87px",background:"white",alignItems:"center"}}>
         <LogoLink to={'/'}><Logo/><LogoText>CR</LogoText></LogoLink>
-        <Display gap={'15px'}>
+        <Display style={{gap:'15px'}}>
             <LoginLink to={'/login'}>Log in</LoginLink>
             <LoginLink to={'/registration'}>Sign up</LoginLink>
         </Display>

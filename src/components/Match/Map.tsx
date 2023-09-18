@@ -22,7 +22,7 @@ export const Map = () => {
 
     return  <Display>
             <MatchResultModal open={isWinner || isEliminated}/>
-            <Display direction="column">
+            <Display style={{flexDirection:"column"}}>
                 {Object.entries(MapCoords).map((row,i) => 
                 <Row $isFirst={i === 0} marginleft={i < 8 ? (7 - i)*26 : (i - 7)*26} >
                     {Object.entries(row[1]).map((cell,j) => {
@@ -33,7 +33,7 @@ export const Map = () => {
                 </Row>)}
             </Display>
             {match?.activePlayer?.color && 
-                <Display $align="center">
+                <Display style={{alignContent:'center'}}>
                     <ActivePlayerCell color={match?.activePlayer?.color}>&#x2B22;</ActivePlayerCell> {match?.activePlayer?.displayName} 
                 </Display>
             }

@@ -38,16 +38,16 @@ export const Registration = () => {
     return <Display>
         <form onSubmit={handleSubmit(onSubmit)}>
             {contextHolder}
-            <Display  borderradius="20px" direction="column" gap={'10px'} $padding={'35px 50px'} background={'white'}>
+            <Display style={{borderRadius:'20px',flexDirection:'column',gap:'10px',padding:"35px 50px",background:'white'}} >
                 <Header>Create account</Header>
                 <Input {...register('displayName',{required:"Username is required",})} placeholder="Username"/>
                 <Input {...register('email',{required:"Email is required",pattern:emailPattern,})} placeholder="E-mail"/>
-                <Display $justify="space-between" >
+                <Display style={{justifyContent:'space-between'}} >
                     <PasswordInput {...register('password',{required:"Password is required",
                                     minLength:{message:"Password must be longer than 6 symbols.",value:6}})} placeholder="Password"/>
                     <PasswordInput onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Confirm password"/>
                 </Display>
-                <Display $align="center" width="100%" direction="column" gap={'10px'}>
+                <Display style={{alignItems:'center',width:'100%',flexDirection:'column',gap:'10px'}}>
                     <SubmitButton disabled={disabled} type={'submit'} value={'Submit'}/>
                     <GoogleAuthButton onClick={signInWithGoogle}><GoogleOutlined /></GoogleAuthButton>
                     <ChangeSignType>Already a member? <GoToLogIn to={'/login'}>Log in</GoToLogIn></ChangeSignType>

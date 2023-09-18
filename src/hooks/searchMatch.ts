@@ -24,10 +24,10 @@ export const useSearchMatch = () => {
         if(!user.id) return;
         setLoading(true);
         const foundMatch = await searchMatch(user.id);
-        setLoading(false);
         if(!foundMatch) return;
         setMatchId(foundMatch);
         setIsSearchCanceled(false);
+        setLoading(false);
         setIsSearchStarted(true);
     }
     
@@ -74,8 +74,10 @@ export const useSearchMatch = () => {
     useEffect(() => {
         if(!isSearchStarted && !isSearchCanceled) return;
         const unsubscribe = onSnapshot(doc(db,collectionsKeys.matches,matchId),(doc) => {
+            setLoading(true);
             const newMatch = {...doc.data(),id:doc.id};
             setLocalMatch(newMatch as MatchT);
+            setLoading(false);
         });
         if(isSearchCanceled) unsubscribe();
         if(localMatch?.numberOfPlayers === maxPlayersNumber) {

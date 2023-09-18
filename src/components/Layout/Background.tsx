@@ -31,12 +31,19 @@ export const Background = () => {
     ];
 
     return <Display
-        $zindex="-1"
-        top={'-180px'} left={"-450px"} $position="absolute"
-        width="131.2vw;" height="125.4vh"
-        minwidth="100%" minheight="100%"
+        style={{
+            zIndex:"-1",
+            top:"-180px",
+            left:"-450px",
+            position:"absolute",
+            width:"131.2vw",
+            height:"125.4vh",
+            minWidth:"100%",
+            minHeight:"100%",
+            overflow:'hidden'
+        }}
         >
-        <Display  direction="column">
+        <Display style={{flexDirection:"column"}}>
             {MapCoords.map((row,i) => 
                 <Row key={i} marginleft={i * 125}>
                     {row.map((cell,j) => <Hex key={j} value={cell}>&#x2B22;</Hex>)}
