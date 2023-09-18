@@ -1,16 +1,15 @@
 import { MatchResultT } from './../../../../types/matchResult';
-import { getDoc } from 'firebase/firestore';
-import { collectionsKeys } from './../../collectionsKeys';
-import { db } from './../../../firebaseInit';
-import { doc } from 'firebase/firestore';
+import { getDocs, limit, query, where } from 'firebase/firestore';
+import { matchResultsCollection } from '../matchResult.collection';
+
 export const getMatchResult = async (matchId:string) => {
     try{
-        const document = doc(db,collectionsKeys.matchResults,matchId);
-        const matchResultDoc = await getDoc(document);
-        const matchResult = matchResultDoc.data();
+        const q = query(matchResultsCollection,where('match',"==",matchId),limit(1));
+        const matchResultDoc = await getDocs(q);
+        const matchResult = matchResultDoc.docs[0].data();
         if(!matchResult) return;
 
-        matchResult.id = matchResultDoc.id;
+        matchResult.id = matchResultDoc.docs[0].id;
         return matchResult as MatchResultT;
     }catch(err){
         console.error(err);

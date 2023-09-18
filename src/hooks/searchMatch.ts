@@ -87,5 +87,5 @@ export const useSearchMatch = () => {
         }
     },[isSearchStarted,isSearchCanceled,localMatch?.numberOfPlayers]);
 
-    return {onStartSearch,isSearchStarted,localMatch,matchId,loading,onCancelSearch,isMatchReady}
+    return {onStartSearch,isSearchStarted,localMatch,matchId,loading,onCancelSearch,isMatchReady,rating:user.rating}
 }

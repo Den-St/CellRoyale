@@ -1,4 +1,6 @@
+import { css } from "styled-components";
 import { styled } from "styled-components";
+import { useAppSelector } from "../../hooks/redux";
 import { BoosterT } from "../../types/booster";
 import { UserT } from "../../types/user";
 
@@ -24,7 +26,14 @@ const HexSpan = styled.button<{value:number,}>`
     }
 `;
 
-const UserHex = styled.button<{user:UserT}>`
+// const enemy = css`
+//         content: '🗡️';
+//         font-size: 16px;
+//         position: absolute;
+// `;
+const UserHex = styled.button<{user:UserT, 
+// $isEnemy?: boolean
+        }>`
      border:none;
     outline:none;
     background:transparent;
@@ -35,11 +44,17 @@ const UserHex = styled.button<{user:UserT}>`
     border-radius:100%;
     transition:0.1s;
     user-select: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
     &:hover{
         opacity:0.95;
     }
 `;
-
+  /* &::after {
+            ${({$isEnemy}) => $isEnemy && enemy}
+            } */
 const BoosterHex = styled.button<{booster:BoosterT}>`
     border:none;
     outline:none;
@@ -71,9 +86,13 @@ export const Cell:React.FC<CellProps> = ({value,onStep}) => {
 type PlayerProps = {
     value:UserT;
     onStep:() => void
-}
+} 
 export const PlayerCell:React.FC<PlayerProps> = ({onStep,value}) => {
-    return <UserHex onClick={onStep} user={value}>
+    const userId = useAppSelector(state => state.user.id);
+    // const isEnemy = userId !== value.id;
+    return <UserHex onClick={onStep} user={value} 
+    // $isEnemy={isEnemy}
+    >
         &#x2B22;
     </UserHex> 
 }

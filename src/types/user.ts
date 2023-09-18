@@ -7,6 +7,7 @@ export type UserT = {
     location?:number[] | null,
     color?:string | null
     matchQueue?:string | null,
+    rating?:number | null
     // isEliminated?:boolean | null,
     // isWinner?:boolean | null,
 }

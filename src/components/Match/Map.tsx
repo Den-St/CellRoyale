@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { styled } from "styled-components";
 import { Display } from "../../assets/Display";
 import { useMap } from "../../hooks/map.hook";
@@ -18,15 +19,16 @@ const ActivePlayerCell = styled.span<{color?:string}>`
 `;
 
 export const Map = () => {
-    const {MapCoords,onStep,match,isEliminated,isWinner} = useMap();
+    const {MapCoords,onStep,match,isEliminated,isWinner,matchResult} = useMap();
+    const [isModalOpened,setIsModalOpened] = useState(true);
 
     return  <Display>
-            <MatchResultModal open={isWinner || isEliminated}/>
+            <MatchResultModal isWinner={isWinner} isModalOpened={isModalOpened} matchResult={matchResult} open={(isWinner || isEliminated) && isModalOpened} onClose={() => setIsModalOpened(false)}/>
             <Display style={{flexDirection:"column"}}>
                 {Object.entries(MapCoords).map((row,i) => 
                 <Row $isFirst={i === 0} marginleft={i < 8 ? (7 - i)*26 : (i - 7)*26} >
                     {Object.entries(row[1]).map((cell,j) => {
-                        if(cell[1].type === 'cell') return <Cell  onStep={() => onStep([i,j])} value={cell[1].value as number} />
+                        if(cell[1].type === 'cell') return <Cell onStep={() => onStep([i,j])} value={cell[1].value as number} />
                         if(cell[1].type === 'player') return <PlayerCell  onStep={() => onStep([i,j])} value={cell[1].value as UserT} />
                         if(cell[1].type === 'booster') return <BoosterCell  onStep={() => onStep([i,j])} value={cell[1].value as BoosterT}/>
                     })}
@@ -37,5 +39,6 @@ export const Map = () => {
                     <ActivePlayerCell color={match?.activePlayer?.color}>&#x2B22;</ActivePlayerCell> {match?.activePlayer?.displayName} 
                 </Display>
             }
+            {isEliminated && !isWinner && !isModalOpened && <button onClick={() => setIsModalOpened(true)}>open modal</button>}
         </Display>
 }

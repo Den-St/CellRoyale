@@ -10,8 +10,7 @@ const initialState:UserT = {
     location:[],
     color:'',
     matchQueue:'',
-    // isEliminated:false,
-    // isWinner:true
+    rating:0
 }
 
 const userSlice = createSlice({
@@ -28,19 +27,19 @@ const userSlice = createSlice({
             state.color = payload?.payload.color;
             state.matchQueue = payload?.payload.matchQueue;
             state.matchQueue = payload?.payload.matchQueue;
-        },
-        clearPlayersMatchInfo(state){
-            // state.color = '';
-            // state.location = [];
+            state.rating = payload?.payload.rating;
         },
         setPlayerMatchInfo(state,payload:PayloadAction<{location:number[],color:string}>){
             state.color = payload.payload.color;
             state.location = payload.payload.location;
+        },
+        setNewRating(state,payload:PayloadAction<{newRating:number}>){
+            state.rating = payload.payload.newRating;
         }
     }
 });
 
 export const {setUser} = userSlice.actions;
-export const {clearPlayersMatchInfo} = userSlice.actions;
 export const {setPlayerMatchInfo} = userSlice.actions;
+export const {setNewRating} = userSlice.actions;
 export default userSlice.reducer;

@@ -1,12 +1,19 @@
+import { limit } from 'firebase/firestore';
+import { MatchResultT } from './../types/matchResult';
+import { where } from 'firebase/firestore';
+import { matchResultsCollection } from './../firebase/db/matchResults/matchResult.collection';
+import { query } from 'firebase/firestore';
 import { eliminatePlayer } from '../firebase/db/matches/edit/eliminatePlayer';
 import { UserT } from './../types/user';
 import { changePlayersLocation } from './../firebase/db/users/edit/changeLocation';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { nextTurn } from './../firebase/db/matches/edit/nextTurn';
-import { useAppSelector } from './redux';
+import { useAppSelector, useAppDispacth } from './redux';
 import { MapT } from '../types/map';
 import { addWinner } from '../firebase/db/matchResults/edit/addWinner';
+import { onSnapshot } from 'firebase/firestore';
+import { setNewRating } from '../store/userSlice';
 
 export const useMap = () => {
     const [MapCoords,setMapCoords] = useState<MapT>({
@@ -31,12 +38,15 @@ export const useMap = () => {
     const [activePlayersLoaded,setActivePlayersLoaded] = useState(false);
     const user = useAppSelector(state => state.user);
     const match = useAppSelector(state => state.match);
+    const dispatch = useAppDispacth();
     const [myCoord,setMyCoord] = useState<number[]>();
+    const [matchResult,setMatchResult] = useState<MatchResultT | null>(null);
 
     useEffect(() => {
         if(user.location) setMyCoord(user.location);
     },[user.location]);
     console.log(MapCoords);
+    console.log('f',isWinner);
 
     const clearMap = () => {
         setMapCoords(prev => {
@@ -130,7 +140,7 @@ export const useMap = () => {
     }
     const loadMap = () => {
         if(!match) return;
-        
+
         clearMap();
         displayZoneCells();
         displayAlivePlayers();
@@ -206,21 +216,19 @@ export const useMap = () => {
 
     useEffect(() => {
         if(!activePlayersLoaded) return;
-        setIsEliminated(!match.alivePlayers?.some(player => player.id === user?.id));
+        // setIsEliminated(!match.alivePlayers?.some(player => player.id === user?.id));
         setIsWinner(match.alivePlayers?.length === 1 && match.alivePlayers?.some(player => player.id === user?.id));
     },[match.alivePlayers,activePlayersLoaded]);
-    console.log(isWinner)
     useEffect(() => {
         loadMap();
     },[match]);
 
     useEffect(() => {
         if(isWinner && match.id && user.id){
-            console.log('v')
-            addWinner(match.id,user.id);
+            addWinner(match.id,user.id).then(newRating => newRating && dispatch(setNewRating({newRating:newRating})));
         }
     },[isWinner]);
-
+    
     const onStep = async (destinationCoord:number[]) => {
         if(isEliminated || isWinner) return;
         if(!myCoord) return;
@@ -298,5 +306,21 @@ export const useMap = () => {
         await nextTurn(match.id,user.id);
     }
 
-    return {MapCoords,onStep,match,isEliminated,isWinner};
+    useEffect(() => {
+        if(!match.id) return;
+        const unsubscribe = onSnapshot(query(matchResultsCollection,where('match','==',match.id,),limit(1)),(matchResultDocs) => {
+            if(!matchResultDocs?.docs[0]) return;
+            const matchResultDoc = matchResultDocs.docs[0];
+            const matchResult = matchResultDoc.data();
+            matchResult.id = matchResultDoc.id;
+            if(!matchResult) return;
+
+            setIsEliminated(!!matchResult.players.find((player:{player:string,place:number}) => player.player === user.id && player.place !== 1))
+            setIsWinner(!!matchResult.players.find((player:{player:string,place:number}) => player.player === user.id && player.place === 1))
+            setMatchResult(matchResult as MatchResultT);
+        });
+        return () => unsubscribe();
+    },[match]);
+
+    return {MapCoords,onStep,match,isEliminated,isWinner,matchResult};
 }
