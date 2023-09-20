@@ -1,19 +1,12 @@
-import { limit } from 'firebase/firestore';
-import { MatchResultT } from './../types/matchResult';
-import { where } from 'firebase/firestore';
-import { matchResultsCollection } from './../firebase/db/matchResults/matchResult.collection';
-import { query } from 'firebase/firestore';
 import { eliminatePlayer } from '../firebase/db/matches/edit/eliminatePlayer';
 import { UserT } from './../types/user';
 import { changePlayersLocation } from './../firebase/db/users/edit/changeLocation';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { nextTurn } from './../firebase/db/matches/edit/nextTurn';
-import { useAppSelector, useAppDispacth } from './redux';
+import { useAppSelector } from './redux';
 import { MapT } from '../types/map';
 import { addWinner } from '../firebase/db/matchResults/edit/addWinner';
-import { onSnapshot } from 'firebase/firestore';
-import { setNewRating } from '../store/userSlice';
 import { clearPlayersMatchInfo } from '../firebase/db/users/edit/clearPlayersMatchInfo';
 import { maxPlayersNumber } from '../consts/maxPlayersNumber';
 
@@ -37,11 +30,9 @@ export const useMap = () => {
     });
     const [isEliminated,setIsEliminated] = useState(false);
     const [isWinner,setIsWinner] = useState(false);
-    // const [activePlayersLoaded,setActivePlayersLoaded] = useState(false);
     const user = useAppSelector(state => state.user);
     const match = useAppSelector(state => state.match);
     const matchResult = useAppSelector(state => state.matchResult);
-    // const dispatch = useAppDispacth();
     const [myCoord,setMyCoord] = useState<number[]>();
 
     useEffect(() => {
@@ -211,28 +202,10 @@ export const useMap = () => {
         });
     };
 
-    // useEffect(() => {
-    //     if(match?.alivePlayers && (match?.alivePlayers?.length > 1)){
-    //         setActivePlayersLoaded(true);
-    //     } 
-    // },[match.alivePlayers]);
-
-    // useEffect(() => {
-    //     if(!activePlayersLoaded) return;
-    //     // setIsEliminated(!match.alivePlayers?.some(player => player.id === user?.id));
-    //     setIsWinner(match.alivePlayers?.length === 1 && match.alivePlayers?.some(player => player.id === user?.id));
-    // },[match.alivePlayers,activePlayersLoaded]);
-
     useEffect(() => {
         loadMap();
     },[match]);
 
-    // useEffect(() => {
-    //     if(isWinner && match.id && user.id){
-    //         console.log('5454')
-    //         addWinner(match.id,user.id).then(newRating => newRating && dispatch(setNewRating({newRating:newRating})));
-    //     }
-    // },[isWinner]);
     
     const onStep = async (destinationCoord:number[]) => {
         if(isEliminated || isWinner) return;
@@ -311,27 +284,7 @@ export const useMap = () => {
         await nextTurn(match.id,user.id);
     }
 
-    // useEffect(() => {
-    //     if(!match.id) return;
-    //     const unsubscribe = onSnapshot(query(matchResultsCollection,where('match','==',match.id,),limit(1)),(matchResultDocs) => {
-    //         if(!matchResultDocs?.docs[0]) return;
-    //         const matchResultDoc = matchResultDocs.docs[0];
-    //         const matchResult = matchResultDoc.data();
-    //         matchResult.id = matchResultDoc.id;
-    //         if(!matchResult) return;
-    //         if(!matchResult?.players?.length) return;
-
-    //         setIsEliminated(!!matchResult.players.find((player:{player:string,place:number}) => player.player === user.id && player.place !== 1))
-    //         setIsWinner(
-    //             (!!matchResult.players.find((player:{player:string,place:number}) => player.player === user.id && player.place === 1)) 
-    //             || (match.alivePlayers?.length === 1 && match.alivePlayers?.some(player => player.id === user?.id))
-    //         );
-    //         setMatchResult(matchResult as MatchResultT);
-    //     });
-    //     return () => unsubscribe();
-    // },[match]);
     useEffect(() => {
-        // if(isWinner || isEliminated) return;
         if(!match.id || !user.id) return;
         if(matchResult.players.length === maxPlayersNumber - 1 && !matchResult.players.some(player => player.player === user.id)){
             setIsWinner(true);
@@ -349,7 +302,6 @@ export const useMap = () => {
     useEffect(() => {
         if((isWinner || isEliminated) && user.id) clearPlayersMatchInfo(user.id);
     },[isWinner,isEliminated]);
-    console.log('ffff',isWinner,isEliminated);
 
     return {MapCoords,onStep,match,isEliminated,isWinner,matchResult};
 }

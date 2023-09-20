@@ -1,10 +1,10 @@
-import { createMatchResult } from './../../matchResults/create/createMatchResult';
 import { nextTurn } from './nextTurn';
 import { updateDoc, doc, getDoc, query, where, getDocs, limit } from "firebase/firestore";
 import { db } from "../../../firebaseInit";
 import { collectionsKeys } from "../../collectionsKeys";
 import { matchResultsCollection } from '../../matchResults/matchResult.collection';
 import { maxPlayersNumber } from '../../../../consts/maxPlayersNumber';
+import { placeToRating } from '../../../../consts/placeToRating';
 
 export const eliminatePlayer = async (matchId?:string,userId?:string) => {
     try{
@@ -12,13 +12,12 @@ export const eliminatePlayer = async (matchId?:string,userId?:string) => {
         const matchDoc = doc(db,collectionsKeys.matches,matchId);
         const userDoc = doc(db,collectionsKeys.users,userId);
         const matchResultQuery = query(matchResultsCollection,where('match','==',matchId),limit(1));
-        const [match,matchResult,] = await Promise.all([
+        const [match,matchResult,user] = await Promise.all([
              getDoc(matchDoc),
-             (await getDocs(matchResultQuery)).docs
+             (await getDocs(matchResultQuery)).docs,
+             getDoc(userDoc),
         ]);
-        if(!matchResult) console.log('222',matchResult)
-        console.log('ttt',matchResult[0]?.data()?.players,matchResult[0]?.data()?.players.some((player:{player:string,place:number}) => player.player === userId));
-        if(matchResult[0]?.data()?.players.some((player:{player:string,place:number}) => player.player === userId)){console.log('kk'); return;}
+        if(matchResult[0]?.data()?.players.some((player:{player:string,place:number}) => player.player === userId))return;
         const queries = [];
         if(match?.data()?.activePlayer === userId) queries.push(async () => await nextTurn(matchId,userId));
         queries.push(
@@ -33,16 +32,17 @@ export const eliminatePlayer = async (matchId?:string,userId?:string) => {
                 color:'',
             })
         );
-        // if(!matchResult.length) {
-        //     queries.push(async () => await createMatchResult(matchId,userId));
-        // }else if(!matchResult[0]?.data()?.players.includes(userId)){
-        queries.push(async () => await updateDoc(doc(db,collectionsKeys.matchResults,matchResult[0].id),{
-            players:[{player:userId,place:maxPlayersNumber - matchResult[0]?.data()?.players.length}, ...matchResult[0]?.data()?.players]
-        }));
-        // }
-        await Promise.all(queries?.map(q => q()));
+        const place = maxPlayersNumber - matchResult[0]?.data()?.players.length
 
-        console.log('vvvv',userId,matchResult);
+        queries.push(async () => await updateDoc(doc(db,collectionsKeys.matchResults,matchResult[0].id),{
+            players:[{player:userId,place}, ...matchResult[0]?.data()?.players]
+        }));
+        
+        queries.push(async () => await updateDoc(userDoc,{
+            rating:user?.data()?.rating + placeToRating[place]
+        }));
+        console.log('i',placeToRating[place]);
+        await Promise.all(queries?.map(q => q()));
     }catch(err){
         console.error(err);
     }
