@@ -14,6 +14,8 @@ import { MapT } from '../types/map';
 import { addWinner } from '../firebase/db/matchResults/edit/addWinner';
 import { onSnapshot } from 'firebase/firestore';
 import { setNewRating } from '../store/userSlice';
+import { clearPlayersMatchInfo } from '../firebase/db/users/edit/clearPlayersMatchInfo';
+import { maxPlayersNumber } from '../consts/maxPlayersNumber';
 
 export const useMap = () => {
     const [MapCoords,setMapCoords] = useState<MapT>({
@@ -35,18 +37,17 @@ export const useMap = () => {
     });
     const [isEliminated,setIsEliminated] = useState(false);
     const [isWinner,setIsWinner] = useState(false);
-    const [activePlayersLoaded,setActivePlayersLoaded] = useState(false);
+    // const [activePlayersLoaded,setActivePlayersLoaded] = useState(false);
     const user = useAppSelector(state => state.user);
     const match = useAppSelector(state => state.match);
-    const dispatch = useAppDispacth();
+    const matchResult = useAppSelector(state => state.matchResult);
+    // const dispatch = useAppDispacth();
     const [myCoord,setMyCoord] = useState<number[]>();
-    const [matchResult,setMatchResult] = useState<MatchResultT | null>(null);
 
     useEffect(() => {
         if(user.location) setMyCoord(user.location);
     },[user.location]);
     console.log(MapCoords);
-    console.log('f',isWinner);
 
     const clearMap = () => {
         setMapCoords(prev => {
@@ -78,11 +79,12 @@ export const useMap = () => {
     }
     const displayZoneCells = () => {
         setMapCoords(prev => {
-            if(!match.roundNumber || !match.id) return prev;
+            if(!match.roundNumber || !match.id || match.roundNumber === 1) return prev;
 
             const newMap = prev;
             for(let i = 1; i < match.roundNumber; i++)
             {
+                console.log('zone',i,match.roundNumber);
                 Object.keys(newMap[i - 1]).forEach(y => {
                     if(myCoord && i - 1 === myCoord[0] && +y === myCoord[1]){
                         if(user.id){
@@ -118,13 +120,13 @@ export const useMap = () => {
                     }));
             }
             return newMap;
-        })
-    };
+        });
+    }
     const displayAlivePlayers = () => {
         match.alivePlayers?.forEach(player => setMapCoords(prev => {
             const x = player.location?.[0];
             const y = player.location?.[1];
-            if(!x || !y) return prev;
+            if(x === undefined || y === undefined) return prev;
 
             return ({...prev,[x]:{...prev[x], [y]: {type:'player',value:player}}});
         }));
@@ -208,26 +210,29 @@ export const useMap = () => {
                 return newMap;
         });
     };
-    useEffect(() => {
-        if(match?.alivePlayers && (match?.alivePlayers?.length > 1)){
-            setActivePlayersLoaded(true);
-        } 
-    },[match.alivePlayers]);
 
-    useEffect(() => {
-        if(!activePlayersLoaded) return;
-        // setIsEliminated(!match.alivePlayers?.some(player => player.id === user?.id));
-        setIsWinner(match.alivePlayers?.length === 1 && match.alivePlayers?.some(player => player.id === user?.id));
-    },[match.alivePlayers,activePlayersLoaded]);
+    // useEffect(() => {
+    //     if(match?.alivePlayers && (match?.alivePlayers?.length > 1)){
+    //         setActivePlayersLoaded(true);
+    //     } 
+    // },[match.alivePlayers]);
+
+    // useEffect(() => {
+    //     if(!activePlayersLoaded) return;
+    //     // setIsEliminated(!match.alivePlayers?.some(player => player.id === user?.id));
+    //     setIsWinner(match.alivePlayers?.length === 1 && match.alivePlayers?.some(player => player.id === user?.id));
+    // },[match.alivePlayers,activePlayersLoaded]);
+
     useEffect(() => {
         loadMap();
     },[match]);
 
-    useEffect(() => {
-        if(isWinner && match.id && user.id){
-            addWinner(match.id,user.id).then(newRating => newRating && dispatch(setNewRating({newRating:newRating})));
-        }
-    },[isWinner]);
+    // useEffect(() => {
+    //     if(isWinner && match.id && user.id){
+    //         console.log('5454')
+    //         addWinner(match.id,user.id).then(newRating => newRating && dispatch(setNewRating({newRating:newRating})));
+    //     }
+    // },[isWinner]);
     
     const onStep = async (destinationCoord:number[]) => {
         if(isEliminated || isWinner) return;
@@ -282,7 +287,7 @@ export const useMap = () => {
                 }
             }
         }
-
+        console.log('ONSTEp')
         setMapCoords(prev => {
             const x = destinationCoord[0];
             const y = destinationCoord[1];
@@ -306,21 +311,45 @@ export const useMap = () => {
         await nextTurn(match.id,user.id);
     }
 
-    useEffect(() => {
-        if(!match.id) return;
-        const unsubscribe = onSnapshot(query(matchResultsCollection,where('match','==',match.id,),limit(1)),(matchResultDocs) => {
-            if(!matchResultDocs?.docs[0]) return;
-            const matchResultDoc = matchResultDocs.docs[0];
-            const matchResult = matchResultDoc.data();
-            matchResult.id = matchResultDoc.id;
-            if(!matchResult) return;
+    // useEffect(() => {
+    //     if(!match.id) return;
+    //     const unsubscribe = onSnapshot(query(matchResultsCollection,where('match','==',match.id,),limit(1)),(matchResultDocs) => {
+    //         if(!matchResultDocs?.docs[0]) return;
+    //         const matchResultDoc = matchResultDocs.docs[0];
+    //         const matchResult = matchResultDoc.data();
+    //         matchResult.id = matchResultDoc.id;
+    //         if(!matchResult) return;
+    //         if(!matchResult?.players?.length) return;
 
-            setIsEliminated(!!matchResult.players.find((player:{player:string,place:number}) => player.player === user.id && player.place !== 1))
-            setIsWinner(!!matchResult.players.find((player:{player:string,place:number}) => player.player === user.id && player.place === 1))
-            setMatchResult(matchResult as MatchResultT);
-        });
-        return () => unsubscribe();
-    },[match]);
+    //         setIsEliminated(!!matchResult.players.find((player:{player:string,place:number}) => player.player === user.id && player.place !== 1))
+    //         setIsWinner(
+    //             (!!matchResult.players.find((player:{player:string,place:number}) => player.player === user.id && player.place === 1)) 
+    //             || (match.alivePlayers?.length === 1 && match.alivePlayers?.some(player => player.id === user?.id))
+    //         );
+    //         setMatchResult(matchResult as MatchResultT);
+    //     });
+    //     return () => unsubscribe();
+    // },[match]);
+    useEffect(() => {
+        // if(isWinner || isEliminated) return;
+        if(!match.id || !user.id) return;
+        if(matchResult.players.length === maxPlayersNumber - 1 && !matchResult.players.some(player => player.player === user.id)){
+            setIsWinner(true);
+            addWinner(match.id,user.id);
+            return; 
+        }
+        if(matchResult.players.some(player => player.place === 1 && player.player === user.id)){
+            setIsWinner(true);
+        }
+        if(matchResult.players.some(player => player.player === user.id && player.place !== 1)){
+            setIsEliminated(true);
+        }
+    },[matchResult.players,match.id,user.id]);
+
+    useEffect(() => {
+        if((isWinner || isEliminated) && user.id) clearPlayersMatchInfo(user.id);
+    },[isWinner,isEliminated]);
+    console.log('ffff',isWinner,isEliminated);
 
     return {MapCoords,onStep,match,isEliminated,isWinner,matchResult};
 }

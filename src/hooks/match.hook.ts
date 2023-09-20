@@ -1,9 +1,13 @@
+import { limit } from 'firebase/firestore';
+import { where } from 'firebase/firestore';
+import { matchResultsCollection } from './../firebase/db/matchResults/matchResult.collection';
+import { createMatchResult } from './../firebase/db/matchResults/create/createMatchResult';
 import { nextTurn } from './../firebase/db/matches/edit/nextTurn';
 import { addBoosters } from './../firebase/db/matches/edit/addBoosters';
 import { useAppSelector, useAppDispacth } from './redux';
 import { collectionsKeys } from './../firebase/db/collectionsKeys';
 import {db} from "./../firebase/firebaseInit";
-import { doc, onSnapshot } from 'firebase/firestore';
+import { doc, onSnapshot, query } from 'firebase/firestore';
 import { useEffect } from 'react';
 import { MatchT } from './../types/match';
 import { useState } from 'react';
@@ -13,6 +17,8 @@ import { getUserById } from '../firebase/db/users/get/getUserById';
 import { getBoosterById } from '../firebase/db/boosters/get/getBoosterById';
 import { setMatch } from '../store/matchSlice';
 import { setPlayerMatchInfo } from '../store/userSlice';
+import { setMatchResult } from '../store/matchResultSlice';
+import { MatchResultT } from '../types/matchResult';
 
 export const useMatch = () => {
     const [boosters,setBoosters] = useState(false);
@@ -34,6 +40,8 @@ export const useMatch = () => {
         setLoading(true);
         addBoosters(match?.id);
         setBoosters(true);
+        const matchResultId = createMatchResult(match.id);
+        
         setLoading(false);
     },[match,userId]);
 
@@ -53,6 +61,23 @@ export const useMatch = () => {
             match.id = doc.id;
 
             dispatch(setMatch(match));
+            setLoading(false);
+        });
+
+        return () => unsubscribe();
+    },[matchId]);
+
+    useEffect(() => {
+        if(!matchId) return;
+
+        const unsubscribe = onSnapshot(query(matchResultsCollection,where('match','==',matchId),limit(1)),async (doc) => {
+            if(!doc?.docs?.[0]) return;
+            setLoading(true);
+            const matchResult = doc.docs[0].data();
+            if(!matchResult) return;
+            matchResult.id = doc.docs[0].id;
+
+            dispatch(setMatchResult(matchResult as MatchResultT));
             setLoading(false);
         });
 

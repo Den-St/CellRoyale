@@ -7,6 +7,7 @@ import { AuthProvider } from "./providers/authProvider";
 function App() {
   console.log(useAppSelector(state => state.user));
   console.log(useAppSelector(state => state.match));
+  console.log(useAppSelector(state => state.matchResult));
   return <>
     <AuthProvider>
       <Normalize/>

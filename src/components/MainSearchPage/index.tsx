@@ -10,7 +10,7 @@ export const MainSearchPage = () => {
     if(isMatchReady) return <Navigate to={`/match/${matchId}`}/>
     
     return <Display style={{alignItems:"center",width:"300px",height:'400px',flexDirection:'column',gap:'70px',padding:"40px 20px",background:'white',borderRadius:'20px'}}>
-        <Rating>Rating:{rating}</Rating>
+        <Rating>Rating: {rating}</Rating>
         <Display style={{flexDirection:'column',alignItems:'center'}}>
             <Display style={{height:'40px',alignItems:'center',flexDirection:'column',gap:'5px'}}>
                 {!loading && !!localMatch?.playersInQueue?.length && isSearchStarted && <><Display>Looking for players</Display><Display>{localMatch?.playersInQueue?.length+`/`+maxPlayersNumber}</Display></>}

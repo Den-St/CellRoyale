@@ -8,6 +8,7 @@ import { matchResultsCollection } from '../matchResult.collection';
 
 export const addWinner = async (matchId:string,userId:string) => {
     try{
+        console.log('vhvhvh')
         const q = query(matchResultsCollection,where('match',"==",matchId),limit(1));
         const matchResultDoc = await getDocs(q);
         const matchResult = matchResultDoc.docs[0].data();

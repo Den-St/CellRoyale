@@ -1,10 +1,8 @@
-import { useAppDispacth } from './../../../../hooks/redux';
 import { playersColors } from './../../../../consts/playersColors';
 import { playersSpawnLocations } from './../../../../consts/playersSpawnLocations';
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../../firebaseInit";
 import { collectionsKeys } from "../../collectionsKeys";
-import { setPlayerMatchInfo } from '../../../../store/userSlice';
 
 export const loadUser = async (matchId:string,playerId:string) => {
     try{

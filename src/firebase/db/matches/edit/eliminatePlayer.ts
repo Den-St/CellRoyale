@@ -16,6 +16,9 @@ export const eliminatePlayer = async (matchId?:string,userId?:string) => {
              getDoc(matchDoc),
              (await getDocs(matchResultQuery)).docs
         ]);
+        if(!matchResult) console.log('222',matchResult)
+        console.log('ttt',matchResult[0]?.data()?.players,matchResult[0]?.data()?.players.some((player:{player:string,place:number}) => player.player === userId));
+        if(matchResult[0]?.data()?.players.some((player:{player:string,place:number}) => player.player === userId)){console.log('kk'); return;}
         const queries = [];
         if(match?.data()?.activePlayer === userId) queries.push(async () => await nextTurn(matchId,userId));
         queries.push(
@@ -30,14 +33,16 @@ export const eliminatePlayer = async (matchId?:string,userId?:string) => {
                 color:'',
             })
         );
-        if(!matchResult.length) {
-            queries.push(async () => await createMatchResult(matchId,userId));
-        }else if(!matchResult[0]?.data()?.players.includes(userId)){
-            queries.push(async () => await updateDoc(doc(db,collectionsKeys.matchResults,matchResult[0].id),{
-                players:[{player:userId,place:maxPlayersNumber - matchResult[0]?.data()?.players.length}, ...matchResult[0]?.data()?.players]
-            }));
-        }
+        // if(!matchResult.length) {
+        //     queries.push(async () => await createMatchResult(matchId,userId));
+        // }else if(!matchResult[0]?.data()?.players.includes(userId)){
+        queries.push(async () => await updateDoc(doc(db,collectionsKeys.matchResults,matchResult[0].id),{
+            players:[{player:userId,place:maxPlayersNumber - matchResult[0]?.data()?.players.length}, ...matchResult[0]?.data()?.players]
+        }));
+        // }
         await Promise.all(queries?.map(q => q()));
+
+        console.log('vvvv',userId,matchResult);
     }catch(err){
         console.error(err);
     }

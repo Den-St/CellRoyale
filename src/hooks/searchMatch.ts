@@ -9,6 +9,7 @@ import { db } from '../firebase/firebaseInit';
 import { cancelSearch } from '../firebase/db/matches/edit/cancelSearch';
 import { setMatch } from '../store/matchSlice';
 import { maxPlayersNumber } from '../consts/maxPlayersNumber';
+import { clearMatchResult } from '../store/matchResultSlice';
 
 export const useSearchMatch = () => {
     const user = useAppSelector(state => state.user);
@@ -28,6 +29,7 @@ export const useSearchMatch = () => {
         setMatchId(foundMatch);
         setIsSearchCanceled(false);
         setLoading(false);
+        dispatch(clearMatchResult());
         setIsSearchStarted(true);
     }
     

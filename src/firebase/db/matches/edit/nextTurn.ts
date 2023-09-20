@@ -10,7 +10,7 @@ export const nextTurn = async (matchId:string,userId:string) => {
 
         await updateDoc(matchRef,{
             activePlayer:userIndex === match?.alivePlayers.length - 1 
-                ? match?.alivePlayers[0] : match?.alivePlayers[userIndex + 1],
+                ? (match?.alivePlayers[0] || '') : (match?.alivePlayers[userIndex + 1] || ''),
             roundNumber:userIndex === match?.alivePlayers.length - 1 ? match?.roundNumber + 1 : match?.roundNumber
         });
     }catch(err){
