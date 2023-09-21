@@ -282,18 +282,18 @@ export const useMap = () => {
 
     useEffect(() => {
         if(!match.id || !user.id) return;
-        if(matchResult.players.length === maxPlayersNumber - 1 && !matchResult.players.some(player => player.player === user.id)){
+        if(matchResult.playersPlaces.length === maxPlayersNumber - 1 && !matchResult.playersPlaces.some(player => player.player === user.id)){
             setIsWinner(true);
             addWinner(match.id,user.id);
             return; 
         }
-        if(matchResult.players.some(player => player.place === 1 && player.player === user.id)){
+        if(matchResult.playersPlaces.some(player => player.place === 1 && player.player === user.id)){
             setIsWinner(true);
         }
-        if(matchResult.players.some(player => player.player === user.id && player.place !== 1)){
+        if(matchResult.playersPlaces.some(player => player.player === user.id && player.place !== 1)){
             setIsEliminated(true);
         }
-    },[matchResult.players,match.id,user.id]);
+    },[matchResult.playersPlaces,match.id,user.id]);
 
     useEffect(() => {
         if((isWinner || isEliminated) && user.id) clearPlayersMatchInfo(user.id);

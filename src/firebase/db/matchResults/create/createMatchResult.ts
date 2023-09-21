@@ -22,7 +22,8 @@ export const createMatchResult = async (matchId:string) => {
         if(matchResult) return;
         const matchResultId = (await addDoc(matchResultsCollection,{
             match:matchId,
-            players:[]
+            players:[],
+            playersPlaces:[]
         })).id;
         return matchResultId;
     }catch(err){

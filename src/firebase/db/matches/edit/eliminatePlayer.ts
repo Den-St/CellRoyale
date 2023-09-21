@@ -18,7 +18,7 @@ export const eliminatePlayer = async (matchId?:string,userId?:string) => {
              (await getDocs(matchResultQuery)).docs,
              getDoc(userDoc),
         ]);
-        if(matchResult[0]?.data()?.players.some((player:{player:string,place:number}) => player.player === userId))return;
+        if(matchResult[0]?.data()?.playersPlaces.some((player:{player:string,place:number}) => player.player === userId))return;
         const queries = [];
         if(match?.data()?.activePlayer === userId) queries.push(async () => await nextTurn(matchId,userId));
         queries.push(
@@ -33,10 +33,11 @@ export const eliminatePlayer = async (matchId?:string,userId?:string) => {
                 color:'',
             })
         );
-        const place = maxPlayersNumber - matchResult[0]?.data()?.players.length
+        const place = maxPlayersNumber - matchResult[0]?.data()?.playersPlaces.length
 
         queries.push(async () => await updateDoc(doc(db,collectionsKeys.matchResults,matchResult[0].id),{
-            players:[{player:userId,place}, ...matchResult[0]?.data()?.players]
+            playersPlaces:[{player:userId,place}, ...matchResult[0]?.data()?.playersPlaces],
+            players:[...matchResult[0].data()?.players,userId]
         }));
         
         queries.push(async () => await updateDoc(userDoc,{

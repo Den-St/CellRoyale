@@ -5,6 +5,8 @@ import { useAppSelector } from "../../hooks/redux";
 import { PhotosInput, PhotosInputContainer, UserName } from "./styles";
 import {UploadOutlined,LogoutOutlined,EditOutlined,CheckOutlined,CloseOutlined} from "@ant-design/icons";
 import { useEditUserInfo } from "../../hooks/editUserInfo";
+import { useState } from "react";
+import { useGetUsersLastMatches } from "../../hooks/getUsersLastMatches";
 
 export const MyProfile = () => {
     const user = useAppSelector(state => state.user);
@@ -13,8 +15,9 @@ export const MyProfile = () => {
         if (e.target.files && e.target.files[0]) {
             setNewImage(e.target.files[0]);
         }
-    }
-    
+    };
+    const {matches,loading} = useGetUsersLastMatches();
+
     return <Display>
         {!isEditingUserInfo 
         ? <>

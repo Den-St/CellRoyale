@@ -13,7 +13,7 @@ type Props = {
 export const MatchResultModal:React.FC<Props> = ({isModalOpened,open,matchResult,onClose,isWinner}) => {
     // const {matchResult,loading} = useMatchWinner();
     const userId = useAppSelector(state => state.user.id);
-    const place = matchResult?.players?.find(player => userId === player.player);
+    const place = matchResult?.playersPlaces?.find(player => userId === player.player);
 
 return <Modal okButtonProps={{hidden:true}} cancelButtonProps={{hidden:true}} closeIcon={<></>} onCancel={onClose} open={open || !!place && isModalOpened}>
         {place?.place === 1  ? <Tag color={'green'}>Winner</Tag> : <Tag>{place?.place}</Tag>}

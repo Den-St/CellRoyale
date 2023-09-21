@@ -1,6 +1,7 @@
 export type MatchResultT = {
     id:string,
     match:string,
-    players:{player:string,place:number}[],
-    createdAt:string
+    playersPlaces:{player:string,place:number}[],
+    createdAt:string,
+    players:string[]
 }

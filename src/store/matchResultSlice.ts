@@ -6,6 +6,7 @@ const initialState:MatchResultT = {
    id:'',
    match:'',
    createdAt:'',
+   playersPlaces:[],
    players:[]
 }
 
@@ -15,12 +16,13 @@ const matchResultSlice = createSlice({
     reducers:{
         setMatchResult(state,payload:PayloadAction<MatchResultT>){
             state.id = payload?.payload.id;
-            state.players = payload?.payload.players;
+            state.playersPlaces = payload?.payload.playersPlaces;
             state.match = payload?.payload.match;
+            state.players = payload?.payload.players;
         },
         clearMatchResult(state,payload:PayloadAction){
             state.id = '';
-            state.players = [];
+            state.playersPlaces = [];
             state.match = '';
         }
     }
