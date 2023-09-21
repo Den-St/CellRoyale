@@ -18,7 +18,7 @@ export const Input = styled.input`
     box-sizing:border-box;
     border-radius:10px;
     outline:none;
-    color:#878787;
+    color:#494949;
     border:0.5px solid gray;
     outline:none;
 `;
@@ -31,7 +31,7 @@ export const PasswordInput = styled.input`
     border-radius:10px;
     outline:none;
     border:0.5px solid gray;
-    color:#878787;
+    color:#494949;
 `;
 
 export const GoogleAuthButton = styled.button`

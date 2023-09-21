@@ -43,9 +43,9 @@ export const Registration = () => {
                 <Input {...register('displayName',{required:"Username is required",})} placeholder="Username"/>
                 <Input {...register('email',{required:"Email is required",pattern:emailPattern,})} placeholder="E-mail"/>
                 <Display style={{justifyContent:'space-between'}} >
-                    <PasswordInput {...register('password',{required:"Password is required",
-                                    minLength:{message:"Password must be longer than 6 symbols.",value:6}})} placeholder="Password"/>
-                    <PasswordInput onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Confirm password"/>
+                    <PasswordInput type={'password'} {...register('password',{required:"Password is required",
+                                    minLength:{message:"Password must be longer than 10 symbols.",value:10},validate:{}})} placeholder="Password"/>
+                    <PasswordInput type={'password'} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Confirm password"/>
                 </Display>
                 <Display style={{alignItems:'center',width:'100%',flexDirection:'column',gap:'10px'}}>
                     <SubmitButton disabled={disabled} type={'submit'} value={'Submit'}/>
