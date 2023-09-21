@@ -10,7 +10,9 @@ const initialState:UserT = {
     location:[],
     color:'',
     matchQueue:'',
-    rating:0
+    rating:0,
+    numberOfWins:0,
+    numberOfMatches:0,
 }
 
 const userSlice = createSlice({
@@ -28,6 +30,8 @@ const userSlice = createSlice({
             state.matchQueue = payload?.payload.matchQueue;
             state.matchQueue = payload?.payload.matchQueue;
             state.rating = payload?.payload.rating;
+            state.numberOfMatches = payload?.payload.numberOfMatches;
+            state.numberOfWins = payload?.payload.numberOfWins;
         },
         setPlayerMatchInfo(state,payload:PayloadAction<{location:number[],color:string}>){
             state.color = payload.payload.color;

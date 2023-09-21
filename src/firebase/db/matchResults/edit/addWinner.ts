@@ -23,7 +23,8 @@ export const addWinner = async (matchId:string,userId:string) => {
         if(!user) return;
         await Promise.all([
             await updateDoc(userDoc,{
-                rating:user.rating + placeToRating[1]
+                rating:user.rating + placeToRating[1],
+                numberOfWins:user.numberOfWins + 1,
             }),
             await updateDoc(matchDoc,{
                 isEnded:true

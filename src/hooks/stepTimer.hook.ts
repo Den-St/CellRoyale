@@ -1,4 +1,3 @@
-import { maxPlayersNumber } from './../consts/maxPlayersNumber';
 import { useEffect, useRef, useState } from "react";
 import { nextTurn } from "../firebase/db/matches/edit/nextTurn";
 import { useAppSelector } from "./redux";
@@ -7,7 +6,6 @@ export const useStepTimer = () => {
     const [timer,setTimer] = useState(0);
     const intervalRef = useRef<NodeJS.Timer>();
     const match = useAppSelector(state => state.match);
-    const matchResult = useAppSelector(state => state.matchResult);
     const userId = useAppSelector(state => state.user.id);
     
     useEffect(() => {

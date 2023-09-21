@@ -8,7 +8,10 @@ export const loadUser = async (matchId:string,playerId:string) => {
     try{
         const document = doc(db,collectionsKeys.matches,matchId);
         const documentUser = doc(db,collectionsKeys.users,playerId);
-        const match = (await getDoc(document)).data();
+        const [match,user] = await Promise.all([
+            (await getDoc(document)).data(),
+            (await getDoc(documentUser)).data()
+        ]);
         if(match?.loadedPlayers.includes(playerId) || match?.alivePlayers.includes(playerId)) return;
 
         await Promise.all([
@@ -21,6 +24,7 @@ export const loadUser = async (matchId:string,playerId:string) => {
                 location:playersSpawnLocations[match?.alivePlayers.length],
                 color:playersColors[match?.alivePlayers.length],
                 matchQueue:'',
+                numberOfMatches:user?.numberOfMatches + 1
             })
         ])
         return {
