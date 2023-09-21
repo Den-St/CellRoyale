@@ -13,6 +13,7 @@ export const createMatchResult = async (matchId:string) => {
             match:matchId,
             players:[],
             playersPlaces:[],
+            createdAt:new Date()
         })).id;
         return matchResultId;
     }catch(err){

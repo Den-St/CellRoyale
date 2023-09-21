@@ -1,4 +1,4 @@
-import { Avatar, Button, Col, Input, Popconfirm, Row, Statistic, Table } from "antd";
+import { Avatar, Button, Col, Input, Popconfirm, Row, Statistic, Table, Tag } from "antd";
 import { Display } from "../../assets/Display";
 import { defaultAvatar } from "../../consts/defaultAvatar";
 import { useAppSelector } from "../../hooks/redux";
@@ -26,8 +26,8 @@ export const MyProfile = () => {
     const {matches,loading} = useGetUsersLastMatches();
     const dataSource = matches?.map(match => ({
       key:match.id,
-      place:match.place,
-      date:match.createdAt
+      place:<Tag style={{fontSize:'15px'}} color={match.place === 1 ? 'success' : 'default'} >{match.place}</Tag>,
+      date:match?.createdAt?.toDate().toLocaleDateString() + ' ' + match?.createdAt?.toDate().toLocaleTimeString()
     }));
     const columns = [
       {
@@ -43,7 +43,7 @@ export const MyProfile = () => {
     ]; 
 
     if(logout) return <Navigate to={'/registration'}/>
-    return <Display style={{flexDirection:'column',gap:'10px',width:'700px',background:'white',borderRadius:'20px',padding:'20px'}}>
+    return <Display style={{flexDirection:'column',gap:'10px',width:'700px',background:'white',borderRadius:'20px',padding:'20px',height:'95%'}}>
         {!isEditingUserInfo 
         ? <Display style={{justifyContent:'space-between',alignItems:'center'}}>
             <Display style={{alignItems:'center',gap:'5px'}}>
@@ -62,7 +62,7 @@ export const MyProfile = () => {
                 <Button danger style={{'background':'white'}} ><LogoutOutlined /></Button>
             </Popconfirm>
           </Display>
-        : <Display style={{alignItems:'center',gap:'5px'}}>
+        : <Display style={{alignItems:'center',gap:'5px',height:'50px'}}>
             <PhotosInputContainer>
               <UploadOutlined/>
               <PhotosInput type={'file'} onChange={onImageChange}/>

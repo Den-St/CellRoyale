@@ -5,7 +5,7 @@ import { UserT } from "../types/user";
 const initialState:MatchResultT = {
    id:'',
    match:'',
-   createdAt:'',
+   createdAt:null,
    playersPlaces:[],
    players:[]
 }

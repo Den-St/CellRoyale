@@ -1,5 +1,7 @@
+import { Timestamp } from "firebase/firestore";
+
 export type MatchInfoT = {
     id:string,
     place:number,
-    createdAt:string,
+    createdAt?:Timestamp | null,
 }
