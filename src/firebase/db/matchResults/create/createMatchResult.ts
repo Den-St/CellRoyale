@@ -12,7 +12,7 @@ export const createMatchResult = async (matchId:string) => {
         const matchResultId = (await addDoc(matchResultsCollection,{
             match:matchId,
             players:[],
-            playersPlaces:[]
+            playersPlaces:[],
         })).id;
         return matchResultId;
     }catch(err){

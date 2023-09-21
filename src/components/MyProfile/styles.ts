@@ -1,6 +1,7 @@
 import { styled } from 'styled-components';
 export const UserName = styled.p`
     margin:0;
+    font-size:20px;
 `;
 
 export const PhotosInput = styled.input`
