@@ -1,7 +1,7 @@
 import { eliminatePlayer } from '../firebase/db/matches/edit/eliminatePlayer';
 import { UserT } from './../types/user';
 import { changePlayersLocation } from './../firebase/db/users/edit/changeLocation';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useState } from 'react';
 import { nextTurn } from './../firebase/db/matches/edit/nextTurn';
 import { useAppSelector } from './redux';
@@ -75,11 +75,9 @@ export const useMap = () => {
             const newMap = prev;
             for(let i = 1; i < match.roundNumber; i++)
             {
-                console.log('zone',i,match.roundNumber);
                 Object.keys(newMap[i - 1]).forEach(y => {
                     if(myCoord && i - 1 === myCoord[0] && +y === myCoord[1]){
                         if(user.id){
-                            console.log('elim 1')
                             setIsEliminated(true);
                             eliminatePlayer(match.id,user.id)
                         }
@@ -89,7 +87,6 @@ export const useMap = () => {
                 Object.keys(newMap[15 - i]).forEach(y => {
                     if(myCoord && 15 - i === myCoord[0] && +y === myCoord[1]){
                         if(user.id){
-                            console.log('elim 2')
                             setIsEliminated(true);
                             eliminatePlayer(match.id,user.id);
                         }
@@ -101,7 +98,6 @@ export const useMap = () => {
                         if(match.roundNumber !== undefined && (+y < match.roundNumber - 1 || +y > Object.keys(newMap[+x]).length - match.roundNumber)){
                             if(myCoord && +x === myCoord[0] && +y === myCoord[1]){
                                 if(user.id) {
-                                    console.log('elim 3')
                                     setIsEliminated(true);
                                     eliminatePlayer(match.id,user.id);
                                 }
@@ -113,6 +109,7 @@ export const useMap = () => {
             return newMap;
         });
     }
+
     const displayAlivePlayers = () => {
         match.alivePlayers?.forEach(player => setMapCoords(prev => {
             const x = player.location?.[0];
@@ -260,7 +257,6 @@ export const useMap = () => {
                 }
             }
         }
-        console.log('ONSTEp')
         setMapCoords(prev => {
             const x = destinationCoord[0];
             const y = destinationCoord[1];

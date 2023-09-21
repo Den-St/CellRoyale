@@ -15,3 +15,9 @@ export const LogoText = styled.h1`
     right:20.5%;
     z-index:1;
 `;
+
+export const HeaderLink = styled(Link)`
+    font-size:20px;
+    text-decoration:none;
+    color:black;
+`;

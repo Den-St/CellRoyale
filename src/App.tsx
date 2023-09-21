@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Normalize } from "styled-normalize";
 import { Layout } from "./components/Layout";
 import { RoutesSwitch } from "./consts/routes";
@@ -8,6 +9,7 @@ function App() {
   console.log(useAppSelector(state => state.user));
   console.log(useAppSelector(state => state.match));
   console.log(useAppSelector(state => state.matchResult));
+  
   return <>
     <AuthProvider>
       <Normalize/>

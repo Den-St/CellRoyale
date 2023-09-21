@@ -1,0 +1,1 @@
+export const stepTime = 10;

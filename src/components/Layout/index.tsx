@@ -1,6 +1,6 @@
 import { useLocation, useParams } from "react-router-dom"
 import { Display } from "../../assets/Display"
-import { Header } from "../Header/indes"
+import { Header } from "../Header"
 import { Background } from "./Background"
 import { Container } from "./styles"
 

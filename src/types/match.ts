@@ -10,5 +10,7 @@ export type MatchT = {
     alivePlayers?:UserT[],
     roundNumber?:number,
     creator?:string,
-    numberOfPlayers?:number
+    numberOfPlayers?:number,
+    stepEndTime?:number,
+    isEnded?:boolean
 }

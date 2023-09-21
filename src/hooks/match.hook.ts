@@ -1,15 +1,14 @@
+import { maxPlayersNumber } from './../consts/maxPlayersNumber';
 import { limit } from 'firebase/firestore';
 import { where } from 'firebase/firestore';
 import { matchResultsCollection } from './../firebase/db/matchResults/matchResult.collection';
 import { createMatchResult } from './../firebase/db/matchResults/create/createMatchResult';
-import { nextTurn } from './../firebase/db/matches/edit/nextTurn';
 import { addBoosters } from './../firebase/db/matches/edit/addBoosters';
 import { useAppSelector, useAppDispacth } from './redux';
 import { collectionsKeys } from './../firebase/db/collectionsKeys';
 import {db} from "./../firebase/firebaseInit";
 import { doc, onSnapshot, query } from 'firebase/firestore';
 import { useEffect } from 'react';
-import { MatchT } from './../types/match';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { loadUser } from '../firebase/db/matches/edit/loadUser';
@@ -19,6 +18,7 @@ import { setMatch } from '../store/matchSlice';
 import { setPlayerMatchInfo } from '../store/userSlice';
 import { setMatchResult } from '../store/matchResultSlice';
 import { MatchResultT } from '../types/matchResult';
+import { setStepEndTime } from '../firebase/db/matches/edit/setStepEndTime';
 
 export const useMatch = () => {
     const [boosters,setBoosters] = useState(false);
@@ -36,11 +36,17 @@ export const useMatch = () => {
     },[matchId,userId,match]);
 
     useEffect(() => {
+        if(!matchId) return;
+        if(match.loadedPlayers?.length !== maxPlayersNumber || match.stepEndTime) return;
+        setStepEndTime(matchId);
+    },[match.loadedPlayers]);
+    
+    useEffect(() => {
         if(boosters || !match?.id || match.boosters?.length || !userId || match.creator !== userId) return;
         setLoading(true);
         addBoosters(match?.id);
         setBoosters(true);
-        const matchResultId = createMatchResult(match.id);
+        createMatchResult(match.id);
         
         setLoading(false);
     },[match,userId]);
@@ -59,7 +65,7 @@ export const useMatch = () => {
             const boostersQ = match.boosters.map(async (booster:string) => await getBoosterById(booster));
             match.boosters = await Promise.all(boostersQ);
             match.id = doc.id;
-
+            console.log('nnnn',match);
             dispatch(setMatch(match));
             setLoading(false);
         });

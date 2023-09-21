@@ -5,6 +5,7 @@ import { collectionsKeys } from "../../collectionsKeys";
 import { matchResultsCollection } from '../../matchResults/matchResult.collection';
 import { maxPlayersNumber } from '../../../../consts/maxPlayersNumber';
 import { placeToRating } from '../../../../consts/placeToRating';
+import { stepTime } from '../../../../consts/stepTime';
 
 export const eliminatePlayer = async (matchId?:string,userId?:string) => {
     try{
@@ -41,7 +42,10 @@ export const eliminatePlayer = async (matchId?:string,userId?:string) => {
         queries.push(async () => await updateDoc(userDoc,{
             rating:user?.data()?.rating + placeToRating[place]
         }));
-        console.log('i',placeToRating[place]);
+
+        queries.push(async () => await updateDoc(matchDoc,{
+            stepEndTime:(new Date().getTime()/1000) + stepTime
+        }))
         await Promise.all(queries?.map(q => q()));
     }catch(err){
         console.error(err);

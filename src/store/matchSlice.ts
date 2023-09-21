@@ -10,7 +10,9 @@ const initialState:MatchT = {
     alivePlayers:[],
     roundNumber:0,
     creator:'',
-    numberOfPlayers:0
+    numberOfPlayers:0,
+    stepEndTime:0,
+    isEnded:false
 }
 
 const matchSlice = createSlice({
@@ -27,6 +29,8 @@ const matchSlice = createSlice({
             state.roundNumber = payload.payload.roundNumber;
             state.creator = payload.payload.creator;
             state.numberOfPlayers = payload.payload.numberOfPlayers;
+            state.stepEndTime = payload.payload.stepEndTime;
+            state.isEnded = payload.payload.isEnded;
         }
     }
 });

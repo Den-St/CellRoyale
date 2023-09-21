@@ -19,7 +19,6 @@ export const createMatchResult = async (matchId:string) => {
         const q = query(matchResultsCollection,where('match',"==",matchId),limit(1));
         const matchResultDoc = await getDocs(q);
         const matchResult = matchResultDoc?.docs[0]?.data();
-        console.log('mmm',matchResult);
         if(matchResult) return;
         const matchResultId = (await addDoc(matchResultsCollection,{
             match:matchId,

@@ -18,11 +18,18 @@ export const addWinner = async (matchId:string,userId:string) => {
             players:[{player:userId,place:1}, ...matchResult?.players]
         });
         const userDoc = doc(db,collectionsKeys.users,userId);
+        const matchDoc = doc(db,collectionsKeys.matches,matchId);
         const user = (await getDoc(userDoc)).data();
         if(!user) return;
-        await updateDoc(userDoc,{
-            rating:user.rating + placeToRating[1]
-        });
+        await Promise.all([
+            await updateDoc(userDoc,{
+                rating:user.rating + placeToRating[1]
+            }),
+            await updateDoc(matchDoc,{
+                isEnded:true
+            }),
+        ])
+        
 
         return user.rating + placeToRating[1];
     }catch(err){
