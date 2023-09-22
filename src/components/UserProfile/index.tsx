@@ -25,5 +25,28 @@ export const UserProfile = () => {
           key: 'date',
         },
       ]; 
-    return <></>
+    return <Display style={{flexDirection:'column',gap:'10px',width:'700px',background:'white',borderRadius:'20px',padding:'20px',height:'95%'}}>
+        <Display style={{justifyContent:'space-between',alignItems:'center'}}>
+            <Display style={{alignItems:'center',gap:'5px'}}>
+                {!userLoading ? <>
+                    <Avatar style={{width:'50px',height:'50px'}} src={user?.photoURL || defaultAvatar}/> 
+                    <UserName>
+                        {user?.displayName || ('user ' + user?.id)}
+                    </UserName>
+                </> : <Spin/>}
+            </Display>
+        </Display>
+        <Row justify={'space-around'}>
+            <Col>
+                <Statistic title="Rating" value={user?.rating || 0} loading={userLoading}/>
+            </Col>
+            <Col >
+                <Statistic title="Matches" value={user?.numberOfMatches || 0} loading={userLoading}/>
+            </Col>
+            <Col >
+                <Statistic title="Victories" value={user?.numberOfWins || 0} loading={userLoading}/>
+            </Col>
+        </Row>
+        <Table loading={loading} dataSource={dataSource} columns={columns} pagination={false}/>
+    </Display>
 }
