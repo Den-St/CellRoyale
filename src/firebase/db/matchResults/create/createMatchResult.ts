@@ -1,6 +1,5 @@
 import { getDocs, limit, query, where } from 'firebase/firestore';
 import { addDoc } from 'firebase/firestore';
-import { maxPlayersNumber } from '../../../../consts/maxPlayersNumber';
 import { matchResultsCollection } from '../matchResult.collection';
 
 export const createMatchResult = async (matchId:string) => {

@@ -12,6 +12,7 @@ export const loadUser = async (matchId:string,playerId:string) => {
             (await getDoc(document)).data(),
             (await getDoc(documentUser)).data()
         ]);
+
         if(match?.loadedPlayers.includes(playerId) || match?.alivePlayers.includes(playerId)) return;
 
         await Promise.all([

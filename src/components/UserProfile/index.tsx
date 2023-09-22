@@ -1,4 +1,4 @@
-import { Avatar, Button, Popconfirm, Row, Col, Statistic, Table, Tag, Spin } from "antd";
+import { Avatar, Row, Col, Statistic, Table, Tag, Spin } from "antd";
 import { Display } from "../../assets/Display";
 import { defaultAvatar } from "../../consts/defaultAvatar";
 import { useGetUser } from "../../hooks/getUser";
@@ -13,18 +13,18 @@ export const UserProfile = () => {
         place:<Tag style={{fontSize:'15px'}} color={match.place === 1 ? 'success' : 'default'} >{match.place}</Tag>,
         date:match?.createdAt?.toDate().toLocaleDateString() + ' ' + match?.createdAt?.toDate().toLocaleTimeString()
       }));
-      const columns = [
+    const columns = [
         {
             title: 'Place',
             dataIndex: 'place',
             key: 'place',
         },
         {
-          title: 'Date',
-          dataIndex: 'date',
-          key: 'date',
+            title: 'Date',
+            dataIndex: 'date',
+            key: 'date',
         },
-      ]; 
+    ]; 
     return <Display style={{flexDirection:'column',gap:'10px',width:'700px',background:'white',borderRadius:'20px',padding:'20px',height:'95%'}}>
         <Display style={{justifyContent:'space-between',alignItems:'center'}}>
             <Display style={{alignItems:'center',gap:'5px'}}>

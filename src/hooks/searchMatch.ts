@@ -10,6 +10,8 @@ import { cancelSearch } from '../firebase/db/matches/edit/cancelSearch';
 import { setMatch } from '../store/matchSlice';
 import { maxPlayersNumber } from '../consts/maxPlayersNumber';
 import { clearMatchResult } from '../store/matchResultSlice';
+import { setPlayerMatchInfo } from '../store/userSlice';
+import { clearPlayersMatchInfo } from '../firebase/db/users/edit/clearPlayersMatchInfo';
 
 export const useSearchMatch = () => {
     const user = useAppSelector(state => state.user);
@@ -24,11 +26,13 @@ export const useSearchMatch = () => {
     const onStartSearch = async () => {
         if(!user.id) return;
         setLoading(true);
+        await clearPlayersMatchInfo(user.id)
         const foundMatch = await searchMatch(user.id);
         if(!foundMatch) return;
         setMatchId(foundMatch);
         setIsSearchCanceled(false);
         setLoading(false);
+        dispatch(setPlayerMatchInfo({location:[],color:''}));
         dispatch(clearMatchResult());
         setIsSearchStarted(true);
     }

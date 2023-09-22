@@ -7,7 +7,6 @@ export const setActivePlayer = async (matchId:string,userId:string) => {
         const matchRef = doc(db,collectionsKeys.matches,matchId);
         const match = (await getDoc(matchRef)).data();
         if(match?.activePlayer) return;
-        
         await updateDoc(matchRef,
             {
                 activePlayer:userId,

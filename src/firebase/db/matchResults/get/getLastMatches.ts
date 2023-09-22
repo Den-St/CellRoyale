@@ -10,7 +10,7 @@ export const getLastMatches = async (userId:string) => {
         const matchResults = docs.map(doc => doc.data());
         matchResults.forEach((matchResult,i) => {
             matchResult.id = docs[i].id;
-        }); console.log('g',matchResults)
+        });
 
         return matchResults as MatchResultT[];
     }catch(err){    

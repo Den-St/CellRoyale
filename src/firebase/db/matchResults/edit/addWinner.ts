@@ -12,7 +12,7 @@ export const addWinner = async (matchId:string,userId:string) => {
         const matchResultDoc = await getDocs(q);
         const matchResult = matchResultDoc.docs[0].data();
         if(!matchResult) return;
-        if(matchResult.playersPlaces.includes(userId)) return;
+        if(matchResult.playersPlaces.some((playerPlace:{player:string,place:number}) => playerPlace.player === userId)) return;
 
         await updateDoc(doc(db,collectionsKeys.matchResults,matchResultDoc.docs[0].id),{
             playersPlaces:[{player:userId,place:1}, ...matchResult?.playersPlaces],

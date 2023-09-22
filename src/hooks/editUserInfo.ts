@@ -22,13 +22,10 @@ export const useEditUserInfo = () => {
         const newImageUrl = await uploadBytes(newImageRef,newImage); 
         return newImageUrl.metadata.fullPath;
     }  
-    console.log(newImage)   
 
      const onConfirmEditUserInfo = async () => {
-        console.log('fdfd',newUserInfo)
         if(!newUserInfo || !user.id) return;
         changePhoto().then(async (newImageUrl) => {
-            console.log(newImageUrl)
             if(!user.id || !newUserInfo.displayName) return;
             await changeUserInfo(user.id,{...newUserInfo, photoURL:newImageUrl});
         });
@@ -46,6 +43,6 @@ export const useEditUserInfo = () => {
     useEffect(() => {
         if(user) setNewUserInfo(user);
     },[user]);
-    console.log(newUserInfo)
+
     return {onConfirmEditUserInfo,changeNameUserInfo,isEditingUserInfo,setIsEditingUserInfo,setNewImage,newImage,newUserInfo};
 }

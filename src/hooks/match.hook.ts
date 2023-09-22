@@ -19,21 +19,26 @@ import { setPlayerMatchInfo } from '../store/userSlice';
 import { setMatchResult } from '../store/matchResultSlice';
 import { MatchResultT } from '../types/matchResult';
 import { setStepEndTime } from '../firebase/db/matches/edit/setStepEndTime';
+import { setActivePlayer } from '../firebase/db/matches/edit/setActivePlayer';
 
 export const useMatch = () => {
     const [boosters,setBoosters] = useState(false);
     const [loading,setLoading] = useState(false);
     const matchId = useParams().id;
     const userId = useAppSelector(state => state.user.id);
+    const user = useAppSelector(state => state.user);
     const match = useAppSelector(state => state.match);
     const dispatch = useAppDispacth();
 
+    useEffect(() => {
+        if(match.alivePlayers?.length === maxPlayersNumber && matchId && match.alivePlayers[0].id && !match.activePlayer) setActivePlayer(matchId,match.alivePlayers[0].id)
+    },[match.alivePlayers?.length])
     useEffect(() => {
         if(!matchId || !userId || match?.loadedPlayers?.includes(userId) || match?.alivePlayers?.some(user => user.id === userId)) return;
         setLoading(true);
         loadUser(matchId,userId).then(res => res && dispatch(setPlayerMatchInfo(res)));
         setLoading(false);
-    },[matchId,userId,match]);
+    },[matchId,userId,match.loadedPlayers]);
 
     useEffect(() => {
         if(!matchId) return;
@@ -65,7 +70,6 @@ export const useMatch = () => {
             const boostersQ = match.boosters.map(async (booster:string) => await getBoosterById(booster));
             match.boosters = await Promise.all(boostersQ);
             match.id = doc.id;
-            console.log('nnnn',match);
             dispatch(setMatch(match));
             setLoading(false);
         });

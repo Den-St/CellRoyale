@@ -5,7 +5,7 @@ import { addMatchInQueue } from '../../users/edit/addMatchInQueue';
 export const createMatch = async (userId:string) => {
     try{
         const match = await addDoc(matchesCollection,{
-            activePlayer:userId,
+            activePlayer:'',
             alivePlayers:[],
             boosters:[],
             loadedPlayers:[],

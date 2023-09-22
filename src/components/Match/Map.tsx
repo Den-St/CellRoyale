@@ -36,12 +36,14 @@ export const Map = () => {
                     })}
                 </Row>)}
             </Display>
-            <h1>{timer}</h1>
-            {match?.activePlayer?.color && 
-                <Display style={{alignContent:'center'}}>
-                    <ActivePlayerCell color={match?.activePlayer?.color}>&#x2B22;</ActivePlayerCell> {match?.activePlayer?.displayName} 
-                </Display>
-            }
-            {isEliminated && !isWinner && !isModalOpened && <button onClick={() => setIsModalOpened(true)}>open modal</button>}
+            <Display style={{flexDirection:'column',gap:'10px',width:'150px'}}>
+                <h1>{timer}</h1>
+                {match?.activePlayer?.color && 
+                    <Display style={{alignContent:'center'}}>
+                        <ActivePlayerCell color={match?.activePlayer?.color}>&#x2B22;</ActivePlayerCell> {match?.activePlayer?.displayName} 
+                    </Display>
+                }
+                {isEliminated && !isWinner && !isModalOpened && <button onClick={() => setIsModalOpened(true)}>open modal</button>}
+            </Display>
         </Display>
 }
