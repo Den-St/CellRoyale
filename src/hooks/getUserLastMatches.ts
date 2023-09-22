@@ -1,10 +1,10 @@
+import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { getLastMatches } from '../firebase/db/matchResults/get/getLastMatches';
 import { MatchInfoT } from '../types/matchInfo';
-import { useAppSelector } from './redux';
 
-export const useGetMyLastMatches = () => {
-    const userId = useAppSelector(state => state.user.id);
+export const useGetUserLastMatches = () => {
+    const userId = useParams().id;
     const [loading,setLoading] = useState(false);
     const [matches,setMatches] = useState<MatchInfoT[]>();
 

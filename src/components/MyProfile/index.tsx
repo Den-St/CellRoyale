@@ -5,7 +5,7 @@ import { useAppSelector } from "../../hooks/redux";
 import { PhotosInput, PhotosInputContainer, UserName } from "./styles";
 import {UploadOutlined,LogoutOutlined,EditOutlined,CheckOutlined,CloseOutlined} from "@ant-design/icons";
 import { useEditUserInfo } from "../../hooks/editUserInfo";
-import { useGetUsersLastMatches } from "../../hooks/getUsersLastMatches";
+import { useGetMyLastMatches } from "../../hooks/getUsersLastMatches";
 import { signOut } from "firebase/auth";
 import { googleAuthProvider } from "../../firebase/firebaseInit";
 import { useState } from "react";
@@ -23,7 +23,7 @@ export const MyProfile = () => {
     const onLogout = () => {
       signOut(googleAuthProvider).then(() => setLogout(true));
     }
-    const {matches,loading} = useGetUsersLastMatches();
+    const {matches,loading} = useGetMyLastMatches();
     const dataSource = matches?.map(match => ({
       key:match.id,
       place:<Tag style={{fontSize:'15px'}} color={match.place === 1 ? 'success' : 'default'} >{match.place}</Tag>,
@@ -77,13 +77,13 @@ export const MyProfile = () => {
           </Display>}
           <Row justify={'space-around'}>
                 <Col>
-                    <Statistic  title="Rating" value={user.rating || 0} loading={loading}/>
+                    <Statistic title="Rating" value={user.rating || 0} loading={loading}/>
                 </Col>
                 <Col >
-                    <Statistic  title="Jobs" value={user.numberOfMatches || 0} loading={loading}/>
+                    <Statistic title="Matches" value={user.numberOfMatches || 0} loading={loading}/>
                 </Col>
                 <Col >
-                    <Statistic  title="Fdsfsd" value={user.numberOfMatches || 0} loading={loading}/>
+                    <Statistic title="Victories" value={user.numberOfWins || 0} loading={loading}/>
                 </Col>
         </Row>
         <Table dataSource={dataSource} columns={columns} pagination={false}/>
