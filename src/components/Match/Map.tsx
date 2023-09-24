@@ -21,7 +21,7 @@ const ActivePlayerCell = styled.span<{color?:string}>`
 
 export const Map = () => {
     const {MapCoords,onStep,match,isEliminated,isWinner,matchResult} = useMap();
-    const {timer} = useStepTimer();
+    // const {timer} = useStepTimer();
     const [isModalOpened,setIsModalOpened] = useState(true);
 
     return  <Display>
@@ -37,7 +37,7 @@ export const Map = () => {
                 </Row>)}
             </Display>
             <Display style={{flexDirection:'column',gap:'10px',width:'150px'}}>
-                <h1>{timer}</h1>
+                {/* <h1>{timer}</h1> */}
                 {match?.activePlayer?.color && 
                     <Display style={{alignContent:'center'}}>
                         <ActivePlayerCell color={match?.activePlayer?.color}>&#x2B22;</ActivePlayerCell> {match?.activePlayer?.displayName} 

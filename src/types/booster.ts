@@ -1,7 +1,9 @@
+import { BoosterTypeT } from "./boosterType"
+
 export type BoosterT = {
     id:string,
     location:number[],
-    type:string
+    type:BoosterTypeT,
 }
 
 export type CreateBoosterT = {

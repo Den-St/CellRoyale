@@ -9,7 +9,9 @@ export const createUser = async (user:CreateUserT) => {
                 ...user,
                 rating:0,
                 numberOfMatches:0,
-                numberOfWins:0
+                numberOfWins:0,
+                boosterStepsRemaining:0,
+                activeBooster:''
             });
     }catch(err){
         console.error(err);

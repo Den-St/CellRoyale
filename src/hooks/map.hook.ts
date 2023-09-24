@@ -1,14 +1,20 @@
+import { removeBoosterById } from './../firebase/db/boosters/delete/removeBoosterById';
 import { eliminatePlayer } from '../firebase/db/matches/edit/eliminatePlayer';
 import { UserT } from './../types/user';
 import { changePlayersLocation } from './../firebase/db/users/edit/changeLocation';
 import { useEffect, useRef } from 'react';
 import { useState } from 'react';
 import { nextTurn } from './../firebase/db/matches/edit/nextTurn';
-import { useAppSelector } from './redux';
+import { useAppSelector, useAppDispacth } from './redux';
 import { MapT } from '../types/map';
 import { addWinner } from '../firebase/db/matchResults/edit/addWinner';
 import { clearPlayersMatchInfo } from '../firebase/db/users/edit/clearPlayersMatchInfo';
 import { maxPlayersNumber } from '../consts/maxPlayersNumber';
+import { BoosterT } from '../types/booster';
+import { activateBooster } from '../firebase/db/users/edit/activateBooster';
+import { removeBoosterFromMatch } from '../firebase/db/matches/edit/removeBoosterFromMatch';
+import { decrementBoosterStepsRemainingLocally, setNewBooster, setUserLocation } from '../store/userSlice';
+import { decreaseBoosterStepsRemaining } from '../firebase/db/users/edit/decreaseBoosterStepsRemaining';
 
 export const useMap = () => {
     const [MapCoords,setMapCoords] = useState<MapT>({
@@ -33,11 +39,8 @@ export const useMap = () => {
     const user = useAppSelector(state => state.user);
     const match = useAppSelector(state => state.match);
     const matchResult = useAppSelector(state => state.matchResult);
-    const [myCoord,setMyCoord] = useState<number[]>();
-
-    useEffect(() => {
-        if(user.location) setMyCoord(user.location);
-    },[user.location]);
+    const dispatch = useAppDispacth();
+   
     console.log(MapCoords);
 
     const clearMap = () => {
@@ -76,7 +79,7 @@ export const useMap = () => {
             for(let i = 1; i < match.roundNumber; i++)
             {
                 Object.keys(newMap[i - 1]).forEach(y => {
-                    if(myCoord && i - 1 === myCoord[0] && +y === myCoord[1]){
+                    if(user.location && i - 1 === user.location[0] && +y === user.location[1]){
                         if(user.id){
                             setIsEliminated(true);
                             eliminatePlayer(match.id,user.id)
@@ -85,7 +88,7 @@ export const useMap = () => {
                     newMap[i - 1][+y] = {type:'cell',value:2};
                 });
                 Object.keys(newMap[15 - i]).forEach(y => {
-                    if(myCoord && 15 - i === myCoord[0] && +y === myCoord[1]){
+                    if(user.location && 15 - i === user.location[0] && +y === user.location[1]){
                         if(user.id){
                             setIsEliminated(true);
                             eliminatePlayer(match.id,user.id);
@@ -96,7 +99,7 @@ export const useMap = () => {
                 Object.keys(newMap).forEach(
                     x => Object.keys(newMap[+x]).forEach(y => {
                         if(match.roundNumber !== undefined && (+y < match.roundNumber - 1 || +y > Object.keys(newMap[+x]).length - match.roundNumber)){
-                            if(myCoord && +x === myCoord[0] && +y === myCoord[1]){
+                            if(user.location && +x === user.location[0] && +y === user.location[1]){
                                 if(user.id) {
                                     setIsEliminated(true);
                                     eliminatePlayer(match.id,user.id);
@@ -109,7 +112,6 @@ export const useMap = () => {
             return newMap;
         });
     }
-
     const displayAlivePlayers = () => {
         match.alivePlayers?.forEach(player => setMapCoords(prev => {
             const x = player.location?.[0];
@@ -140,54 +142,54 @@ export const useMap = () => {
     const setAvailableCells = () => {
         if(isWinner || isEliminated) return;
         if(match?.activePlayer?.id !== user.id) return;
-        if(!myCoord) return;
+        if(!user.location) return;
 
         setMapCoords(prev => {
             const newMap:MapT = prev;
 
             Object.keys(prev).forEach(
                 x => Object.keys(prev[+x]).forEach(y => {
-                    if(newMap[+x][+y].type !== 'player' && newMap[+x][+y].type !== 'booster'){
-                        if(myCoord[0] < 7){
-                            if(+x === myCoord?.[0] - 1 ){
-                                if(+y === myCoord?.[1] - 1 || +y === myCoord?.[1]){
+                    if(newMap[+x][+y].type !== 'player' && newMap[+x][+y].type !== 'booster' && user.location){
+                        if(user.location[0] < 7){
+                            if(+x === user.location?.[0] - 1 ){
+                                if(+y === user.location?.[1] - 1 || +y === user.location?.[1]){
                                     newMap[+x][+y] = {type:'cell',value:1};
                                 }
                             }
-                            if(+x === myCoord[0] + 1){
-                                if(+y === myCoord?.[1] + 1 || +y === myCoord?.[1]){
+                            if(+x === user.location[0] + 1){
+                                if(+y === user.location?.[1] + 1 || +y === user.location?.[1]){
                                     newMap[+x][+y] = {type:'cell',value:1};
                                 }
                             }
-                            if(+x === myCoord[0]){
-                                if(+y === myCoord?.[1] + 1 || +y === myCoord?.[1] - 1){
+                            if(+x === user.location[0]){
+                                if(+y === user.location?.[1] + 1 || +y === user.location?.[1] - 1){
                                     newMap[+x][+y] = {type:'cell',value:1};
                                 }
                             }
-                        }else if(myCoord[0] > 7){
-                            if(+x === myCoord?.[0] - 1 ){
-                                if(+y === myCoord?.[1] + 1 || +y === myCoord?.[1]){
+                        }else if(user.location[0] > 7){
+                            if(+x === user.location?.[0] - 1 ){
+                                if(+y === user.location?.[1] + 1 || +y === user.location?.[1]){
                                     newMap[+x][+y] = {type:'cell',value:1};
                                 }
                             }
-                            if(+x === myCoord[0] + 1){
-                                if(+y === myCoord?.[1] - 1 || +y === myCoord?.[1]){
+                            if(+x === user.location[0] + 1){
+                                if(+y === user.location?.[1] - 1 || +y === user.location?.[1]){
                                     newMap[+x][+y] = {type:'cell',value:1};
                                 }
                             }
-                            if(+x === myCoord[0]){
-                                if(+y === myCoord?.[1] + 1 || +y === myCoord?.[1] - 1){
+                            if(+x === user.location[0]){
+                                if(+y === user.location?.[1] + 1 || +y === user.location?.[1] - 1){
                                     newMap[+x][+y] = {type:'cell',value:1};
                                 }
                             }
                         }else{
-                            if(+x === myCoord?.[0] - 1 || +x === myCoord[0] + 1){
-                                if(+y === myCoord?.[1] - 1 || +y === myCoord?.[1]){
+                            if(+x === user.location?.[0] - 1 || +x === user.location[0] + 1){
+                                if(+y === user.location?.[1] - 1 || +y === user.location?.[1]){
                                     newMap[+x][+y] = {type:'cell',value:1};
                                 }
                             }
-                            if(+x === myCoord[0]){
-                                if(+y === myCoord?.[1] - 1 || +y === myCoord?.[1] + 1){
+                            if(+x === user.location[0]){
+                                if(+y === user.location?.[1] - 1 || +y === user.location?.[1] + 1){
                                     newMap[+x][+y] = {type:'cell',value:1};
                                 }
                             }
@@ -206,57 +208,60 @@ export const useMap = () => {
     
     const onStep = async (destinationCoord:number[]) => {
         if(isEliminated || isWinner) return;
-        if(!myCoord) return;
+        if(!user.location) return;
         if(!match.id || !user.id) return;
         if(match?.activePlayer?.id !== user.id) return;
         
-        if(!(destinationCoord[0] === myCoord[0] || destinationCoord[0] === myCoord[0] + 1 || destinationCoord[0] === myCoord[0] - 1)) return;
+        if(!(destinationCoord[0] === user.location[0] || destinationCoord[0] === user.location[0] + 1 || destinationCoord[0] === user.location[0] - 1)) return;
         let enemyId = MapCoords[destinationCoord[0]][destinationCoord[1]].type === 'player' ? (MapCoords[destinationCoord[0]][destinationCoord[1]].value as UserT).id : null;
-
-        if(myCoord[0] < 7){
-            if(destinationCoord[0] === myCoord?.[0] - 1 ){
-                if(!(destinationCoord[1] === myCoord?.[1] - 1 || destinationCoord[1] === myCoord?.[1])){
+        let booster = MapCoords[destinationCoord[0]][destinationCoord[1]].type === 'booster' ? (MapCoords[destinationCoord[0]][destinationCoord[1]].value as BoosterT) : null;
+        
+        //available cells 1
+        if(user.location[0] < 7){
+            if(destinationCoord[0] === user.location?.[0] - 1 ){
+                if(!(destinationCoord[1] === user.location?.[1] - 1 || destinationCoord[1] === user.location?.[1])){
                     return;
                 }
             }
-            if(destinationCoord[0] === myCoord[0] + 1){
-                if(!(destinationCoord[1] === myCoord?.[1] + 1 || destinationCoord[1] === myCoord?.[1])){
+            if(destinationCoord[0] === user.location[0] + 1){
+                if(!(destinationCoord[1] === user.location?.[1] + 1 || destinationCoord[1] === user.location?.[1])){
                     return;
                 }
             }
-            if(destinationCoord[0] === myCoord[0]){
-                if(!(destinationCoord[1] === myCoord?.[1] + 1 || destinationCoord[1] === myCoord?.[1] - 1)){
+            if(destinationCoord[0] === user.location[0]){
+                if(!(destinationCoord[1] === user.location?.[1] + 1 || destinationCoord[1] === user.location?.[1] - 1)){
                     return;
                 }
             }
-        }else if(myCoord[0] > 7){
-            if(destinationCoord[0] === myCoord?.[0] - 1 ){
-                if(!(destinationCoord[1] === myCoord?.[1] + 1 || destinationCoord[1] === myCoord?.[1])){
+        }else if(user.location[0] > 7){
+            if(destinationCoord[0] === user.location?.[0] - 1 ){
+                if(!(destinationCoord[1] === user.location?.[1] + 1 || destinationCoord[1] === user.location?.[1])){
                     return;
                 }
             }
-            if(destinationCoord[0] === myCoord[0] + 1){
-                if(!(destinationCoord[1] === myCoord?.[1] - 1 || destinationCoord[1] === myCoord?.[1])){
+            if(destinationCoord[0] === user.location[0] + 1){
+                if(!(destinationCoord[1] === user.location?.[1] - 1 || destinationCoord[1] === user.location?.[1])){
                     return;
                 }
             }
-            if(destinationCoord[0] === myCoord[0]){
-                if(!(destinationCoord[1] === myCoord?.[1] + 1 || destinationCoord[1] === myCoord?.[1] - 1)){
+            if(destinationCoord[0] === user.location[0]){
+                if(!(destinationCoord[1] === user.location?.[1] + 1 || destinationCoord[1] === user.location?.[1] - 1)){
                     return;
                 }
             }
         }else{
-            if(destinationCoord[0] === myCoord?.[0] - 1 || destinationCoord[0] === myCoord[0] + 1){
-                if(!(destinationCoord[1] === myCoord?.[1] - 1 || destinationCoord[1] === myCoord?.[1])){
+            if(destinationCoord[0] === user.location?.[0] - 1 || destinationCoord[0] === user.location[0] + 1){
+                if(!(destinationCoord[1] === user.location?.[1] - 1 || destinationCoord[1] === user.location?.[1])){
                     return;
                 }
             }
-            if(destinationCoord[0] === myCoord[0]){
-                if(!(destinationCoord[1] === myCoord?.[1] - 1 || destinationCoord[1] === myCoord?.[1] + 1)){
+            if(destinationCoord[0] === user.location[0]){
+                if(!(destinationCoord[1] === user.location?.[1] - 1 || destinationCoord[1] === user.location?.[1] + 1)){
                     return;
                 }
             }
         }
+
         setMapCoords(prev => {
             const x = destinationCoord[0];
             const y = destinationCoord[1];
@@ -266,16 +271,30 @@ export const useMap = () => {
         });
 
         setMapCoords(prev => {
-            const x = myCoord?.[0];
-            const y = myCoord?.[1]; 
+            const x = user.location?.[0];
+            const y = user.location?.[1]; 
 
             if(!x || !y) return prev;
             return ({...prev,[x]:{...prev[x], [y]:{type:'cell',value:0}}});
         });
-
-        setMyCoord(destinationCoord);
+        //if(user.boosterStep) await decreaseSteps dispatch(decrement); if boosterStep === 1 set '' to activeBooster and decrement
+        //if(booster) await activateBooster(user.id,booster.type); set boosterSteps and set booster.type.id in activeBooster
+        //if(booster) deleteBooster(booster.id) remove from map and delete doc
+        dispatch(setUserLocation({location:destinationCoord}));
         clearMapFromAvailableCells();
         await changePlayersLocation(user.id,destinationCoord);
+        if(booster) {
+            await Promise.all([
+                await activateBooster(user.id,booster?.type),
+                await removeBoosterById(booster.id),
+                await removeBoosterFromMatch(match.id,booster.id),
+            ]);
+            dispatch(setNewBooster({booster}));
+        }
+        if(user.boosterStepsRemaining){
+            await decreaseBoosterStepsRemaining(user.id);
+            dispatch(decrementBoosterStepsRemainingLocally());
+        }
         if(enemyId) await eliminatePlayer(match.id,enemyId);
         await nextTurn(match.id,user.id);
     }

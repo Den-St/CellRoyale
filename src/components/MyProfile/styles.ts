@@ -10,7 +10,7 @@ export const PhotosInput = styled.input`
 `;
 
 export const PhotosInputContainer = styled.div`
-    postion:relative;
+    position:relative;
     width:60px;
     .anticon{
         position:absolute;

@@ -1,12 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { nextTurn } from "../firebase/db/matches/edit/nextTurn";
-import { useAppSelector } from "./redux";
+import { decreaseBoosterStepsRemaining } from "../firebase/db/users/edit/decreaseBoosterStepsRemaining";
+import { decrementBoosterStepsRemainingLocally } from "../store/userSlice";
+import { useAppDispacth, useAppSelector } from "./redux";
 
 export const useStepTimer = () => {
     const [timer,setTimer] = useState(0);
     const intervalRef = useRef<NodeJS.Timer>();
     const match = useAppSelector(state => state.match);
-    const userId = useAppSelector(state => state.user.id);
+    const user = useAppSelector(state => state.user);
+    const dispatch = useAppDispacth();
     
     useEffect(() => {
         clearInterval(intervalRef.current);
@@ -27,8 +30,12 @@ export const useStepTimer = () => {
 
       useEffect(() => {
         if(match.isEnded) return;
-        if(userId === match.activePlayer?.id && timer <= 0 && match.id && userId){
-            nextTurn(match.id,userId);
+        if(user.id === match.activePlayer?.id && timer <= 0 && match.id && user.id){
+            nextTurn(match.id,user.id);
+            if(user.boosterStepsRemaining){
+                decreaseBoosterStepsRemaining(user.id);
+                dispatch(decrementBoosterStepsRemainingLocally());
+            }
             clearInterval(intervalRef.current);
         }else if(timer <= 0) {
             clearInterval(intervalRef.current);

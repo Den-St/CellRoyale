@@ -1,3 +1,4 @@
+import { BoosterT } from './../types/booster';
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { UserT } from "../types/user";
 
@@ -13,6 +14,8 @@ const initialState:UserT = {
     rating:0,
     numberOfWins:0,
     numberOfMatches:0,
+    boosterStepsRemaining:0,
+    activeBooster:null
 }
 
 const userSlice = createSlice({
@@ -32,13 +35,25 @@ const userSlice = createSlice({
             state.rating = payload?.payload.rating;
             state.numberOfMatches = payload?.payload.numberOfMatches;
             state.numberOfWins = payload?.payload.numberOfWins;
+            state.activeBooster = payload?.payload.activeBooster;
+            state.boosterStepsRemaining = payload?.payload.boosterStepsRemaining;
         },
         setPlayerMatchInfo(state,payload:PayloadAction<{location:number[],color:string}>){
             state.color = payload.payload.color;
             state.location = payload.payload.location;
         },
+        setUserLocation(state,payload:PayloadAction<{location:number[]}>){
+            state.location = payload.payload.location;
+        },
         setNewRating(state,payload:PayloadAction<{newRating:number}>){
             state.rating = payload.payload.newRating;
+        },
+        setNewBooster(state,payload:PayloadAction<{booster:BoosterT}>){
+            state.boosterStepsRemaining = payload.payload.booster.type.duration;
+            state.activeBooster = payload.payload.booster;
+        },
+        decrementBoosterStepsRemainingLocally(state){
+            state.boosterStepsRemaining = (state?.boosterStepsRemaining || 0) - 1;
         }
     }
 });
@@ -46,4 +61,7 @@ const userSlice = createSlice({
 export const {setUser} = userSlice.actions;
 export const {setPlayerMatchInfo} = userSlice.actions;
 export const {setNewRating} = userSlice.actions;
+export const {decrementBoosterStepsRemainingLocally} = userSlice.actions;
+export const {setNewBooster} = userSlice.actions;
+export const {setUserLocation} = userSlice.actions;
 export default userSlice.reducer;
