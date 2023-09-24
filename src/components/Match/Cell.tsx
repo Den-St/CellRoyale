@@ -31,8 +31,13 @@ const HexSpan = styled.button<{value:number,}>`
 //         font-size: 16px;
 //         position: absolute;
 // `;
+
+const invisibleColorForMe = '#6bff6b4';
+const invisibleColorForOther = colors[0];
 const UserHex = styled.button<{user:UserT, 
 // $isEnemy?: boolean
+    $invisible:boolean,
+    $isMe:boolean
         }>`
      border:none;
     outline:none;
@@ -40,6 +45,8 @@ const UserHex = styled.button<{user:UserT,
     padding:0;
     cursor:pointer;
     ${({user}) => `color:${user.color}`};
+    ${({$invisible}) => $invisible && `color:${invisibleColorForOther}`}
+    ${({$invisible,$isMe}) => $invisible && $isMe && `color:${invisibleColorForMe}`}
     font-size: 55px;
     border-radius:100%;
     transition:0.1s;
@@ -86,11 +93,13 @@ export const Cell:React.FC<CellProps> = ({value,onStep}) => {
 type PlayerProps = {
     value:UserT;
     onStep:() => void
+    $invisible:boolean,
+    $isMe:boolean
 } 
-export const PlayerCell:React.FC<PlayerProps> = ({onStep,value}) => {
+export const PlayerCell:React.FC<PlayerProps> = ({onStep,value,$invisible,$isMe}) => {
     const userId = useAppSelector(state => state.user.id);
     // const isEnemy = userId !== value.id;
-    return <UserHex onClick={onStep} user={value} 
+    return <UserHex onClick={onStep} user={value} $invisible={$invisible} $isMe={$isMe}
     // $isEnemy={isEnemy}
     >
         &#x2B22;
