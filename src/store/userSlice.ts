@@ -1,6 +1,7 @@
 import { BoosterT } from './../types/booster';
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { UserT } from "../types/user";
+import { BoosterTypeT } from '../types/boosterType';
 
 const initialState:UserT = {
     email:'',
@@ -48,12 +49,16 @@ const userSlice = createSlice({
         setNewRating(state,payload:PayloadAction<{newRating:number}>){
             state.rating = payload.payload.newRating;
         },
-        setNewBooster(state,payload:PayloadAction<{booster:BoosterT}>){
-            state.boosterStepsRemaining = payload.payload.booster.type.duration;
-            state.activeBooster = payload.payload.booster;
+        setNewBooster(state,payload:PayloadAction<{boosterType:BoosterTypeT}>){
+            state.boosterStepsRemaining = payload.payload.boosterType.duration;
+            state.activeBooster = payload.payload.boosterType;
         },
         decrementBoosterStepsRemainingLocally(state){
             state.boosterStepsRemaining = (state?.boosterStepsRemaining || 0) - 1;
+        },
+        clearUserBooster(state){
+            state.boosterStepsRemaining = 0;
+            state.activeBooster = null
         }
     }
 });
@@ -64,4 +69,5 @@ export const {setNewRating} = userSlice.actions;
 export const {decrementBoosterStepsRemainingLocally} = userSlice.actions;
 export const {setNewBooster} = userSlice.actions;
 export const {setUserLocation} = userSlice.actions;
+export const {clearUserBooster} = userSlice.actions;
 export default userSlice.reducer;

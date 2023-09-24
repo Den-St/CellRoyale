@@ -1,3 +1,4 @@
+import { clearUserBoosterInfo } from './../firebase/db/users/edit/clearUserBoosterInfo';
 import { removeBoosterById } from './../firebase/db/boosters/delete/removeBoosterById';
 import { eliminatePlayer } from '../firebase/db/matches/edit/eliminatePlayer';
 import { UserT } from './../types/user';
@@ -13,7 +14,7 @@ import { maxPlayersNumber } from '../consts/maxPlayersNumber';
 import { BoosterT } from '../types/booster';
 import { activateBooster } from '../firebase/db/users/edit/activateBooster';
 import { removeBoosterFromMatch } from '../firebase/db/matches/edit/removeBoosterFromMatch';
-import { decrementBoosterStepsRemainingLocally, setNewBooster, setUserLocation } from '../store/userSlice';
+import { clearUserBooster, decrementBoosterStepsRemainingLocally, setNewBooster, setUserLocation } from '../store/userSlice';
 import { decreaseBoosterStepsRemaining } from '../firebase/db/users/edit/decreaseBoosterStepsRemaining';
 
 export const useMap = () => {
@@ -134,7 +135,7 @@ export const useMap = () => {
         if(!match) return;
 
         clearMap();
-        displayZoneCells();
+        // displayZoneCells();
         displayAlivePlayers();
         displayBoosters();
         setAvailableCells();
@@ -282,20 +283,25 @@ export const useMap = () => {
         //if(booster) deleteBooster(booster.id) remove from map and delete doc
         dispatch(setUserLocation({location:destinationCoord}));
         clearMapFromAvailableCells();
-        await changePlayersLocation(user.id,destinationCoord);
+        const queries = [];
+        queries.push(async () => user.id && await changePlayersLocation(user.id,destinationCoord));
         if(booster) {
-            await Promise.all([
-                await activateBooster(user.id,booster?.type),
-                await removeBoosterById(booster.id),
-                await removeBoosterFromMatch(match.id,booster.id),
-            ]);
-            dispatch(setNewBooster({booster}));
+            queries.push(async () => user.id && booster?.type && await activateBooster(user.id,booster?.type));
+            queries.push(async () => user.id && booster && await removeBoosterById(booster.id));
+            queries.push(async () => user.id && match.id && booster && await removeBoosterFromMatch(match.id,booster.id));
         }
         if(user.boosterStepsRemaining){
-            await decreaseBoosterStepsRemaining(user.id);
+            queries.push(async () => user.id && await decreaseBoosterStepsRemaining(user.id));
+        }
+        if(enemyId) queries.push(async () => enemyId && await eliminatePlayer(match.id,enemyId));
+        await Promise.all(queries.map(q => q()));
+        if(booster) {
+            dispatch(setNewBooster({boosterType:booster.type}));
+        }
+        if(user.boosterStepsRemaining){
             dispatch(decrementBoosterStepsRemainingLocally());
         }
-        if(enemyId) await eliminatePlayer(match.id,enemyId);
+        if(user.boosterStepsRemaining === 1) dispatch(clearUserBooster());
         await nextTurn(match.id,user.id);
     }
 

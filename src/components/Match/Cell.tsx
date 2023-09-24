@@ -45,8 +45,8 @@ const UserHex = styled.button<{user:UserT,
     padding:0;
     cursor:pointer;
     ${({user}) => `color:${user.color}`};
-    ${({$invisible}) => $invisible && `color:${invisibleColorForOther}`}
-    ${({$invisible,$isMe}) => $invisible && $isMe && `color:${invisibleColorForMe}`}
+    ${({$invisible}) => $invisible && `color:${invisibleColorForOther}`};
+    ${({$invisible,$isMe}) => $invisible && $isMe && `color:${invisibleColorForMe}`};
     font-size: 55px;
     border-radius:100%;
     transition:0.1s;
@@ -94,12 +94,12 @@ type PlayerProps = {
     value:UserT;
     onStep:() => void
     $invisible:boolean,
-    $isMe:boolean
 } 
-export const PlayerCell:React.FC<PlayerProps> = ({onStep,value,$invisible,$isMe}) => {
+export const PlayerCell:React.FC<PlayerProps> = ({onStep,value,$invisible}) => {
     const userId = useAppSelector(state => state.user.id);
+    console.log('gdgdf',userId,value)
     // const isEnemy = userId !== value.id;
-    return <UserHex onClick={onStep} user={value} $invisible={$invisible} $isMe={$isMe}
+    return <UserHex onClick={onStep} user={value} $invisible={$invisible} $isMe={userId === value.id}
     // $isEnemy={isEnemy}
     >
         &#x2B22;

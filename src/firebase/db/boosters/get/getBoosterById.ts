@@ -14,6 +14,7 @@ export const getBoosterById = async (id:string) => {
         const boosterType = await getBoosterTypeById(booster.type);
         booster.type = boosterType;
         booster.id = boosterDoc.id;
+        
         return booster as BoosterT;
     }catch(err){
         console.error();

@@ -1,3 +1,4 @@
+import { clearUserBoosterInfo } from './../firebase/db/users/edit/clearUserBoosterInfo';
 import { useEffect } from 'react';
 import { useAppDispacth, useAppSelector } from './redux';
 import { useState } from 'react';
@@ -10,7 +11,7 @@ import { cancelSearch } from '../firebase/db/matches/edit/cancelSearch';
 import { setMatch } from '../store/matchSlice';
 import { maxPlayersNumber } from '../consts/maxPlayersNumber';
 import { clearMatchResult } from '../store/matchResultSlice';
-import { setPlayerMatchInfo } from '../store/userSlice';
+import { clearUserBooster, setPlayerMatchInfo } from '../store/userSlice';
 import { clearPlayersMatchInfo } from '../firebase/db/users/edit/clearPlayersMatchInfo';
 
 export const useSearchMatch = () => {
@@ -27,6 +28,7 @@ export const useSearchMatch = () => {
         if(!user.id) return;
         setLoading(true);
         await clearPlayersMatchInfo(user.id)
+        await clearUserBoosterInfo(user.id);
         const foundMatch = await searchMatch(user.id);
         if(!foundMatch) return;
         setMatchId(foundMatch);
@@ -34,6 +36,7 @@ export const useSearchMatch = () => {
         setLoading(false);
         dispatch(setPlayerMatchInfo({location:[],color:''}));
         dispatch(clearMatchResult());
+        dispatch(clearUserBooster());
         setIsSearchStarted(true);
     }
     

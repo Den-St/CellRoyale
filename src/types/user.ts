@@ -1,4 +1,4 @@
-import { BoosterT } from "./booster"
+import { BoosterTypeT } from './boosterType';
 
 export type UserT = {
     email:string | null,
@@ -13,7 +13,7 @@ export type UserT = {
     numberOfWins?:number | null,
     numberOfMatches?:number | null,
     boosterStepsRemaining?:number | null,
-    activeBooster?:BoosterT | null;
+    activeBooster?:BoosterTypeT | null;
 }
 
 export type CreateUserT = {
