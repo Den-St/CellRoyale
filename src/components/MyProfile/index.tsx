@@ -47,7 +47,7 @@ export const MyProfile = () => {
         {!isEditingUserInfo 
         ? <Display style={{justifyContent:'space-between',alignItems:'center'}}>
             <Display style={{alignItems:'center',gap:'5px'}}>
-              <Avatar style={{width:'50px',height:'50px'}} src={newImage ? URL.createObjectURL(newImage) : user.photoURL || defaultAvatar}/> 
+              <Avatar style={{width:'50px',height:'50px'}} src={newImage ? URL.createObjectURL(newImage) : newUserInfo?.photoURL || defaultAvatar}/> 
               <UserName>
                   {user?.displayName || ('user ' + user?.id)}
               </UserName>
@@ -63,8 +63,9 @@ export const MyProfile = () => {
             </Popconfirm>
           </Display>
         : <Display style={{alignItems:'center',gap:'5px',height:'50px'}}>
+          {newImage && <Avatar src={URL.createObjectURL(newImage)}/>}
             <PhotosInputContainer>
-              {/* <UploadOutlined/> */}
+              <UploadOutlined/>
               <PhotosInput type={'file'} onChange={onImageChange}/>
             </PhotosInputContainer>
             <Input style={{width:'200px'}} defaultValue={user.displayName || ''} onChange={(e) => changeNameUserInfo(e.target.value)}/>

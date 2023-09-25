@@ -23,7 +23,7 @@ export const Header = () => {
     const user = useAppSelector(state => state.user);
     return <Display style={{justifyContent:"space-between",padding:"0 100px",zIndex:'1',position:'fixed',top:0,width:"100vw",height:"87px",background:"white",alignItems:"center"}}>
         <LogoLink to={'/'}><Logo/><LogoText>CR</LogoText></LogoLink>
-        <Display style={{gap:'20px',alignItems:'center'}}>
+        <Display style={{gap:'30px',alignItems:'center'}}>
             <HeaderLink to={'/rating'}>Rating</HeaderLink>
             {user ?
                 <Display style={{gap:'10px',alignItems:'center'}}>

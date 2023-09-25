@@ -14,9 +14,8 @@ export const PhotosInputContainer = styled.div`
     width:60px;
     .anticon{
         position:absolute;
-        padding:5px;
+        padding:5px 20px;
         font-size:20px;
-        width:50px;
         background:#1677ff;
         color:white;
         border-radius:5px;

@@ -12,7 +12,7 @@ export const useEditUserInfo = () => {
     const [newUserInfo,setNewUserInfo] = useState<UserT>();
     const [isEditingUserInfo,setIsEditingUserInfo] = useState(false);
     const dispatch = useAppDispacth();
-    const [newImage,setNewImage] = useState<File>();
+    const [newImage,setNewImage] = useState<File | null>();
 
     const user = useAppSelector(state => state.user);
 
@@ -23,16 +23,18 @@ export const useEditUserInfo = () => {
         return newImageUrl.metadata.fullPath;
     }  
 
-     const onConfirmEditUserInfo = async () => {
+    const onConfirmEditUserInfo = async () => {
         if(!newUserInfo || !user.id) return;
         changePhoto().then(async (newImageUrl) => {
             if(!user.id || !newUserInfo.displayName) return;
+            dispatch(setUser({
+                ...newUserInfo,
+                photoURL:newImage ? URL.createObjectURL(newImage) : newUserInfo.photoURL
+            }));
             await changeUserInfo(user.id,{...newUserInfo, photoURL:newImageUrl});
         });
         setIsEditingUserInfo(false);
-        dispatch(setUser({
-            ...newUserInfo
-        }));
+        
     }
     const changeNameUserInfo = (text:string) => {
         setNewUserInfo(prev => {
