@@ -6,7 +6,7 @@ import { SubmitHandler } from "react-hook-form";
 import { googleAuthProvider, googleProvider } from "../firebase/firebaseInit";
 import { RegistrationInterface } from "../types/registration";
 
-export const useRegistration = () => {
+export const useRegistration = (disabled:boolean) => {
     const [success,setSuccess] = useState(false);
     const [messageApi, contextHolder] = message.useMessage();
     const showError = (message:string,key:string) => {
@@ -21,6 +21,7 @@ export const useRegistration = () => {
       }
 
     const onSubmit:SubmitHandler<RegistrationInterface> = async (data:RegistrationInterface) => {
+      if(disabled) return;
         try{
             await createUserWithEmailAndPassword(googleAuthProvider,data.email,data.password);
             if(googleAuthProvider.currentUser === null) return;

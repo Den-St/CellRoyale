@@ -1,3 +1,4 @@
+import { boostersTypesNames } from './../consts/boostersTypesNames';
 import { clearUserBoosterInfo } from './../firebase/db/users/edit/clearUserBoosterInfo';
 import { removeBoosterById } from './../firebase/db/boosters/delete/removeBoosterById';
 import { eliminatePlayer } from '../firebase/db/matches/edit/eliminatePlayer';
@@ -152,7 +153,8 @@ export const useMap = () => {
             Object.keys(prev).forEach(
                 x => Object.keys(prev[+x]).forEach(y => {
                     if(newMap[+x][+y].type !== 'player' && newMap[+x][+y].type !== 'booster' && user.location){
-                        if(isAvailableCell(user.location,[+x,+y],2,7)) newMap[+x][+y] = {type:'cell',value:1};
+                        const stepRange = user?.activeBooster?.name === boostersTypesNames.increaseStepDistance ? 2 : 1
+                        if(isAvailableCell(user.location,[+x,+y],stepRange,7)) newMap[+x][+y] = {type:'cell',value:1};
                     }
                 }));
 
@@ -175,7 +177,8 @@ export const useMap = () => {
         let enemyId = MapCoords[destinationCoord[0]][destinationCoord[1]].type === 'player' ? (MapCoords[destinationCoord[0]][destinationCoord[1]].value as UserT).id : null;
         let booster = MapCoords[destinationCoord[0]][destinationCoord[1]].type === 'booster' ? (MapCoords[destinationCoord[0]][destinationCoord[1]].value as BoosterT) : null;
         
-        if(!isAvailableCell(user.location,destinationCoord,2,7)) return;
+        const stepRange = user?.activeBooster?.name === boostersTypesNames.increaseStepDistance ? 2 : 1
+        if(!isAvailableCell(user.location,destinationCoord,stepRange,7)) return;
 
         setMapCoords(prev => {
             const x = destinationCoord[0];

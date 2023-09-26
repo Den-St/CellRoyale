@@ -9,6 +9,7 @@ export const SubmitButton = styled.input`
     height: 50px;
     padding: 0 40px;
     width:fit-content;
+    cursor:pointer;
 `;
 
 export const Input = styled.input`

@@ -10,13 +10,15 @@ import GoogleOutlined from "@ant-design/icons/GoogleOutlined";
 
 export const Registration = () => {
     const [confirmPassword,setConfirmPassword] = useState('');
-    const {signInWithGoogle,onSubmit,success,contextHolder,showError,clearError} = useRegistration();
     const {
         register,
         handleSubmit,
         formState: { errors },
         watch,
     } = useForm<RegistrationInterface>();
+    const disabled = watch('password') !== confirmPassword || confirmPassword === '';
+    const {signInWithGoogle,onSubmit,success,contextHolder,showError,clearError} = useRegistration(disabled);
+
     useEffect(() => {
         if(errors.email?.message) {
             clearError('email');
@@ -30,8 +32,11 @@ export const Registration = () => {
             clearError('displayName')
             showError(errors.displayName.message,'displayName');
         }
+        if(watch('password') && disabled){
+            clearError('password dont match')
+            showError('Passwords dont`t match','password dont match');
+        }
     },[errors.email, errors.password, errors.displayName]);
-    const disabled = watch('password') !== confirmPassword || confirmPassword === '';
     
     if(success) return <Navigate to={'/'}/>
 
@@ -41,14 +46,14 @@ export const Registration = () => {
             <Display style={{borderRadius:'20px',flexDirection:'column',gap:'10px',padding:"35px 50px",background:'white',alignItems:'center'}} >
                 <Header>Create account</Header>
                 <Input {...register('displayName',{required:"Username is required",})} placeholder="Username"/>
-                <Input {...register('email',{required:"Email is required",pattern:emailPattern,})} placeholder="E-mail"/>
+                <Input {...register('email',{required:"Email is required",pattern:{value:emailPattern,message:"Email must be correct(example@email.com)"},})} placeholder="E-mail"/>
                 <Display style={{justifyContent:'space-between',gap:'20px'}} >
                     <PasswordInput type={'password'} {...register('password',{required:"Password is required",
-                                    minLength:{message:"Password must be longer than 10 symbols.",value:10},validate:{}})} placeholder="Password"/>
+                                    minLength:{message:"Password must be longer than 10 symbols.",value:10}})} placeholder="Password"/>
                     <PasswordInput type={'password'} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Confirm password"/>
                 </Display>
                 <Display style={{alignItems:'center',width:'100%',flexDirection:'column',gap:'10px'}}>
-                    <SubmitButton disabled={disabled} type={'submit'} value={'Sign up'}/>
+                    <SubmitButton type={'submit'} value={'Sign up'}/>
                     <GoogleAuthButton onClick={signInWithGoogle}><GoogleOutlined /></GoogleAuthButton>
                     <ChangeSignType>Already a member? <GoToLogIn to={'/login'}>Log in</GoToLogIn></ChangeSignType>
                 </Display>

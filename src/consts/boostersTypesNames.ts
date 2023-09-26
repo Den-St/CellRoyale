@@ -1,3 +1,4 @@
 export const boostersTypesNames = {
-    invisibility:'invisibility'
+    invisibility:'invisibility',
+    increaseStepDistance:'increase step distance'
 }
