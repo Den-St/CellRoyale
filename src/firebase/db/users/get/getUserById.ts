@@ -6,7 +6,6 @@ import { getBoosterTypeById } from '../../boosterType/get/getBoosterTypeById';
 export const getUserById = async (userId:string) => {
     try{
         if(!userId) return;
-        console.log('userId',userId)
         const document = doc(db,collectionsKeys.users,userId);
         const userDoc = (await getDoc(document));
         const user = userDoc.data();

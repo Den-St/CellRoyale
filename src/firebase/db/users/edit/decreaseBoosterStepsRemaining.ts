@@ -5,7 +5,6 @@ export const decreaseBoosterStepsRemaining = async (userId:string) => {
     try{
         const userDoc = doc(db,collectionsKeys.users,userId);
         const user = (await getDoc(userDoc)).data();
-        console.log('bbb',user)
         await updateDoc(userDoc,{
             boosterStepsRemaining:user?.boosterStepsRemaining - 1,
             activeBooster:user?.boosterStepsRemaining !== 1 ? user?.activeBooster : ''

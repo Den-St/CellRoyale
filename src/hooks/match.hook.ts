@@ -26,13 +26,17 @@ export const useMatch = () => {
     const [loading,setLoading] = useState(false);
     const matchId = useParams().id;
     const userId = useAppSelector(state => state.user.id);
-    const user = useAppSelector(state => state.user);
     const match = useAppSelector(state => state.match);
     const dispatch = useAppDispacth();
 
     useEffect(() => {
-        if(match.alivePlayers?.length === maxPlayersNumber && matchId && match.alivePlayers[0].id && !match.activePlayer) setActivePlayer(matchId,match.alivePlayers[0].id)
+        if(match.alivePlayers?.length === maxPlayersNumber && matchId && match.alivePlayers[0].id && !match.activePlayer) {
+            setLoading(true);
+            setActivePlayer(matchId,match.alivePlayers[0].id);
+            setLoading(false);
+        }
     },[match.alivePlayers?.length])
+
     useEffect(() => {
         if(!matchId || !userId || match?.loadedPlayers?.includes(userId) || match?.alivePlayers?.some(user => user.id === userId)) return;
         setLoading(true);
@@ -43,7 +47,9 @@ export const useMatch = () => {
     useEffect(() => {
         if(!matchId) return;
         if(match.loadedPlayers?.length !== maxPlayersNumber || match.stepEndTime) return;
+        setLoading(true);
         setStepEndTime(matchId);
+        setLoading(false);
     },[match.loadedPlayers]);
     
     useEffect(() => {
@@ -52,7 +58,6 @@ export const useMatch = () => {
         addBoosters(match?.id);
         setBoosters(true);
         createMatchResult(match.id);
-        
         setLoading(false);
     },[match,userId]);
 
@@ -70,6 +75,7 @@ export const useMatch = () => {
             const boostersQ = match.boosters.map(async (booster:string) => await getBoosterById(booster));
             match.boosters = await Promise.all(boostersQ);
             match.id = doc.id;
+            console.log('match1',match);
             dispatch(setMatch(match));
             setLoading(false);
         });

@@ -44,7 +44,7 @@ export const useMap = () => {
     const matchResult = useAppSelector(state => state.matchResult);
     const dispatch = useAppDispacth();
    
-    console.log(MapCoords);
+    console.log('MapCoords',MapCoords);
 
     const clearMap = () => {
         setMapCoords(prev => {
