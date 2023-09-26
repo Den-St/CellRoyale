@@ -16,6 +16,7 @@ import { activateBooster } from '../firebase/db/users/edit/activateBooster';
 import { removeBoosterFromMatch } from '../firebase/db/matches/edit/removeBoosterFromMatch';
 import { clearUserBooster, decrementBoosterStepsRemainingLocally, setNewBooster, setUserLocation } from '../store/userSlice';
 import { decreaseBoosterStepsRemaining } from '../firebase/db/users/edit/decreaseBoosterStepsRemaining';
+import { isAvailableCell } from '../helpers/isAvailableCell';
 
 export const useMap = () => {
     const [MapCoords,setMapCoords] = useState<MapT>({
@@ -151,50 +152,7 @@ export const useMap = () => {
             Object.keys(prev).forEach(
                 x => Object.keys(prev[+x]).forEach(y => {
                     if(newMap[+x][+y].type !== 'player' && newMap[+x][+y].type !== 'booster' && user.location){
-                        if(user.location[0] < 7){
-                            if(+x === user.location?.[0] - 1 ){
-                                if(+y === user.location?.[1] - 1 || +y === user.location?.[1]){
-                                    newMap[+x][+y] = {type:'cell',value:1};
-                                }
-                            }
-                            if(+x === user.location[0] + 1){
-                                if(+y === user.location?.[1] + 1 || +y === user.location?.[1]){
-                                    newMap[+x][+y] = {type:'cell',value:1};
-                                }
-                            }
-                            if(+x === user.location[0]){
-                                if(+y === user.location?.[1] + 1 || +y === user.location?.[1] - 1){
-                                    newMap[+x][+y] = {type:'cell',value:1};
-                                }
-                            }
-                        }else if(user.location[0] > 7){
-                            if(+x === user.location?.[0] - 1 ){
-                                if(+y === user.location?.[1] + 1 || +y === user.location?.[1]){
-                                    newMap[+x][+y] = {type:'cell',value:1};
-                                }
-                            }
-                            if(+x === user.location[0] + 1){
-                                if(+y === user.location?.[1] - 1 || +y === user.location?.[1]){
-                                    newMap[+x][+y] = {type:'cell',value:1};
-                                }
-                            }
-                            if(+x === user.location[0]){
-                                if(+y === user.location?.[1] + 1 || +y === user.location?.[1] - 1){
-                                    newMap[+x][+y] = {type:'cell',value:1};
-                                }
-                            }
-                        }else{
-                            if(+x === user.location?.[0] - 1 || +x === user.location[0] + 1){
-                                if(+y === user.location?.[1] - 1 || +y === user.location?.[1]){
-                                    newMap[+x][+y] = {type:'cell',value:1};
-                                }
-                            }
-                            if(+x === user.location[0]){
-                                if(+y === user.location?.[1] - 1 || +y === user.location?.[1] + 1){
-                                    newMap[+x][+y] = {type:'cell',value:1};
-                                }
-                            }
-                        }
+                        if(isAvailableCell(user.location,[+x,+y],2,7)) newMap[+x][+y] = {type:'cell',value:1};
                     }
                 }));
 
@@ -213,55 +171,11 @@ export const useMap = () => {
         if(!match.id || !user.id) return;
         if(match?.activePlayer?.id !== user.id) return;
         
-        if(!(destinationCoord[0] === user.location[0] || destinationCoord[0] === user.location[0] + 1 || destinationCoord[0] === user.location[0] - 1)) return;
+        if(destinationCoord[0] === user.location[0]) return;
         let enemyId = MapCoords[destinationCoord[0]][destinationCoord[1]].type === 'player' ? (MapCoords[destinationCoord[0]][destinationCoord[1]].value as UserT).id : null;
         let booster = MapCoords[destinationCoord[0]][destinationCoord[1]].type === 'booster' ? (MapCoords[destinationCoord[0]][destinationCoord[1]].value as BoosterT) : null;
         
-        //available cells 1
-        if(user.location[0] < 7){
-            if(destinationCoord[0] === user.location?.[0] - 1 ){
-                if(!(destinationCoord[1] === user.location?.[1] - 1 || destinationCoord[1] === user.location?.[1])){
-                    return;
-                }
-            }
-            if(destinationCoord[0] === user.location[0] + 1){
-                if(!(destinationCoord[1] === user.location?.[1] + 1 || destinationCoord[1] === user.location?.[1])){
-                    return;
-                }
-            }
-            if(destinationCoord[0] === user.location[0]){
-                if(!(destinationCoord[1] === user.location?.[1] + 1 || destinationCoord[1] === user.location?.[1] - 1)){
-                    return;
-                }
-            }
-        }else if(user.location[0] > 7){
-            if(destinationCoord[0] === user.location?.[0] - 1 ){
-                if(!(destinationCoord[1] === user.location?.[1] + 1 || destinationCoord[1] === user.location?.[1])){
-                    return;
-                }
-            }
-            if(destinationCoord[0] === user.location[0] + 1){
-                if(!(destinationCoord[1] === user.location?.[1] - 1 || destinationCoord[1] === user.location?.[1])){
-                    return;
-                }
-            }
-            if(destinationCoord[0] === user.location[0]){
-                if(!(destinationCoord[1] === user.location?.[1] + 1 || destinationCoord[1] === user.location?.[1] - 1)){
-                    return;
-                }
-            }
-        }else{
-            if(destinationCoord[0] === user.location?.[0] - 1 || destinationCoord[0] === user.location[0] + 1){
-                if(!(destinationCoord[1] === user.location?.[1] - 1 || destinationCoord[1] === user.location?.[1])){
-                    return;
-                }
-            }
-            if(destinationCoord[0] === user.location[0]){
-                if(!(destinationCoord[1] === user.location?.[1] - 1 || destinationCoord[1] === user.location?.[1] + 1)){
-                    return;
-                }
-            }
-        }
+        if(!isAvailableCell(user.location,destinationCoord,2,7)) return;
 
         setMapCoords(prev => {
             const x = destinationCoord[0];
