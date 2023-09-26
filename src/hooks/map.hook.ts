@@ -173,7 +173,7 @@ export const useMap = () => {
         if(!match.id || !user.id) return;
         if(match?.activePlayer?.id !== user.id) return;
         
-        if(destinationCoord[0] === user.location[0]) return;
+        if(destinationCoord[0] === user.location[0] && destinationCoord[1] === user.location[1]) return;
         let enemyId = MapCoords[destinationCoord[0]][destinationCoord[1]].type === 'player' ? (MapCoords[destinationCoord[0]][destinationCoord[1]].value as UserT).id : null;
         let booster = MapCoords[destinationCoord[0]][destinationCoord[1]].type === 'booster' ? (MapCoords[destinationCoord[0]][destinationCoord[1]].value as BoosterT) : null;
         
@@ -195,20 +195,18 @@ export const useMap = () => {
             if(!x || !y) return prev;
             return ({...prev,[x]:{...prev[x], [y]:{type:'cell',value:0}}});
         });
-        //if(user.boosterStep) await decreaseSteps dispatch(decrement); if boosterStep === 1 set '' to activeBooster and decrement
-        //if(booster) await activateBooster(user.id,booster.type); set boosterSteps and set booster.type.id in activeBooster
-        //if(booster) deleteBooster(booster.id) remove from map and delete doc
+
         dispatch(setUserLocation({location:destinationCoord}));
         clearMapFromAvailableCells();
         const queries = [];
         queries.push(async () => user.id && await changePlayersLocation(user.id,destinationCoord));
+        if(user.boosterStepsRemaining){
+            queries.push(async () => user.id && await decreaseBoosterStepsRemaining(user.id));
+        }
         if(booster) {
             queries.push(async () => user.id && booster?.type && await activateBooster(user.id,booster?.type));
             queries.push(async () => user.id && booster && await removeBoosterById(booster.id));
             queries.push(async () => user.id && match.id && booster && await removeBoosterFromMatch(match.id,booster.id));
-        }
-        if(user.boosterStepsRemaining){
-            queries.push(async () => user.id && await decreaseBoosterStepsRemaining(user.id));
         }
         if(enemyId) queries.push(async () => enemyId && await eliminatePlayer(match.id,enemyId));
         await Promise.all(queries.map(q => q()));
