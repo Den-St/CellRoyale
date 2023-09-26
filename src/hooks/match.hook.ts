@@ -53,7 +53,7 @@ export const useMatch = () => {
     },[match.loadedPlayers]);
     
     useEffect(() => {
-        if(boosters || !match?.id || match.boosters?.length || !userId || match.creator !== userId) return;
+        if(boosters || !match?.id || match.boosters?.length || boosters || !userId || match.creator !== userId) return;
         setLoading(true);
         addBoosters(match?.id);
         setBoosters(true);
