@@ -1,5 +1,6 @@
 import { styled } from "styled-components";
 import { BoosterT } from "../../../types/booster";
+import { CellT } from "../../../types/cell";
 
 const BoosterHex = styled.button<{booster:BoosterT}>`
     border:none;
@@ -25,7 +26,7 @@ export const AvailableToStepCell = styled.span`
     border-radius:100%;
     transition:0.1s;
     user-select: none;
-    color:#75b4f7;
+    color:black;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -35,12 +36,14 @@ export const AvailableToStepCell = styled.span`
 `;
 
 type BoosterProps = {
-    value:BoosterT;
+    cell:CellT;
     onStep:() => void,
-    $availableToStep:boolean
+    $availableToStep:boolean,
+    activateOnHover:(cell:CellT) => void,
+    clearHover:() => void
 }
-export const BoosterCell:React.FC<BoosterProps> = ({value,onStep,$availableToStep}) => {
-    return <BoosterHex onClick={onStep} booster={value}>
+export const BoosterCell:React.FC<BoosterProps> = ({cell,onStep,$availableToStep,clearHover,activateOnHover}) => {
+    return <BoosterHex onMouseEnter={() => activateOnHover(cell)} onMouseLeave={clearHover} onClick={onStep} booster={cell.value as BoosterT}>
         &#x2B22;
         {$availableToStep && <AvailableToStepCell>&#x2B22;</AvailableToStepCell>}
     </BoosterHex> 

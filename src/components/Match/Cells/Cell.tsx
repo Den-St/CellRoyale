@@ -1,4 +1,5 @@
 import { styled } from "styled-components";
+import { CellT } from "../../../types/cell";
 
 const colors = [
     '#9fa79f',
@@ -28,20 +29,23 @@ const AvailableCell = styled.span`
     font-size: 20px;
     border-radius:100%;
     user-select: none;
-    color:#75b4f7;
+    color:#4877f9;
     position:absolute;
     top:37%;
     left:32.5%;
 `;
 
 type CellProps = {
-    value:number;
+    cell:CellT;
     onStep:() => void,
-    $isAvailable:boolean
+    $isAvailable:boolean,
+    activateOnHover:(cell:CellT) => void,
+    clearHover:() => void
+
 }
 
-export const Cell:React.FC<CellProps> = ({value,onStep,$isAvailable}) => {
-    return <HexSpan onClick={onStep} value={value}>
+export const Cell:React.FC<CellProps> = ({cell,onStep,$isAvailable,clearHover,activateOnHover}) => {
+    return <HexSpan onMouseEnter={() => activateOnHover(cell)} onMouseLeave={clearHover} onClick={onStep} value={cell.value as number}>
         &#x2B22;
         {$isAvailable && <AvailableCell>&#x2B22;</AvailableCell>}
     </HexSpan> 
