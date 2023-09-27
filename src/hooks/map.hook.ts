@@ -21,21 +21,21 @@ import { isAvailableCell } from '../helpers/isAvailableCell';
 
 export const useMap = () => {
     const [MapCoords,setMapCoords] = useState<MapT>({
-        0:{0:{type:'cell',value:0}, 1:{type:'cell',value:0}, 2:{type:'cell',value:0}, 3:{type:'cell',value:0}, 4:{type:'cell',value:0}, 5:{type:'cell',value:0}, 6:{type:'cell',value:0}, 7:{type:'cell',value:0},},
-        1:{0:{type:'cell',value:0}, 1:{type:'cell',value:0}, 2:{type:'cell',value:0}, 3:{type:'cell',value:0}, 4:{type:'cell',value:0}, 5:{type:'cell',value:0}, 6:{type:'cell',value:0}, 7:{type:'cell',value:0}, 8:{type:'cell',value:0}},
-        2:{0:{type:'cell',value:0}, 1:{type:'cell',value:0}, 2:{type:'cell',value:0}, 3:{type:'cell',value:0}, 4:{type:'cell',value:0}, 5:{type:'cell',value:0}, 6:{type:'cell',value:0}, 7:{type:'cell',value:0}, 8:{type:'cell',value:0}, 9:{type:'cell',value:0}},
-        3:{0:{type:'cell',value:0}, 1:{type:'cell',value:0}, 2:{type:'cell',value:0}, 3:{type:'cell',value:0}, 4:{type:'cell',value:0}, 5:{type:'cell',value:0}, 6:{type:'cell',value:0}, 7:{type:'cell',value:0}, 8:{type:'cell',value:0}, 9:{type:'cell',value:0}, 10:{type:'cell',value:0}},
-        4:{0:{type:'cell',value:0}, 1:{type:'cell',value:0}, 2:{type:'cell',value:0}, 3:{type:'cell',value:0}, 4:{type:'cell',value:0}, 5:{type:'cell',value:0}, 6:{type:'cell',value:0}, 7:{type:'cell',value:0}, 8:{type:'cell',value:0}, 9:{type:'cell',value:0}, 10:{type:'cell',value:0}, 11:{type:'cell',value:0}},
-        5:{0:{type:'cell',value:0}, 1:{type:'cell',value:0}, 2:{type:'cell',value:0}, 3:{type:'cell',value:0}, 4:{type:'cell',value:0}, 5:{type:'cell',value:0}, 6:{type:'cell',value:0}, 7:{type:'cell',value:0}, 8:{type:'cell',value:0}, 9:{type:'cell',value:0}, 10:{type:'cell',value:0}, 11:{type:'cell',value:0}, 12:{type:'cell',value:0}},
-        6:{0:{type:'cell',value:0}, 1:{type:'cell',value:0}, 2:{type:'cell',value:0}, 3:{type:'cell',value:0}, 4:{type:'cell',value:0}, 5:{type:'cell',value:0}, 6:{type:'cell',value:0}, 7:{type:'cell',value:0}, 8:{type:'cell',value:0}, 9:{type:'cell',value:0}, 10:{type:'cell',value:0}, 11:{type:'cell',value:0}, 12:{type:'cell',value:0}, 13:{type:'cell',value:0}},
-        7:{0:{type:'cell',value:0}, 1:{type:'cell',value:0}, 2:{type:'cell',value:0}, 3:{type:'cell',value:0}, 4:{type:'cell',value:0}, 5:{type:'cell',value:0}, 6:{type:'cell',value:0}, 7:{type:'cell',value:0}, 8:{type:'cell',value:0}, 9:{type:'cell',value:0}, 10:{type:'cell',value:0}, 11:{type:'cell',value:0}, 12:{type:'cell',value:0}, 13:{type:'cell',value:0}, 14:{type:'cell',value:0}},
-        8:{0:{type:'cell',value:0}, 1:{type:'cell',value:0}, 2:{type:'cell',value:0}, 3:{type:'cell',value:0}, 4:{type:'cell',value:0}, 5:{type:'cell',value:0}, 6:{type:'cell',value:0}, 7:{type:'cell',value:0}, 8:{type:'cell',value:0}, 9:{type:'cell',value:0}, 10:{type:'cell',value:0}, 11:{type:'cell',value:0}, 12:{type:'cell',value:0}, 13:{type:'cell',value:0}},
-        9:{0:{type:'cell',value:0}, 1:{type:'cell',value:0}, 2:{type:'cell',value:0}, 3:{type:'cell',value:0}, 4:{type:'cell',value:0}, 5:{type:'cell',value:0}, 6:{type:'cell',value:0}, 7:{type:'cell',value:0}, 8:{type:'cell',value:0}, 9:{type:'cell',value:0}, 10:{type:'cell',value:0}, 11:{type:'cell',value:0}, 12:{type:'cell',value:0}},
-        10:{0:{type:'cell',value:0}, 1:{type:'cell',value:0}, 2:{type:'cell',value:0}, 3:{type:'cell',value:0}, 4:{type:'cell',value:0}, 5:{type:'cell',value:0}, 6:{type:'cell',value:0}, 7:{type:'cell',value:0}, 8:{type:'cell',value:0},9:{type:'cell',value:0}, 10:{type:'cell',value:0}, 11:{type:'cell',value:0}},
-        11:{0:{type:'cell',value:0}, 1:{type:'cell',value:0}, 2:{type:'cell',value:0}, 3:{type:'cell',value:0}, 4:{type:'cell',value:0}, 5:{type:'cell',value:0}, 6:{type:'cell',value:0}, 7:{type:'cell',value:0}, 8:{type:'cell',value:0},9:{type:'cell',value:0}, 10:{type:'cell',value:0}},
-        12:{0:{type:'cell',value:0}, 1:{type:'cell',value:0}, 2:{type:'cell',value:0}, 3:{type:'cell',value:0}, 4:{type:'cell',value:0}, 5:{type:'cell',value:0}, 6:{type:'cell',value:0}, 7:{type:'cell',value:0}, 8:{type:'cell',value:0},9:{type:'cell',value:0}},
-        13:{0:{type:'cell',value:0}, 1:{type:'cell',value:0}, 2:{type:'cell',value:0}, 3:{type:'cell',value:0}, 4:{type:'cell',value:0}, 5:{type:'cell',value:0}, 6:{type:'cell',value:0}, 7:{type:'cell',value:0}, 8:{type:'cell',value:0}},
-        14:{0:{type:'cell',value:0}, 1:{type:'cell',value:0}, 2:{type:'cell',value:0}, 3:{type:'cell',value:0}, 4:{type:'cell',value:0}, 5:{type:'cell',value:0}, 6:{type:'cell',value:0}, 7:{type:'cell',value:0},}  
+        0:{0:{type:'cell',value:0,isAvailable:false}, 1:{type:'cell',value:0,isAvailable:false}, 2:{type:'cell',value:0,isAvailable:false}, 3:{type:'cell',value:0,isAvailable:false}, 4:{type:'cell',value:0,isAvailable:false}, 5:{type:'cell',value:0,isAvailable:false}, 6:{type:'cell',value:0,isAvailable:false}, 7:{type:'cell',value:0,isAvailable:false},},
+        1:{0:{type:'cell',value:0,isAvailable:false}, 1:{type:'cell',value:0,isAvailable:false}, 2:{type:'cell',value:0,isAvailable:false}, 3:{type:'cell',value:0,isAvailable:false}, 4:{type:'cell',value:0,isAvailable:false}, 5:{type:'cell',value:0,isAvailable:false}, 6:{type:'cell',value:0,isAvailable:false}, 7:{type:'cell',value:0,isAvailable:false}, 8:{type:'cell',value:0,isAvailable:false}},
+        2:{0:{type:'cell',value:0,isAvailable:false}, 1:{type:'cell',value:0,isAvailable:false}, 2:{type:'cell',value:0,isAvailable:false}, 3:{type:'cell',value:0,isAvailable:false}, 4:{type:'cell',value:0,isAvailable:false}, 5:{type:'cell',value:0,isAvailable:false}, 6:{type:'cell',value:0,isAvailable:false}, 7:{type:'cell',value:0,isAvailable:false}, 8:{type:'cell',value:0,isAvailable:false}, 9:{type:'cell',value:0,isAvailable:false}},
+        3:{0:{type:'cell',value:0,isAvailable:false}, 1:{type:'cell',value:0,isAvailable:false}, 2:{type:'cell',value:0,isAvailable:false}, 3:{type:'cell',value:0,isAvailable:false}, 4:{type:'cell',value:0,isAvailable:false}, 5:{type:'cell',value:0,isAvailable:false}, 6:{type:'cell',value:0,isAvailable:false}, 7:{type:'cell',value:0,isAvailable:false}, 8:{type:'cell',value:0,isAvailable:false}, 9:{type:'cell',value:0,isAvailable:false}, 10:{type:'cell',value:0,isAvailable:false}},
+        4:{0:{type:'cell',value:0,isAvailable:false}, 1:{type:'cell',value:0,isAvailable:false}, 2:{type:'cell',value:0,isAvailable:false}, 3:{type:'cell',value:0,isAvailable:false}, 4:{type:'cell',value:0,isAvailable:false}, 5:{type:'cell',value:0,isAvailable:false}, 6:{type:'cell',value:0,isAvailable:false}, 7:{type:'cell',value:0,isAvailable:false}, 8:{type:'cell',value:0,isAvailable:false}, 9:{type:'cell',value:0,isAvailable:false}, 10:{type:'cell',value:0,isAvailable:false}, 11:{type:'cell',value:0,isAvailable:false}},
+        5:{0:{type:'cell',value:0,isAvailable:false}, 1:{type:'cell',value:0,isAvailable:false}, 2:{type:'cell',value:0,isAvailable:false}, 3:{type:'cell',value:0,isAvailable:false}, 4:{type:'cell',value:0,isAvailable:false}, 5:{type:'cell',value:0,isAvailable:false}, 6:{type:'cell',value:0,isAvailable:false}, 7:{type:'cell',value:0,isAvailable:false}, 8:{type:'cell',value:0,isAvailable:false}, 9:{type:'cell',value:0,isAvailable:false}, 10:{type:'cell',value:0,isAvailable:false}, 11:{type:'cell',value:0,isAvailable:false}, 12:{type:'cell',value:0,isAvailable:false}},
+        6:{0:{type:'cell',value:0,isAvailable:false}, 1:{type:'cell',value:0,isAvailable:false}, 2:{type:'cell',value:0,isAvailable:false}, 3:{type:'cell',value:0,isAvailable:false}, 4:{type:'cell',value:0,isAvailable:false}, 5:{type:'cell',value:0,isAvailable:false}, 6:{type:'cell',value:0,isAvailable:false}, 7:{type:'cell',value:0,isAvailable:false}, 8:{type:'cell',value:0,isAvailable:false}, 9:{type:'cell',value:0,isAvailable:false}, 10:{type:'cell',value:0,isAvailable:false}, 11:{type:'cell',value:0,isAvailable:false}, 12:{type:'cell',value:0,isAvailable:false}, 13:{type:'cell',value:0,isAvailable:false}},
+        7:{0:{type:'cell',value:0,isAvailable:false}, 1:{type:'cell',value:0,isAvailable:false}, 2:{type:'cell',value:0,isAvailable:false}, 3:{type:'cell',value:0,isAvailable:false}, 4:{type:'cell',value:0,isAvailable:false}, 5:{type:'cell',value:0,isAvailable:false}, 6:{type:'cell',value:0,isAvailable:false}, 7:{type:'cell',value:0,isAvailable:false}, 8:{type:'cell',value:0,isAvailable:false}, 9:{type:'cell',value:0,isAvailable:false}, 10:{type:'cell',value:0,isAvailable:false}, 11:{type:'cell',value:0,isAvailable:false}, 12:{type:'cell',value:0,isAvailable:false}, 13:{type:'cell',value:0,isAvailable:false}, 14:{type:'cell',value:0,isAvailable:false}},
+        8:{0:{type:'cell',value:0,isAvailable:false}, 1:{type:'cell',value:0,isAvailable:false}, 2:{type:'cell',value:0,isAvailable:false}, 3:{type:'cell',value:0,isAvailable:false}, 4:{type:'cell',value:0,isAvailable:false}, 5:{type:'cell',value:0,isAvailable:false}, 6:{type:'cell',value:0,isAvailable:false}, 7:{type:'cell',value:0,isAvailable:false}, 8:{type:'cell',value:0,isAvailable:false}, 9:{type:'cell',value:0,isAvailable:false}, 10:{type:'cell',value:0,isAvailable:false}, 11:{type:'cell',value:0,isAvailable:false}, 12:{type:'cell',value:0,isAvailable:false}, 13:{type:'cell',value:0,isAvailable:false}},
+        9:{0:{type:'cell',value:0,isAvailable:false}, 1:{type:'cell',value:0,isAvailable:false}, 2:{type:'cell',value:0,isAvailable:false}, 3:{type:'cell',value:0,isAvailable:false}, 4:{type:'cell',value:0,isAvailable:false}, 5:{type:'cell',value:0,isAvailable:false}, 6:{type:'cell',value:0,isAvailable:false}, 7:{type:'cell',value:0,isAvailable:false}, 8:{type:'cell',value:0,isAvailable:false}, 9:{type:'cell',value:0,isAvailable:false}, 10:{type:'cell',value:0,isAvailable:false}, 11:{type:'cell',value:0,isAvailable:false}, 12:{type:'cell',value:0,isAvailable:false}},
+        10:{0:{type:'cell',value:0,isAvailable:false}, 1:{type:'cell',value:0,isAvailable:false}, 2:{type:'cell',value:0,isAvailable:false}, 3:{type:'cell',value:0,isAvailable:false}, 4:{type:'cell',value:0,isAvailable:false}, 5:{type:'cell',value:0,isAvailable:false}, 6:{type:'cell',value:0,isAvailable:false}, 7:{type:'cell',value:0,isAvailable:false}, 8:{type:'cell',value:0,isAvailable:false},9:{type:'cell',value:0,isAvailable:false}, 10:{type:'cell',value:0,isAvailable:false}, 11:{type:'cell',value:0,isAvailable:false}},
+        11:{0:{type:'cell',value:0,isAvailable:false}, 1:{type:'cell',value:0,isAvailable:false}, 2:{type:'cell',value:0,isAvailable:false}, 3:{type:'cell',value:0,isAvailable:false}, 4:{type:'cell',value:0,isAvailable:false}, 5:{type:'cell',value:0,isAvailable:false}, 6:{type:'cell',value:0,isAvailable:false}, 7:{type:'cell',value:0,isAvailable:false}, 8:{type:'cell',value:0,isAvailable:false},9:{type:'cell',value:0,isAvailable:false}, 10:{type:'cell',value:0,isAvailable:false}},
+        12:{0:{type:'cell',value:0,isAvailable:false}, 1:{type:'cell',value:0,isAvailable:false}, 2:{type:'cell',value:0,isAvailable:false}, 3:{type:'cell',value:0,isAvailable:false}, 4:{type:'cell',value:0,isAvailable:false}, 5:{type:'cell',value:0,isAvailable:false}, 6:{type:'cell',value:0,isAvailable:false}, 7:{type:'cell',value:0,isAvailable:false}, 8:{type:'cell',value:0,isAvailable:false},9:{type:'cell',value:0,isAvailable:false}},
+        13:{0:{type:'cell',value:0,isAvailable:false}, 1:{type:'cell',value:0,isAvailable:false}, 2:{type:'cell',value:0,isAvailable:false}, 3:{type:'cell',value:0,isAvailable:false}, 4:{type:'cell',value:0,isAvailable:false}, 5:{type:'cell',value:0,isAvailable:false}, 6:{type:'cell',value:0,isAvailable:false}, 7:{type:'cell',value:0,isAvailable:false}, 8:{type:'cell',value:0,isAvailable:false}},
+        14:{0:{type:'cell',value:0,isAvailable:false}, 1:{type:'cell',value:0,isAvailable:false}, 2:{type:'cell',value:0,isAvailable:false}, 3:{type:'cell',value:0,isAvailable:false}, 4:{type:'cell',value:0,isAvailable:false}, 5:{type:'cell',value:0,isAvailable:false}, 6:{type:'cell',value:0,isAvailable:false}, 7:{type:'cell',value:0,isAvailable:false},}  
     });
     const [isEliminated,setIsEliminated] = useState(false);
     const [isWinner,setIsWinner] = useState(false);
@@ -53,7 +53,7 @@ export const useMap = () => {
             Object.keys(prev).forEach(
                 x => Object.keys(prev[+x]).forEach(y => {
                     if(clearedMap[+x][+y].type === 'player' || clearedMap[+x][+y].value === 1){
-                        clearedMap[+x][+y] = {type:'cell',value:0};
+                        clearedMap[+x][+y] = {type:'cell',value:0,isAvailable:false};
                     }
                 }));
 
@@ -66,8 +66,8 @@ export const useMap = () => {
 
             Object.keys(prev).forEach(
                 x => Object.keys(prev[+x]).forEach(y => {
-                    if( clearedMap[+x][+y].value === 1){
-                        clearedMap[+x][+y] = {type:'cell',value:0};
+                    if( clearedMap[+x][+y].isAvailable){
+                        clearedMap[+x][+y] = {...clearedMap[+x][+y],isAvailable:false};
                     }
                 }));
 
@@ -88,7 +88,7 @@ export const useMap = () => {
                             eliminatePlayer(match.id,user.id)
                         }
                     }
-                    newMap[i - 1][+y] = {type:'cell',value:2};
+                    newMap[i - 1][+y] = {type:'cell',value:2,isAvailable:false};
                 });
                 Object.keys(newMap[15 - i]).forEach(y => {
                     if(user.location && 15 - i === user.location[0] && +y === user.location[1]){
@@ -97,7 +97,7 @@ export const useMap = () => {
                             eliminatePlayer(match.id,user.id);
                         }
                     } 
-                    newMap[15 - i][+y] = {type:'cell',value:2};
+                    newMap[15 - i][+y] = {type:'cell',value:2,isAvailable:false};
                 });
                 Object.keys(newMap).forEach(
                     x => Object.keys(newMap[+x]).forEach(y => {
@@ -108,7 +108,7 @@ export const useMap = () => {
                                     eliminatePlayer(match.id,user.id);
                                 }
                             }
-                            newMap[+x][+y] = {type:'cell',value:2};
+                            newMap[+x][+y] = {type:'cell',value:2,isAvailable:false};
                         }
                     }));
             }
@@ -121,7 +121,7 @@ export const useMap = () => {
             const y = player.location?.[1];
             if(x === undefined || y === undefined) return prev;
 
-            return ({...prev,[x]:{...prev[x], [y]: {type:'player',value:player}}});
+            return ({...prev,[x]:{...prev[x], [y]: {...prev[x][y],type:'player',value:player}}});
         }));
     }
     const displayBoosters = () => {
@@ -130,7 +130,7 @@ export const useMap = () => {
             const y = booster.location?.[1];
             if(!x || !y) return prev;
 
-            return ({...prev,[x]:{...prev[x], [y]: {type:'booster',value:booster}}});
+            return ({...prev,[x]:{...prev[x], [y]: {...prev[x][y],type:'booster',value:booster}}});
         }));
     }
     const loadMap = () => {
@@ -152,9 +152,9 @@ export const useMap = () => {
 
             Object.keys(prev).forEach(
                 x => Object.keys(prev[+x]).forEach(y => {
-                    if(newMap[+x][+y].type !== 'player' && newMap[+x][+y].type !== 'booster' && user.location){
+                    if(user.location){
                         const stepRange = user?.activeBooster?.name === boostersTypesNames.increaseStepDistance ? 2 : 1
-                        if(isAvailableCell(user.location,[+x,+y],stepRange,7)) newMap[+x][+y] = {type:'cell',value:1};
+                        if(isAvailableCell(user.location,[+x,+y],stepRange,7)) newMap[+x][+y] = {...newMap[+x][+y],isAvailable:true};
                     }
                 }));
 
@@ -179,12 +179,13 @@ export const useMap = () => {
         
         const stepRange = user?.activeBooster?.name === boostersTypesNames.increaseStepDistance ? 2 : 1
         if(!isAvailableCell(user.location,destinationCoord,stepRange,7)) return;
+        clearMapFromAvailableCells();
 
         setMapCoords(prev => {
             const x = destinationCoord[0];
             const y = destinationCoord[1];
 
-            return ({...prev,[x]:{...prev[x], [y]: {type:'player',value:user}},
+            return ({...prev,[x]:{...prev[x], [y]: {...prev[x][y],type:'player',value:user}},
             });
         });
 
@@ -193,11 +194,10 @@ export const useMap = () => {
             const y = user.location?.[1]; 
 
             if(!x || !y) return prev;
-            return ({...prev,[x]:{...prev[x], [y]:{type:'cell',value:0}}});
+            return ({...prev,[x]:{...prev[x], [y]:{...prev[x][y],type:'cell',value:0}}});
         });
 
         dispatch(setUserLocation({location:destinationCoord}));
-        clearMapFromAvailableCells();
         const queries = [];
         queries.push(async () => user.id && await changePlayersLocation(user.id,destinationCoord));
         if(user.boosterStepsRemaining){
@@ -239,5 +239,5 @@ export const useMap = () => {
         if((isWinner || isEliminated) && user.id) clearPlayersMatchInfo(user.id);
     },[isWinner,isEliminated]);
 
-    return {MapCoords,onStep,match,isEliminated,isWinner,matchResult};
+    return {MapCoords,onStep,match,isEliminated,isWinner,matchResult,user};
 }

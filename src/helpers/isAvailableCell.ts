@@ -47,6 +47,7 @@
 // }
 
 export const isAvailableCell = (userLocation:number[],destinationCoord:number[],distance:number,indexOfCentralRow:number) => {
+    if(userLocation[0] === destinationCoord[0] && userLocation[1] === destinationCoord[1]) return false;
     if(userLocation[0] > indexOfCentralRow - distance && userLocation[0] < indexOfCentralRow + distance && userLocation[0] < indexOfCentralRow){
         if(destinationCoord[0] === userLocation[0]){
             if(userLocation[1] - destinationCoord[1] <= distance &&  userLocation[1] - destinationCoord[1] >= -distance){

@@ -33,9 +33,9 @@ export const Login = () => {
             {contextHolder}
             <Display style={{alignItems:"center",borderRadius:'20px',flexDirection:'column',gap:'15px',padding:"35px 50px",background:"white"}}>
                 <Header>Log in account</Header>
-                <Input {...register('email',{required:"Email is required",pattern:emailPattern,})} placeholder="E-mail"/>
+                <Input {...register('email',{required:"Email is required",pattern:{value:emailPattern,message:"Email must be correct(example@email.com)"}})} placeholder="E-mail"/>
                 <Input {...register('password',{required:"Password is required",
-                        minLength:{message:"Password must be longer than 6 symbols.",value:6}})}
+                        minLength:{message:"Password must be longer than 10 symbols.",value:10}})}
                         type={"password"} placeholder="Password"/>
                 <SubmitButton type={'submit'} value={'Submit'}/>
                 <GoogleAuthButton onClick={signInWithGoogle}><GoogleOutlined/></GoogleAuthButton>
