@@ -60,7 +60,7 @@ type PlayerProps = {
 export const PlayerCell:React.FC<PlayerProps> = ({onStep,cell,$invisible,$availableToEliminate,activateOnHover,clearHover}) => {
     const userId = useAppSelector(state => state.user.id);
     // const isEnemy = userId !== value.id;
-    return <UserHex onMouseEnter={() => activateOnHover(cell)} onMouseLeave={clearHover} onClick={onStep} user={cell.value as UserT} $invisible={$invisible} $isMe={userId === (cell.value as UserT).id}
+    return <UserHex onMouseEnter={!$invisible ? () => activateOnHover(cell) : () => {}} onMouseLeave={clearHover} onClick={onStep} user={cell.value as UserT} $invisible={$invisible} $isMe={userId === (cell.value as UserT).id}
     // $isEnemy={isEnemy}
     >
         &#x2B22;

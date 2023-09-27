@@ -137,7 +137,7 @@ export const useMap = () => {
         if(!match) return;
 
         clearMap();
-        // displayZoneCells();
+        displayZoneCells();
         displayAlivePlayers();
         displayBoosters();
         setAvailableCells();
@@ -185,8 +185,7 @@ export const useMap = () => {
             const x = destinationCoord[0];
             const y = destinationCoord[1];
 
-            return ({...prev,[x]:{...prev[x], [y]: {...prev[x][y],type:'player',value:user}},
-            });
+            return ({...prev,[x]:{...prev[x], [y]: {...prev[x][y],type:'player',value:user}},});
         });
 
         setMapCoords(prev => {
@@ -239,5 +238,5 @@ export const useMap = () => {
         if((isWinner || isEliminated) && user.id) clearPlayersMatchInfo(user.id);
     },[isWinner,isEliminated]);
 
-    return {MapCoords,onStep,match,isEliminated,isWinner,matchResult,user};
+    return {MapCoords,onStep,match,isEliminated,isWinner,matchResult,user,clearMapFromAvailableCells};
 }
