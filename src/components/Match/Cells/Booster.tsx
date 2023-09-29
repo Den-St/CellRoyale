@@ -14,6 +14,8 @@ const BoosterHex = styled.button<{booster:BoosterT}>`
     font-size: 55px;
     border-radius:100%;
     transition:0.1s;
+    width:45px;
+
     user-select: none;
     position:relative;
     &:hover{
@@ -32,9 +34,6 @@ export const AvailableToStepCell = styled.span`
     transition:0.1s;
     user-select: none;
     color:black;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     position: absolute;
     top:38%;
     left:32.5%;

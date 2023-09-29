@@ -18,8 +18,8 @@ import {PlayerCell} from './Cells/PlayerCell';
 
 const Row = styled.div<{marginleft:number,$isFirst:boolean}>`
     display:flex;
-    ${({$isFirst}) => !$isFirst && `margin-top:-20px;`};
-    ${({marginleft}) => `margin-left:${marginleft * 26}px`};
+    ${({$isFirst}) => !$isFirst && `margin-top:-25px;`};
+    ${({marginleft}) => `margin-left:${marginleft * 23}px`};
     ${Media.up.xxxl}{
         ${({marginleft}) => `margin-left:${marginleft * 25.2}px`};
         ${({$isFirst}) => !$isFirst && `margin-top:-40px;`};

@@ -25,9 +25,7 @@ const UserHex = styled.button<{user:UserT,
     border-radius:100%;
     transition:0.1s;
     user-select: none;
-    /* display: flex; */
-    /* justify-content: center; */
-    /* align-items: center; */
+    width:45px;
     position: relative;
     &:hover{
         opacity:0.95;
@@ -47,8 +45,6 @@ export const AvailableToEliminateCell = styled.span<{$invisible:boolean}>`
     user-select: none;
     ${({$invisible}) => $invisible ? `color:#75b4f7;` : `color:#000000;`};
     display: flex;
-    justify-content: center;
-    align-items: center;
     position: absolute;
     top:38%;
     left:32.5%;
