@@ -48,7 +48,7 @@ export const Rating = () => {
         },
     ];
       
-    return <Display style={{width:'600px',height:'100%',padding:'20px 0 0 20px',overflow:'scroll',justifyContent:'center'}}>
+    return <Display style={{width:'540px',height:'98%',padding:'20px 0 0 20px',overflowY:'scroll',justifyContent:'center'}}>
         <Table pagination={false} loading={loading} dataSource={dataSource} columns={columns}/>
     </Display>
 }
