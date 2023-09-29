@@ -1,4 +1,5 @@
 import { styled } from "styled-components";
+import { Media } from "../../../assets/breakpoints";
 import { CellT } from "../../../types/cell";
 
 const colors = [
@@ -21,6 +22,10 @@ const HexSpan = styled.button<{value:number,}>`
     &:hover{
         opacity:0.9;
     }
+    ${Media.up.xxxl}{
+        font-size: 75px;
+        width:50px;
+    }
 `;
 
 const AvailableCell = styled.span`
@@ -31,8 +36,13 @@ const AvailableCell = styled.span`
     user-select: none;
     color:#4877f9;
     position:absolute;
-    top:37%;
+    top:38%;
     left:32.5%;
+    ${Media.up.xxxl}{
+        top:31.5%;
+        left:37%;
+        font-size: 30px;
+    }
 `;
 
 type CellProps = {

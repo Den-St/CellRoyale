@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { styled } from "styled-components";
+import { Media } from "../../assets/breakpoints";
 import { Display } from "../../assets/Display";
 import { boostersTypesNames } from "../../consts/boostersTypesNames";
 import { isAvailableCell } from "../../helpers/isAvailableCell";
@@ -17,8 +18,13 @@ import {PlayerCell} from './Cells/PlayerCell';
 
 const Row = styled.div<{marginleft:number,$isFirst:boolean}>`
     display:flex;
-    ${({$isFirst}) => !$isFirst && `margin-top:-20px;`}
-    ${({marginleft}) => `margin-left:${marginleft}px`}
+    ${({$isFirst}) => !$isFirst && `margin-top:-20px;`};
+    ${({marginleft}) => `margin-left:${marginleft * 26}px`};
+    ${Media.up.xxxl}{
+        ${({marginleft}) => `margin-left:${marginleft * 25.2}px`};
+        ${({$isFirst}) => !$isFirst && `margin-top:-40px;`};
+        display:flex;
+    }
 `;
 
 const ActivePlayerCell = styled.span<{color?:string}>`
@@ -27,8 +33,8 @@ const ActivePlayerCell = styled.span<{color?:string}>`
 `;
 
 export const Map = () => {
-    const {MapCoords,onStep,match,isEliminated,isWinner,matchResult,user,clearMapFromAvailableCells} = useMap();
-    const {timer} = useStepTimer(clearMapFromAvailableCells);
+    const {MapCoords,onStep,match,isEliminated,isWinner,matchResult,user,clearMapFromAvailableCells,mapCenter} = useMap();
+    // const {timer} = useStepTimer(clearMapFromAvailableCells);
     const [isModalOpened,setIsModalOpened] = useState(true);
     const {onChangeHoveredCell,onClearHoveredCell,hoveredCellMessage} = useHoverCell();
     
@@ -36,7 +42,7 @@ export const Map = () => {
             <MatchResultModal isWinner={isWinner} isModalOpened={isModalOpened} matchResult={matchResult} open={(isWinner || isEliminated) && isModalOpened} onClose={() => setIsModalOpened(false)}/>
             <Display style={{flexDirection:"column"}}>
                 {Object.entries(MapCoords).map((row,i) => 
-                <Row $isFirst={i === 0} marginleft={i < 8 ? (7 - i)*26 : (i - 7)*26} >
+                <Row $isFirst={i === 0} marginleft={i < mapCenter ? (mapCenter - 1 - i) : (i - (mapCenter - 1))} >
                     {Object.entries(row[1]).map((cell,j) => {
                         if(cell[1].type === 'cell') return <Cell activateOnHover={onChangeHoveredCell} clearHover={onClearHoveredCell} $isAvailable={cell[1].isAvailable} onStep={() => onStep([i,j])} cell={cell[1]} />
                         if(cell[1].type === 'player') return <PlayerCell activateOnHover={onChangeHoveredCell} clearHover={onClearHoveredCell} $availableToEliminate={cell[1].isAvailable} $invisible={(cell[1].value as UserT).activeBooster?.name === boostersTypesNames.invisibility}  onStep={() => onStep([i,j])} cell={cell[1]} />
@@ -45,7 +51,7 @@ export const Map = () => {
                 </Row>)}
             </Display>
             <Display style={{flexDirection:'column',gap:'10px',width:'150px'}}>
-                <h1>{timer}</h1>
+                {/* <h1>{timer}</h1> */}
                 <h1>{hoveredCellMessage}</h1>
                 {match?.activePlayer?.color && 
                     <Display style={{alignContent:'center'}}>

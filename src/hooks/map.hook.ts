@@ -43,7 +43,7 @@ export const useMap = () => {
     const match = useAppSelector(state => state.match);
     const matchResult = useAppSelector(state => state.matchResult);
     const dispatch = useAppDispacth();
-   
+    const mapCenter = Math.ceil(Object.keys(MapCoords).length/2);
     console.log('MapCoords',MapCoords);
 
     const clearMap = () => {
@@ -238,5 +238,5 @@ export const useMap = () => {
         if((isWinner || isEliminated) && user.id) clearPlayersMatchInfo(user.id);
     },[isWinner,isEliminated]);
 
-    return {MapCoords,onStep,match,isEliminated,isWinner,matchResult,user,clearMapFromAvailableCells};
+    return {MapCoords,onStep,match,isEliminated,isWinner,matchResult,user,clearMapFromAvailableCells,mapCenter};
 }
