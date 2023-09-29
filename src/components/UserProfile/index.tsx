@@ -47,6 +47,8 @@ export const UserProfile = () => {
                 <Statistic title="Victories" value={user?.numberOfWins || 0} loading={userLoading}/>
             </Col>
         </Row>
-        <Table loading={loading} dataSource={dataSource} columns={columns} pagination={false}/>
+        <Display style={{overflowY:'scroll',width:'100%'}}>
+            <Table style={{width:'100%'}} loading={loading} dataSource={dataSource} columns={columns} pagination={false}/>
+        </Display>
     </Display>
 }
