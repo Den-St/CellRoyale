@@ -1,11 +1,11 @@
+import { MatchT } from './../types/match';
 import { createMessage } from './../firebase/db/messages/create/createMessage';
 import { boostersTypesNames } from './../consts/boostersTypesNames';
-import { clearUserBoosterInfo } from './../firebase/db/users/edit/clearUserBoosterInfo';
 import { removeBoosterById } from './../firebase/db/boosters/delete/removeBoosterById';
 import { eliminatePlayer } from '../firebase/db/matches/edit/eliminatePlayer';
 import { UserT } from './../types/user';
 import { changePlayersLocation } from './../firebase/db/users/edit/changeLocation';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useState } from 'react';
 import { nextTurn } from './../firebase/db/matches/edit/nextTurn';
 import { useAppSelector, useAppDispacth } from './redux';
@@ -19,6 +19,7 @@ import { removeBoosterFromMatch } from '../firebase/db/matches/edit/removeBooste
 import { clearUserBooster, decrementBoosterStepsRemainingLocally, setNewBooster, setUserLocation } from '../store/userSlice';
 import { decreaseBoosterStepsRemaining } from '../firebase/db/users/edit/decreaseBoosterStepsRemaining';
 import { isAvailableCell } from '../helpers/isAvailableCell';
+import { setMatch } from '../store/matchSlice';
 
 export const useMap = () => {
     const [MapCoords,setMapCoords] = useState<MapT>({
@@ -40,12 +41,13 @@ export const useMap = () => {
     });
     const [isEliminated,setIsEliminated] = useState(false);
     const [isWinner,setIsWinner] = useState(false);
+    const [isOnStep,setIsOnStep] = useState(false);
     const user = useAppSelector(state => state.user);
     const match = useAppSelector(state => state.match);
     const matchResult = useAppSelector(state => state.matchResult);
     const dispatch = useAppDispacth();
     const mapCenter = Math.ceil(Object.keys(MapCoords).length/2);
-    console.log('MapCoords',MapCoords);
+    // console.log('MapCoords',MapCoords);
 
     const clearMap = () => {
         setMapCoords(prev => {
@@ -185,22 +187,24 @@ export const useMap = () => {
         loadMap();
     },[match]);
 
-    
     const onStep = async (destinationCoord:number[]) => {
+        if(isOnStep) return;
         if(isEliminated || isWinner) return;
         if(!user.location) return;
         if(!match.id || !user.id) return;
         if(match?.activePlayer?.id !== user.id) return;
-        
         if(destinationCoord[0] === user.location[0] && destinationCoord[1] === user.location[1]) return;
+
+        const stepRange = user?.activeBooster?.name === boostersTypesNames.increaseStepDistance ? 2 : 1
+        if(!isAvailableCell(user.location,destinationCoord,stepRange,7)) return;
+        
+        setIsOnStep(true);
+
         let enemyId = MapCoords[destinationCoord[0]][destinationCoord[1]].type === 'player' ? (MapCoords[destinationCoord[0]][destinationCoord[1]].value as UserT).id : null;
         let enemyName = MapCoords[destinationCoord[0]][destinationCoord[1]].type === 'player' ? (MapCoords[destinationCoord[0]][destinationCoord[1]].value as UserT).displayName : null;
         let booster = MapCoords[destinationCoord[0]][destinationCoord[1]].type === 'booster' ? (MapCoords[destinationCoord[0]][destinationCoord[1]].value as BoosterT) : null;
         
-        const stepRange = user?.activeBooster?.name === boostersTypesNames.increaseStepDistance ? 2 : 1
-        if(!isAvailableCell(user.location,destinationCoord,stepRange,7)) return;
         clearMapFromAvailableCells();
-
         setMapCoords(prev => {
             const x = destinationCoord[0];
             const y = destinationCoord[1];
@@ -236,9 +240,20 @@ export const useMap = () => {
             dispatch(decrementBoosterStepsRemainingLocally());
         }
         if(user.boosterStepsRemaining === 1) dispatch(clearUserBooster());
-        await nextTurn(match.id,user.id);
+        nextTurn(match.id,user.id);
+        //change active player on client
+        const userIndex = match?.alivePlayers?.findIndex((player:UserT) => player.id === user.id);
+
+        if(!match?.alivePlayers?.length || userIndex === undefined)return;
+        dispatch(setMatch({
+            ...match,
+            activePlayer: userIndex === match?.alivePlayers?.length - 1 
+            ? match?.alivePlayers?.[0] : match?.alivePlayers?.[userIndex + 1]
+        }))
+        //change player location on client
+        dispatch(setUserLocation({location:destinationCoord}));
         if(booster){
-            createMessage({
+            await createMessage({
                 sender:user.id,
                 match:match.id,
                 isSystem:true,
@@ -246,14 +261,16 @@ export const useMap = () => {
             });
         }
         if(enemyName){
-            createMessage({
+            await createMessage({
                 sender:user.id,
                 match:match.id,
                 isSystem:true,
                 text:user.displayName + ' eliminated ' + enemyName
             });
         }
+        setIsOnStep(false);
     }
+    console.log('activePlayer',match.activePlayer);
 
     useEffect(() => {
         if(!match.id || !user.id) return;
@@ -274,5 +291,5 @@ export const useMap = () => {
         if((isWinner || isEliminated) && user.id) clearPlayersMatchInfo(user.id);
     },[isWinner,isEliminated]);
 
-    return {MapCoords,onStep,match,isEliminated,isWinner,matchResult,user,clearMapFromAvailableCells,mapCenter};
+    return {MapCoords,onStep,match,isEliminated,isWinner,matchResult,user,clearMapFromAvailableCells,mapCenter,isOnStep};
 }

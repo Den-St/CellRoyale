@@ -30,6 +30,7 @@ export const useChat = (matchId:string) => {
     },[]);
     
     const onCreateMessage = async () => {
+        if(!text) return;
         setLoading(prev => ({...prev,create:true}));
         await createMessage({
             sender:myId || '',

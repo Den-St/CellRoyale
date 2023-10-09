@@ -47,13 +47,12 @@ export const AvailableToStepCell = styled.span`
 type BoosterProps = {
     cell:CellT;
     onStep:() => void,
-    $availableToStep:boolean,
     activateOnHover:(cell:CellT) => void,
     clearHover:() => void
 }
-export const BoosterCell:React.FC<BoosterProps> = ({cell,onStep,$availableToStep,clearHover,activateOnHover}) => {
+export const BoosterCell:React.FC<BoosterProps> = ({cell,onStep,clearHover,activateOnHover}) => {
     return <BoosterHex onMouseEnter={() => activateOnHover(cell)} onMouseLeave={clearHover} onClick={onStep} booster={cell.value as BoosterT}>
         &#x2B22;
-        {$availableToStep && <AvailableToStepCell>&#x2B22;</AvailableToStepCell>}
+        {cell.isAvailable && <AvailableToStepCell>&#x2B22;</AvailableToStepCell>}
     </BoosterHex> 
 }

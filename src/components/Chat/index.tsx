@@ -3,6 +3,7 @@ import { ChatContainer, MessagesContainer, MessageItemContainer, SystemMessage, 
 import {ExclamationCircleOutlined} from '@ant-design/icons';
 import { useChat } from "../../hooks/chat";
 import { useAppSelector } from "../../hooks/redux";
+import { useForm } from "react-hook-form";
 
 type Props = {
     matchId:string
@@ -11,7 +12,10 @@ type Props = {
 export const Chat:React.FC<Props> = ({matchId}) => {
     const {loading,messages,onCreateMessage,setText,text} = useChat(matchId);
     const myId = useAppSelector(state => state).user.id;
-    
+    const {
+        handleSubmit,
+    } = useForm<{text:string}>();
+
     return <ChatContainer>
         <MessagesContainer>
             {
@@ -20,9 +24,9 @@ export const Chat:React.FC<Props> = ({matchId}) => {
                 : <MessageItemContainer key={message.id} $isMineMessage={message.sender === myId}>{message.text}</MessageItemContainer>)
             }
         </MessagesContainer>
-        <MessageControllerContainer>
+        <MessageControllerContainer onSubmit={handleSubmit(onCreateMessage)}>
             <MessageInput onChange={(e) => setText(e.target.value)} value={text}/>
-            <MessageSendButton onClick={onCreateMessage}>send</MessageSendButton>
+            <MessageSendButton type={'submit'} value={'Send'}/>
         </MessageControllerContainer>
     </ChatContainer>
 }

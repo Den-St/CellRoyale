@@ -49,15 +49,14 @@ const AvailableCell = styled.span`
 type CellProps = {
     cell:CellT;
     onStep:() => void,
-    $isAvailable:boolean,
     activateOnHover:(cell:CellT) => void,
     clearHover:() => void
 
 }
 
-export const Cell:React.FC<CellProps> = ({cell,onStep,$isAvailable,clearHover,activateOnHover}) => {
+export const Cell:React.FC<CellProps> = ({cell,onStep,clearHover,activateOnHover}) => {
     return <HexSpan onMouseEnter={() => activateOnHover(cell)} onMouseLeave={clearHover} onClick={onStep} value={cell.value as number}>
         &#x2B22;
-        {$isAvailable && <AvailableCell>&#x2B22;</AvailableCell>}
+        {cell.isAvailable && <AvailableCell>&#x2B22;</AvailableCell>}
     </HexSpan> 
 }

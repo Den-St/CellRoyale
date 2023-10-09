@@ -30,7 +30,7 @@ export const SystemMessage = styled.div`
     justify-content:center;
     gap:10px;
 `;
-export const MessageControllerContainer = styled.div`
+export const MessageControllerContainer = styled.form`
     display:flex;
     gap:5px;
     align-item:center;
@@ -41,6 +41,10 @@ export const MessageInput = styled.input`
 
 `;
 
-export const MessageSendButton = styled.button`
-
+export const MessageSendButton = styled.input`
+    background:blue;
+    border:none;
+    outline:none;
+    border-radius:5px;
+    color:white;
 `;

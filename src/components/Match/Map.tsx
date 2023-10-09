@@ -32,30 +32,31 @@ const ActivePlayerCell = styled.span<{color?:string}>`
 `;
 
 export const Map = () => {
-    const {MapCoords,onStep,match,isEliminated,isWinner,matchResult,user,clearMapFromAvailableCells,mapCenter} = useMap();
+    const {MapCoords,onStep,match,isEliminated,isWinner,matchResult,user,clearMapFromAvailableCells,mapCenter,isOnStep} = useMap();
     // const {timer} = useStepTimer(clearMapFromAvailableCells);
     const [isModalOpened,setIsModalOpened] = useState(true);
     const {onChangeHoveredCell,onClearHoveredCell,hoveredCellMessage} = useHoverCell();
-    
     return  <Display style={{display:'flex',gap:'50px',alignItems:'center',padding:'0 30px',justifyContent:'space-between',width:'100%'}}>   
             <MatchResultModal isWinner={isWinner} isModalOpened={isModalOpened} matchResult={matchResult} open={(isWinner || isEliminated) && isModalOpened} onClose={() => setIsModalOpened(false)}/>
             <Display style={{flexDirection:"column"}}>
                 {Object.entries(MapCoords).map((row,i) => 
                 <Row $isFirst={i === 0} marginleft={i < mapCenter ? (mapCenter - 1 - i) : (i - (mapCenter - 1))} >
                     {Object.entries(row[1]).map((cell,j) => {
-                        if(cell[1].type === 'cell') return <Cell activateOnHover={onChangeHoveredCell} clearHover={onClearHoveredCell} $isAvailable={cell[1].isAvailable} onStep={() => onStep([i,j])} cell={cell[1]} />
-                        if(cell[1].type === 'player') return <PlayerCell activateOnHover={onChangeHoveredCell} clearHover={onClearHoveredCell} $availableToEliminate={cell[1].isAvailable} $invisible={(cell[1].value as UserT).activeBooster?.name === boostersTypesNames.invisibility}  onStep={() => onStep([i,j])} cell={cell[1]} />
-                        if(cell[1].type === 'booster') return <BoosterCell activateOnHover={onChangeHoveredCell} clearHover={onClearHoveredCell} $availableToStep={cell[1].isAvailable} onStep={() => onStep([i,j])} cell={cell[1]}/>
+                        if(cell[1].type === 'cell') return <Cell activateOnHover={onChangeHoveredCell} clearHover={onClearHoveredCell} onStep={() => !isOnStep && onStep([i,j])} cell={cell[1]} />
+                        if(cell[1].type === 'player') return <PlayerCell activateOnHover={onChangeHoveredCell} clearHover={onClearHoveredCell} $invisible={(cell[1].value as UserT).activeBooster?.name === boostersTypesNames.invisibility}  onStep={() => !isOnStep && onStep([i,j])} cell={cell[1]} />
+                        if(cell[1].type === 'booster') return <BoosterCell activateOnHover={onChangeHoveredCell} clearHover={onClearHoveredCell} onStep={() => !isOnStep && onStep([i,j])} cell={cell[1]}/>
                     })}
                 </Row>)}
             </Display>
             <Display style={{flexDirection:'column',gap:'10px',width:'350px',background:'#00000084',height:'600px',borderRadius:'15px',alignItems:'center',padding:'10px'}}>
+                <h1>{match?.activePlayer?.id}</h1>
+                <h1>{+isOnStep}</h1>
                 <Timer>9,6</Timer>
                 <ActionMessage>{hoveredCellMessage}</ActionMessage>
                 <PlayersContainer>
                     {match.alivePlayers?.map(alivePlayer => 
-                        <PlayerItemContainer $isActivePlayer={alivePlayer.id === match?.activePlayer?.id}>
-                            <ActivePlayerCell color={alivePlayer.color || ''}>&#x2B22;</ActivePlayerCell> {alivePlayer?.displayName} 
+                        <PlayerItemContainer $isActivePlayer={alivePlayer?.id === match?.activePlayer?.id}>
+                            <ActivePlayerCell color={alivePlayer?.color || ''}>&#x2B22;</ActivePlayerCell> {alivePlayer?.displayName} 
                         </PlayerItemContainer>)
                     }
                 </PlayersContainer>

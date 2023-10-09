@@ -75,7 +75,6 @@ export const useMatch = () => {
             const boostersQ = match.boosters.map(async (booster:string) => await getBoosterById(booster));
             match.boosters = await Promise.all(boostersQ);
             match.id = doc.id;
-            console.log('match1',match);
             dispatch(setMatch(match));
             setLoading(false);
         });

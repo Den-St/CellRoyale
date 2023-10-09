@@ -35,7 +35,6 @@ export const Login = () => {
         }
     },[errors.email, errors.password]);
 
-    console.log(errors);
     if(success) return <Navigate to={'/'}/>
     return <Display>
         <form onSubmit={handleSubmit(onSubmit)}>
