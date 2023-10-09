@@ -42,6 +42,7 @@ export const useMap = () => {
     const [isEliminated,setIsEliminated] = useState(false);
     const [isWinner,setIsWinner] = useState(false);
     const [isOnStep,setIsOnStep] = useState(false);
+    const [isActive,setIsActive] = useState(false);
     const user = useAppSelector(state => state.user);
     const match = useAppSelector(state => state.match);
     const matchResult = useAppSelector(state => state.matchResult);
@@ -186,13 +187,15 @@ export const useMap = () => {
     useEffect(() => {
         loadMap();
     },[match]);
-
+    useEffect(() => {
+        setIsActive(match.activePlayer?.id === user.id);
+    },[match.activePlayer])
     const onStep = async (destinationCoord:number[]) => {
         if(isOnStep) return;
         if(isEliminated || isWinner) return;
         if(!user.location) return;
         if(!match.id || !user.id) return;
-        if(match?.activePlayer?.id !== user.id) return;
+        if(!isActive) return;
         if(destinationCoord[0] === user.location[0] && destinationCoord[1] === user.location[1]) return;
 
         const stepRange = user?.activeBooster?.name === boostersTypesNames.increaseStepDistance ? 2 : 1
@@ -221,6 +224,9 @@ export const useMap = () => {
         });
 
         dispatch(setUserLocation({location:destinationCoord}));
+        //change active player on client
+        setIsActive(false);
+
         const queries = [];
         queries.push(async () => user.id && await changePlayersLocation(user.id,destinationCoord));
         if(user.boosterStepsRemaining){
@@ -241,15 +247,7 @@ export const useMap = () => {
         }
         if(user.boosterStepsRemaining === 1) dispatch(clearUserBooster());
         nextTurn(match.id,user.id);
-        //change active player on client
-        const userIndex = match?.alivePlayers?.findIndex((player:UserT) => player.id === user.id);
-
-        if(!match?.alivePlayers?.length || userIndex === undefined)return;
-        dispatch(setMatch({
-            ...match,
-            activePlayer: userIndex === match?.alivePlayers?.length - 1 
-            ? match?.alivePlayers?.[0] : match?.alivePlayers?.[userIndex + 1]
-        }))
+        
         if(booster){
             await createMessage({
                 sender:user.id,

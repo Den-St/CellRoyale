@@ -36,14 +36,14 @@ const UserHex = styled.button<{user:UserT,
     }
 `;
 
-export const AvailableToEliminateCell = styled.span<{$invisible:boolean}>`
+export const AvailableToEliminateCell = styled.span<{$invisible:boolean,$isMe:boolean}>`
     padding:0;
     cursor:pointer;
     font-size: 20px;
     border-radius:100%;
     transition:0.1s;
     user-select: none;
-    ${({$invisible}) => $invisible ? `color:#75b4f7;` : `color:#000000;`};
+    ${({$invisible,$isMe}) => !$isMe ? `color:#4877f9;` : $invisible ? `color:#75b4f7;` : `color:#000000;`};
     display: flex;
     position: absolute;
     top:38%;
@@ -69,6 +69,6 @@ export const PlayerCell:React.FC<PlayerProps> = ({onStep,cell,$invisible,activat
     // $isEnemy={isEnemy}
     >
         &#x2B22;
-        {cell.isAvailable && <AvailableToEliminateCell $invisible={$invisible}>&#x2B22;</AvailableToEliminateCell>}
+        {cell.isAvailable && <AvailableToEliminateCell $isMe={userId === (cell.value as UserT).id} $invisible={$invisible}>&#x2B22;</AvailableToEliminateCell>}
     </UserHex> 
 }
