@@ -19,16 +19,25 @@ export const Login = () => {
     useEffect(() => {
         if(errors.email?.message) {
             clearError('email');
+            clearError('auth');
             showError(errors.email.message,'email');
         }
         if(errors.password?.message) {
             clearError('password');
+            clearError('auth');
             showError(errors.password.message,'password');
         }
+        if(!errors.email?.message){
+            clearError('email');
+        }
+        if(!errors.password?.message){
+            clearError('password');
+        }
     },[errors.email, errors.password]);
-    
-  if(success) return <Navigate to={'/'}/>
-  return <Display>
+
+    console.log(errors);
+    if(success) return <Navigate to={'/'}/>
+    return <Display>
         <form onSubmit={handleSubmit(onSubmit)}>
             {contextHolder}
             <Display style={{alignItems:"center",borderRadius:'20px',flexDirection:'column',gap:'15px',padding:"35px 50px",background:"white"}}>
@@ -38,8 +47,8 @@ export const Login = () => {
                         minLength:{message:"Password must be longer than 10 symbols.",value:10}})}
                         type={"password"} placeholder="Password"/>
                 <SubmitButton type={'submit'} value={'Submit'}/>
-                <GoogleAuthButton onClick={signInWithGoogle}><GoogleOutlined/></GoogleAuthButton>
                 <ChangeSignType>Dont have an account?<GoToLogIn to={'/registration'}>Create account</GoToLogIn></ChangeSignType>
+                <GoogleAuthButton onClick={signInWithGoogle}><GoogleOutlined/></GoogleAuthButton>
             </Display>
         </form>
     </Display>

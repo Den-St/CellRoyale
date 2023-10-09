@@ -10,6 +10,7 @@ import { signOut } from "firebase/auth";
 import { googleAuthProvider } from "../../firebase/firebaseInit";
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
+import { useLogout } from "../../hooks/logout";
 
 export const MyProfile = () => {
     const user = useAppSelector(state => state.user);
@@ -19,10 +20,7 @@ export const MyProfile = () => {
             setNewImage(e.target.files[0]);
         }
     };
-    const [logout,setLogout] = useState(false);
-    const onLogout = () => {
-      signOut(googleAuthProvider).then(() => setLogout(true));
-    }
+    const {logout,onLogout} = useLogout();
     const {matches,loading} = useGetMyLastMatches();
     const dataSource = matches?.map(match => ({
       key:match.id,

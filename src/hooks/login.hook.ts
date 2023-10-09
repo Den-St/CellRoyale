@@ -12,7 +12,8 @@ export const useLogin = () => {
       messageApi.open({
         type: 'error',
         content: message,
-        key
+        key,
+        duration:20
       });
     }
     const clearError = (key:string) => {
@@ -24,9 +25,13 @@ export const useLogin = () => {
             setSuccess(true);
         }catch(err){
             if(AuthErrorCodes.INVALID_PASSWORD === JSON.parse(JSON.stringify(err)).code 
-                || AuthErrorCodes.INVALID_EMAIL === JSON.parse(JSON.stringify(err)).code ){
-                showError('Incorrect email or password',"auth")
+                || AuthErrorCodes.INVALID_EMAIL === JSON.parse(JSON.stringify(err)).code 
+                 ){
+                  clearError('email');
+                  clearError('password');
+                  showError('Incorrect email or password',"auth");
             }
+          
         }
       }
       const signInWithGoogle = async () => {
