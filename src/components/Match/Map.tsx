@@ -1,21 +1,20 @@
+import { Tag } from "antd";
 import { useState } from "react";
 import { styled } from "styled-components";
 import { Media } from "../../assets/breakpoints";
 import { Display } from "../../assets/Display";
 import { boostersTypesNames } from "../../consts/boostersTypesNames";
-import { isAvailableCell } from "../../helpers/isAvailableCell";
 import { useHoverCell } from "../../hooks/hoverCell";
 import { useMap } from "../../hooks/map.hook";
-import { useAppSelector } from "../../hooks/redux";
 import { useStepTimer } from "../../hooks/stepTimer.hook";
-import { BoosterT } from "../../types/booster";
-import { CellT, CellTypeT } from "../../types/cell";
 import { UserT } from "../../types/user";
+import { Chat } from "../Chat";
 import { MatchResultModal } from "../MatchResultModal";
 import { BoosterCell } from "./Cells/Booster";
 import { Cell } from "./Cells/Cell";
 import {PlayerCell} from './Cells/PlayerCell';
-
+import { ActionMessage, PlayerItemContainer, PlayersContainer, Timer } from "./InformationBlock";
+  
 const Row = styled.div<{marginleft:number,$isFirst:boolean}>`
     display:flex;
     ${({$isFirst}) => !$isFirst && `margin-top:-25px;`};
@@ -28,7 +27,7 @@ const Row = styled.div<{marginleft:number,$isFirst:boolean}>`
 `;
 
 const ActivePlayerCell = styled.span<{color?:string}>`
-    font-size:50px;
+    font-size:40px;
     ${({color}) => `color:${color}`};
 `;
 
@@ -38,7 +37,7 @@ export const Map = () => {
     const [isModalOpened,setIsModalOpened] = useState(true);
     const {onChangeHoveredCell,onClearHoveredCell,hoveredCellMessage} = useHoverCell();
     
-    return  <Display>   
+    return  <Display style={{display:'flex',gap:'50px',alignItems:'center',padding:'0 30px',justifyContent:'space-between',width:'100%'}}>   
             <MatchResultModal isWinner={isWinner} isModalOpened={isModalOpened} matchResult={matchResult} open={(isWinner || isEliminated) && isModalOpened} onClose={() => setIsModalOpened(false)}/>
             <Display style={{flexDirection:"column"}}>
                 {Object.entries(MapCoords).map((row,i) => 
@@ -50,14 +49,17 @@ export const Map = () => {
                     })}
                 </Row>)}
             </Display>
-            <Display style={{flexDirection:'column',gap:'10px',width:'150px'}}>
-                {/* <h1>{timer}</h1> */}
-                <h1>{hoveredCellMessage}</h1>
-                {match?.activePlayer?.color && 
-                    <Display style={{alignContent:'center'}}>
-                        <ActivePlayerCell color={match?.activePlayer?.color}>&#x2B22;</ActivePlayerCell> {match?.activePlayer?.displayName} 
-                    </Display>
-                }
+            <Display style={{flexDirection:'column',gap:'10px',width:'350px',background:'#00000084',height:'600px',borderRadius:'15px',alignItems:'center',padding:'10px'}}>
+                <Timer>9,6</Timer>
+                <ActionMessage>{hoveredCellMessage}</ActionMessage>
+                <PlayersContainer>
+                    {match.alivePlayers?.map(alivePlayer => 
+                        <PlayerItemContainer $isActivePlayer={alivePlayer.id === match?.activePlayer?.id}>
+                            <ActivePlayerCell color={alivePlayer.color || ''}>&#x2B22;</ActivePlayerCell> {alivePlayer?.displayName} 
+                        </PlayerItemContainer>)
+                    }
+                </PlayersContainer>
+                {match.id && <Chat matchId={match.id}/>}
                 {isEliminated && !isWinner && !isModalOpened && <button onClick={() => setIsModalOpened(true)}>open modal</button>}
             </Display>
         </Display>

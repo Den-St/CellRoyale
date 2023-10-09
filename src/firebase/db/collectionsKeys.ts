@@ -4,4 +4,5 @@ export enum collectionsKeys {
     boosterTypes = "boosterTypes",
     boosters = "boosters",
     matchResults = "matchResults",
+    messages = "messages"
 };
