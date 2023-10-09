@@ -41,5 +41,5 @@ export const useChat = (matchId:string) => {
         setLoading(prev => ({...prev,create:false}));
     };
 
-    return {loading,messages,onCreateMessage,setText,text}
+    return {loading,messages,onCreateMessage,setText,text};
 }

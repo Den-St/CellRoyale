@@ -1,3 +1,4 @@
+import { createMessage } from './../firebase/db/messages/create/createMessage';
 import { boostersTypesNames } from './../consts/boostersTypesNames';
 import { clearUserBoosterInfo } from './../firebase/db/users/edit/clearUserBoosterInfo';
 import { removeBoosterById } from './../firebase/db/boosters/delete/removeBoosterById';
@@ -86,6 +87,12 @@ export const useMap = () => {
                         if(user.id){
                             setIsEliminated(true);
                             eliminatePlayer(match.id,user.id)
+                            createMessage({
+                                sender:user.id,
+                                match:match.id || '',
+                                isSystem:true,
+                                text:user.displayName + ' eliminated by zone'
+                            });
                         }
                     }
                     newMap[i - 1][+y] = {type:'cell',value:2,isAvailable:false};
@@ -95,6 +102,12 @@ export const useMap = () => {
                         if(user.id){
                             setIsEliminated(true);
                             eliminatePlayer(match.id,user.id);
+                            createMessage({
+                                sender:user.id,
+                                match:match.id || '',
+                                isSystem:true,
+                                text:user.displayName + ' eliminated by zone'
+                            });
                         }
                     } 
                     newMap[15 - i][+y] = {type:'cell',value:2,isAvailable:false};
@@ -106,6 +119,12 @@ export const useMap = () => {
                                 if(user.id) {
                                     setIsEliminated(true);
                                     eliminatePlayer(match.id,user.id);
+                                    createMessage({
+                                        sender:user.id,
+                                        match:match.id || '',
+                                        isSystem:true,
+                                        text:user.displayName + ' eliminated by zone'
+                                    });
                                 }
                             }
                             newMap[+x][+y] = {type:'cell',value:2,isAvailable:false};
@@ -175,6 +194,7 @@ export const useMap = () => {
         
         if(destinationCoord[0] === user.location[0] && destinationCoord[1] === user.location[1]) return;
         let enemyId = MapCoords[destinationCoord[0]][destinationCoord[1]].type === 'player' ? (MapCoords[destinationCoord[0]][destinationCoord[1]].value as UserT).id : null;
+        let enemyName = MapCoords[destinationCoord[0]][destinationCoord[1]].type === 'player' ? (MapCoords[destinationCoord[0]][destinationCoord[1]].value as UserT).displayName : null;
         let booster = MapCoords[destinationCoord[0]][destinationCoord[1]].type === 'booster' ? (MapCoords[destinationCoord[0]][destinationCoord[1]].value as BoosterT) : null;
         
         const stepRange = user?.activeBooster?.name === boostersTypesNames.increaseStepDistance ? 2 : 1
@@ -217,6 +237,22 @@ export const useMap = () => {
         }
         if(user.boosterStepsRemaining === 1) dispatch(clearUserBooster());
         await nextTurn(match.id,user.id);
+        if(booster){
+            createMessage({
+                sender:user.id,
+                match:match.id,
+                isSystem:true,
+                text:user.displayName + ' activated ' + booster.type.name
+            });
+        }
+        if(enemyName){
+            createMessage({
+                sender:user.id,
+                match:match.id,
+                isSystem:true,
+                text:user.displayName + ' eliminated ' + enemyName
+            });
+        }
     }
 
     useEffect(() => {
