@@ -50,7 +50,7 @@ export const Map = () => {
             </Display>
             <Display style={{flexDirection:'column',gap:'10px',width:'350px',background:'#00000084',height:'600px',borderRadius:'15px',alignItems:'center',padding:'10px'}}>
                 <h1>{match?.activePlayer?.id}</h1>
-                <h1>{+isOnStep}</h1>
+                <h1>{user?.location?.[0]} {user?.location?.[1]}</h1>
                 <Timer>9,6</Timer>
                 <ActionMessage>{hoveredCellMessage}</ActionMessage>
                 <PlayersContainer>

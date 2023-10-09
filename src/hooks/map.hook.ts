@@ -158,7 +158,7 @@ export const useMap = () => {
         if(!match) return;
 
         clearMap();
-        displayZoneCells();
+        // displayZoneCells();
         displayAlivePlayers();
         displayBoosters();
         setAvailableCells();
@@ -250,8 +250,6 @@ export const useMap = () => {
             activePlayer: userIndex === match?.alivePlayers?.length - 1 
             ? match?.alivePlayers?.[0] : match?.alivePlayers?.[userIndex + 1]
         }))
-        //change player location on client
-        dispatch(setUserLocation({location:destinationCoord}));
         if(booster){
             await createMessage({
                 sender:user.id,

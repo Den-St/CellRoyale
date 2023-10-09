@@ -1,7 +1,10 @@
+import { UserT } from './../types/user';
+import { useAppSelector } from './redux';
 import { useState } from "react";
 import { CellT, CellTypeT } from "../types/cell";
 
 export const useHoverCell = () => {
+    const userId = useAppSelector(state => state.user.id);
     const [hoveredCellMessage,setHoveredCellMessage] = useState('');
     const typeToMessage:Record<CellTypeT,string> = {
         'booster':'Activate booster',
@@ -10,6 +13,7 @@ export const useHoverCell = () => {
     };
 
     const onChangeHoveredCell = (cell:CellT) => {
+        if(cell.type === 'player'  && userId === (cell.value as UserT).id) return;
         if(typeToMessage[cell.type] === hoveredCellMessage) return;
         setHoveredCellMessage(typeToMessage[cell.type]);
     }
