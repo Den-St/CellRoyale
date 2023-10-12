@@ -20,6 +20,7 @@ const matchSlice = createSlice({
     initialState,
     reducers:{
         setMatch(state,payload:PayloadAction<MatchT>){
+            console.log('SET MATCH ACTIVATED');
             state.id = payload.payload.id;
             state.activePlayer = payload.payload.activePlayer;
             state.boosters = payload.payload.boosters;

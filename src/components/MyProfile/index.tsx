@@ -85,6 +85,8 @@ export const MyProfile = () => {
                     <Statistic title="Victories" value={user.numberOfWins || 0} loading={loading}/>
                 </Col>
         </Row>
-        <Table dataSource={dataSource} columns={columns} pagination={false}/>
+        <Display style={{overflowY:'scroll'}}>
+          <Table dataSource={dataSource} columns={columns} pagination={false}/>
+        </Display>
     </Display>
 }

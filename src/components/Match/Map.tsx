@@ -17,7 +17,7 @@ import { ActionMessage, PlayerItemContainer, PlayersContainer, Timer } from "./I
   
 const Row = styled.div<{marginleft:number,$isFirst:boolean}>`
     display:flex;
-    ${({$isFirst}) => !$isFirst && `margin-top:-25px;`};
+    ${({$isFirst}) => !$isFirst && `margin-top:-24px;`};
     ${({marginleft}) => `margin-left:${marginleft * 23}px`};
     ${Media.up.xxxl}{
         ${({marginleft}) => `margin-left:${marginleft * 25.2}px`};
@@ -36,6 +36,7 @@ export const Map = () => {
     // const {timer} = useStepTimer(clearMapFromAvailableCells);
     const [isModalOpened,setIsModalOpened] = useState(true);
     const {onChangeHoveredCell,onClearHoveredCell,hoveredCellMessage} = useHoverCell();
+    
     return  <Display style={{display:'flex',gap:'50px',alignItems:'center',padding:'0 30px',justifyContent:'space-between',width:'100%'}}>   
             <MatchResultModal isWinner={isWinner} isModalOpened={isModalOpened} matchResult={matchResult} open={(isWinner || isEliminated) && isModalOpened} onClose={() => setIsModalOpened(false)}/>
             <Display style={{flexDirection:"column"}}>
@@ -50,8 +51,9 @@ export const Map = () => {
             </Display>
             <Display style={{flexDirection:'column',gap:'10px',width:'350px',background:'#00000084',height:'600px',borderRadius:'15px',alignItems:'center',padding:'10px'}}>
                 <h1>{match?.activePlayer?.id}</h1>
+                <h1>{match?.roundNumber}</h1>
                 <h1>{user?.location?.[0]} {user?.location?.[1]}</h1>
-                <Timer>9,6</Timer>
+                {/* <Timer>{timer}</Timer> */}
                 <ActionMessage>{hoveredCellMessage}</ActionMessage>
                 <PlayersContainer>
                     {match.alivePlayers?.map(alivePlayer => 

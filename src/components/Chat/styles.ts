@@ -2,18 +2,18 @@ import { styled } from "styled-components";
 
 export const ChatContainer = styled.div`
     width:100%;
-    height:400px;
+    height:300px;
     border-radius:10px;
     border:1px solid white;
-    padding:5px;
-   
+    padding:5px 10px;
+    box-sizing:border-box;
 `;
 
 export const MessagesContainer = styled.div`
     display:flex;
     flex-direction:column;
     gap:5px;
-    height: 93%;
+    height: 220px;
     overflow-y:scroll;
 `;
 

@@ -19,6 +19,7 @@ const matchResultSlice = createSlice({
             state.playersPlaces = payload?.payload.playersPlaces;
             state.match = payload?.payload.match;
             state.players = payload?.payload.players;
+            state.createdAt = payload?.payload.createdAt;
         },
         clearMatchResult(state,payload:PayloadAction){
             state.id = '';

@@ -5,6 +5,7 @@ import { collectionsKeys } from "../../collectionsKeys";
 
 export const nextTurn = async (matchId:string,userId:string) => {
     try{
+        console.log('next turn')
         const matchRef = doc(db,collectionsKeys.matches,matchId);
         const match = (await getDoc(matchRef)).data();
         const userIndex = match?.alivePlayers.findIndex((player:string) => player === userId)

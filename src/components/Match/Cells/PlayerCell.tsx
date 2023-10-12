@@ -8,6 +8,10 @@ const invisibleColorForOther = '#9fa79f';
 const invisibleColors:Record<string,string> = {
     "purple":'#80008091',
     "green":'#008000a5',
+    "red":'#e71010a1',
+    'blue':'#162ee5534',
+    'orange':'#ec8217445',
+    '#00e2ff':'#5cf4f453',
 }
 const UserHex = styled.button<{user:UserT, 
 // $isEnemy?: boolean
@@ -43,7 +47,7 @@ export const AvailableToEliminateCell = styled.span<{$invisible:boolean,$isMe:bo
     border-radius:100%;
     transition:0.1s;
     user-select: none;
-    ${({$invisible,$isMe}) => !$isMe ? `color:#4877f9;` : $invisible ? `color:#75b4f7;` : `color:#000000;`};
+    ${({$invisible,$isMe}) => !$isMe ? $invisible ? `color:#4877f9` : `color:#000000` : 'color:#9fa79f'};
     display: flex;
     position: absolute;
     top:38%;

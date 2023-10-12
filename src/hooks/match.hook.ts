@@ -28,9 +28,9 @@ export const useMatch = () => {
     const userId = useAppSelector(state => state.user.id);
     const match = useAppSelector(state => state.match);
     const dispatch = useAppDispacth();
-
     useEffect(() => {
         if(match.alivePlayers?.length === maxPlayersNumber && matchId && match.alivePlayers[0].id && !match.activePlayer) {
+            console.log('match.hook.ts change active')
             setLoading(true);
             setActivePlayer(matchId,match.alivePlayers[0].id);
             setLoading(false);
@@ -51,9 +51,9 @@ export const useMatch = () => {
         setStepEndTime(matchId);
         setLoading(false);
     },[match.loadedPlayers]);
-    
+
     useEffect(() => {
-        if(boosters || !match?.id || match.boosters?.length || boosters || !userId || match.creator !== userId) return;
+        if(boosters || !match?.id || match.boosters?.length || boosters || !userId || match.creator !== userId || (match?.roundNumber || 0) > 1) return;
         setLoading(true);
         addBoosters(match?.id);
         setBoosters(true);
@@ -67,6 +67,7 @@ export const useMatch = () => {
         const unsubscribe = onSnapshot(doc(db,collectionsKeys.matches,matchId),async (doc) => {
             setLoading(true);
             const match = doc.data();
+            console.log('match4',match?.activePlayer);
             if(!match) return;
             match.activePlayer = await getUserById(match.activePlayer);
             const alivePlayersQ = match.alivePlayers.map(async (alivePlayer:string) => await getUserById(alivePlayer));

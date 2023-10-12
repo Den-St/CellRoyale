@@ -17,13 +17,14 @@ export const eliminatePlayer = async (matchId?:string,userId?:string) => {
              getDoc(matchDoc),
              (await getDocs(matchResultQuery)).docs,
              getDoc(userDoc),
-        ]);
+        ]); 
         if(matchResult[0]?.data()?.playersPlaces.some((player:{player:string,place:number}) => player.player === userId))return;
         const queries = [];
         if(match?.data()?.activePlayer === userId) queries.push(async () => await nextTurn(matchId,userId));
         queries.push(
             async () => await updateDoc(matchDoc,{
-                alivePlayers:match?.data()?.alivePlayers.filter((player:string) => player !== userId)
+                alivePlayers:match?.data()?.alivePlayers.filter((player:string) => player !== userId),
+                stepEndTime:(new Date().getTime()/1000) + stepTime
             })
         );
 
@@ -44,9 +45,9 @@ export const eliminatePlayer = async (matchId?:string,userId?:string) => {
             rating:user?.data()?.rating + placeToRating[place]
         }));
 
-        queries.push(async () => await updateDoc(matchDoc,{
-            stepEndTime:(new Date().getTime()/1000) + stepTime
-        }))
+        // queries.push(async () => await updateDoc(matchDoc,{
+        //     stepEndTime:(new Date().getTime()/1000) + stepTime
+        // }))
         await Promise.all(queries?.map(q => q()));
     }catch(err){
         console.error(err);

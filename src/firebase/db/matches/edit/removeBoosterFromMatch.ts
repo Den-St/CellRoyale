@@ -5,8 +5,10 @@ export const removeBoosterFromMatch = async (matchId:string,boosterId:string) =>
     try{    
         const matchDoc = doc(db,collectionsKeys.matches,matchId);
         const match = (await getDoc(matchDoc)).data();
+        const filteredBoosters = match?.boosters.filter((booster:string) => booster !== boosterId);
+        
         await updateDoc(matchDoc,{
-            boosters:match?.boosters.filter((booster:string) => booster !== boosterId)
+            boosters: filteredBoosters
         });
     }catch(err){
         console.error(err);

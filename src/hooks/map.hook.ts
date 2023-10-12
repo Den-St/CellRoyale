@@ -19,7 +19,6 @@ import { removeBoosterFromMatch } from '../firebase/db/matches/edit/removeBooste
 import { clearUserBooster, decrementBoosterStepsRemainingLocally, setNewBooster, setUserLocation } from '../store/userSlice';
 import { decreaseBoosterStepsRemaining } from '../firebase/db/users/edit/decreaseBoosterStepsRemaining';
 import { isAvailableCell } from '../helpers/isAvailableCell';
-import { setMatch } from '../store/matchSlice';
 
 export const useMap = () => {
     const [MapCoords,setMapCoords] = useState<MapT>({
@@ -42,14 +41,13 @@ export const useMap = () => {
     const [isEliminated,setIsEliminated] = useState(false);
     const [isWinner,setIsWinner] = useState(false);
     const [isOnStep,setIsOnStep] = useState(false);
-    const [isActive,setIsActive] = useState(false);
     const user = useAppSelector(state => state.user);
     const match = useAppSelector(state => state.match);
+    const [isActive,setIsActive] = useState(match?.activePlayer?.id === user?.id);
     const matchResult = useAppSelector(state => state.matchResult);
     const dispatch = useAppDispacth();
     const mapCenter = Math.ceil(Object.keys(MapCoords).length/2);
     // console.log('MapCoords',MapCoords);
-
     const clearMap = () => {
         setMapCoords(prev => {
             const clearedMap:MapT = prev;
@@ -147,9 +145,10 @@ export const useMap = () => {
         }));
     }
     const displayBoosters = () => {
-        match.boosters?.forEach(booster => setMapCoords(prev => {
-            const x = booster.location?.[0];
-            const y = booster.location?.[1];
+        console.log('boostes',match?.boosters);
+        match?.boosters?.forEach(booster => setMapCoords(prev => {
+            const x = booster?.location?.[0];
+            const y = booster?.location?.[1];
             if(!x || !y) return prev;
 
             return ({...prev,[x]:{...prev[x], [y]: {...prev[x][y],type:'booster',value:booster}}});
@@ -164,9 +163,9 @@ export const useMap = () => {
         displayBoosters();
         setAvailableCells();
     }
-    const setAvailableCells = () => {
+    const setAvailableCells = (isCurrentActive?:boolean) => {
         if(isWinner || isEliminated) return;
-        if(match?.activePlayer?.id !== user.id) return;
+        if(!isActive && !isCurrentActive) return;
         if(!user.location) return;
 
         setMapCoords(prev => {
@@ -183,13 +182,19 @@ export const useMap = () => {
                 return newMap;
         });
     };
-
+    console.log('mm',match);
     useEffect(() => {
         loadMap();
-    },[match]);
+    },[match,]);
+    
     useEffect(() => {
         setIsActive(match.activePlayer?.id === user.id);
-    },[match.activePlayer])
+        if(!isActive || match.activePlayer?.id !== user.id){
+            clearMapFromAvailableCells();
+        }
+        setAvailableCells(match.activePlayer?.id === user.id);
+    },[match.activePlayer?.id,]);
+
     const onStep = async (destinationCoord:number[]) => {
         if(isOnStep) return;
         if(isEliminated || isWinner) return;
@@ -234,11 +239,14 @@ export const useMap = () => {
         }
         if(booster) {
             queries.push(async () => user.id && booster?.type && await activateBooster(user.id,booster?.type));
+            // queries.push(async () => user.id && match.id && booster && 
+            await removeBoosterFromMatch(match.id,booster.id)
+            // );
             queries.push(async () => user.id && booster && await removeBoosterById(booster.id));
-            queries.push(async () => user.id && match.id && booster && await removeBoosterFromMatch(match.id,booster.id));
-        }
-        if(enemyId) queries.push(async () => enemyId && await eliminatePlayer(match.id,enemyId));
+        } else if(enemyId) queries.push(async () => enemyId && await eliminatePlayer(match.id,enemyId));
+
         await Promise.all(queries.map(q => q()));
+
         if(booster) {
             dispatch(setNewBooster({boosterType:booster.type}));
         }
@@ -246,10 +254,10 @@ export const useMap = () => {
             dispatch(decrementBoosterStepsRemainingLocally());
         }
         if(user.boosterStepsRemaining === 1) dispatch(clearUserBooster());
-        nextTurn(match.id,user.id);
+        await nextTurn(match.id,user.id);
         
         if(booster){
-            await createMessage({
+            createMessage({
                 sender:user.id,
                 match:match.id,
                 isSystem:true,
@@ -257,7 +265,7 @@ export const useMap = () => {
             });
         }
         if(enemyName){
-            await createMessage({
+            createMessage({
                 sender:user.id,
                 match:match.id,
                 isSystem:true,
@@ -266,7 +274,6 @@ export const useMap = () => {
         }
         setIsOnStep(false);
     }
-    console.log('activePlayer',match.activePlayer);
 
     useEffect(() => {
         if(!match.id || !user.id) return;

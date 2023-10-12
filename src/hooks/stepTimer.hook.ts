@@ -23,7 +23,7 @@ export const useStepTimer = (clearAvailableCells:() => void) => {
             if(!match?.stepEndTime) return;
             const notFixedTime = match?.stepEndTime - (new Date().getTime()/1000);
             const time = notFixedTime > stepTime ? stepTime : +notFixedTime.toFixed(1);
-            setTimer(time);//if time with fault bigger than clear time for step show user clear time for step
+            setTimer(+notFixedTime.toFixed(1));//if time with fault bigger than clear time for step show user clear time for step
         }, 100);
         
         intervalRef.current = interval;
