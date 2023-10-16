@@ -50,6 +50,9 @@ const Container = styled.div`
         height:121.4vh;
         overflow:hidden;
     }
+    ${Media.down.m}{
+        backround:green;
+    }
 `;
 
 export const Background = () => {

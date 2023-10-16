@@ -30,7 +30,6 @@ export const useMatch = () => {
     const dispatch = useAppDispacth();
     useEffect(() => {
         if(match.alivePlayers?.length === maxPlayersNumber && matchId && match.alivePlayers[0].id && !match.activePlayer) {
-            console.log('match.hook.ts change active')
             setLoading(true);
             setActivePlayer(matchId,match.alivePlayers[0].id);
             setLoading(false);
@@ -67,7 +66,6 @@ export const useMatch = () => {
         const unsubscribe = onSnapshot(doc(db,collectionsKeys.matches,matchId),async (doc) => {
             setLoading(true);
             const match = doc.data();
-            console.log('match4',match?.activePlayer);
             if(!match) return;
             match.activePlayer = await getUserById(match.activePlayer);
             const alivePlayersQ = match.alivePlayers.map(async (alivePlayer:string) => await getUserById(alivePlayer));

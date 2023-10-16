@@ -63,12 +63,14 @@ export const useMap = () => {
         });
     }
     const clearMapFromAvailableCells = () => {
+        setIsActive(false);
         setMapCoords(prev => {
             const clearedMap:MapT = prev;
 
             Object.keys(prev).forEach(
                 x => Object.keys(prev[+x]).forEach(y => {
                     if( clearedMap[+x][+y].isAvailable){
+                        console.log('cl1');
                         clearedMap[+x][+y] = {...clearedMap[+x][+y],isAvailable:false};
                     }
                 }));
@@ -145,7 +147,6 @@ export const useMap = () => {
         }));
     }
     const displayBoosters = () => {
-        console.log('boostes',match?.boosters);
         match?.boosters?.forEach(booster => setMapCoords(prev => {
             const x = booster?.location?.[0];
             const y = booster?.location?.[1];
@@ -158,7 +159,7 @@ export const useMap = () => {
         if(!match) return;
 
         clearMap();
-        // displayZoneCells();
+        displayZoneCells();
         displayAlivePlayers();
         displayBoosters();
         setAvailableCells();
@@ -182,7 +183,6 @@ export const useMap = () => {
                 return newMap;
         });
     };
-    console.log('mm',match);
     useEffect(() => {
         loadMap();
     },[match,]);

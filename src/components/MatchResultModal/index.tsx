@@ -1,5 +1,7 @@
-import { Modal, Spin, Tag } from "antd"
+import { Button, Modal, Spin, Tag } from "antd"
 import { Link } from "react-router-dom";
+import { Display } from "../../assets/Display";
+import { placeToRating } from "../../consts/placeToRating";
 import { useAppSelector } from "../../hooks/redux";
 import { MatchResultT } from "../../types/matchResult";
 
@@ -15,12 +17,18 @@ export const MatchResultModal:React.FC<Props> = ({isModalOpened,open,matchResult
     const userId = useAppSelector(state => state.user.id);
     const place = matchResult?.playersPlaces?.find(player => userId === player.player);
 
-return <Modal okButtonProps={{hidden:true}} cancelButtonProps={{hidden:true}} closeIcon={<></>} onCancel={onClose} open={open || !!place && isModalOpened}>
-        {place?.place === 1  ? <Tag color={'green'}>Winner</Tag> : <Tag>{place?.place}</Tag>}
-        {!matchResult ? <Spin/> :
-            <p>{matchResult?.id}</p>
+    return <Modal okButtonProps={{hidden:true}} cancelButtonProps={{hidden:true}} closeIcon={<></>} onCancel={onClose} open={open || !!place && isModalOpened}>
+        {!matchResult ? <Spin/> : <Display style={{flexDirection:'column',alignItems:'center',padding:'25px 0',gap:'20px'}}>
+            {place?.place === 1  ? <Tag color={'green'} style={{fontSize:'20px',padding:'5px'}}>Winner</Tag> : <Tag style={{fontSize:'20px',padding:'5px'}}>{place?.place}  place</Tag>}
+            {place?.place ? placeToRating[place?.place] > 0 ? <Tag color={'blue'} style={{fontSize:'20px',padding:'5px'}}>+{placeToRating[place?.place]}</Tag> : <Tag color={'red'} style={{fontSize:'20px',padding:'5px'}}>{placeToRating[place?.place]}</Tag> : <Spin/>}
+            {!isWinner ? <Display style={{width:'200px',justifyContent:'space-between'}}>
+                <Link style={{fontSize:'20px'}} to={'/'}>Leave</Link>
+                <Button onClick={onClose}>Watch</Button>
+            </Display>
+            : <Display style={{width:'200px',justifyContent:'center'}}>
+                <Link style={{fontSize:'20px'}} to={'/'}>Leave</Link>
+            </Display>}
+        </Display>
         }
-        <Link to={'/'}>Leave</Link>
-        {!isWinner && <button onClick={onClose}>Watch</button>}
     </Modal>
 }

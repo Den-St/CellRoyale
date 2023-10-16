@@ -33,7 +33,7 @@ const ActivePlayerCell = styled.span<{color?:string}>`
 
 export const Map = () => {
     const {MapCoords,onStep,match,isEliminated,isWinner,matchResult,user,clearMapFromAvailableCells,mapCenter,isOnStep} = useMap();
-    // const {timer} = useStepTimer(clearMapFromAvailableCells);
+    const {timer} = useStepTimer(clearMapFromAvailableCells);
     const [isModalOpened,setIsModalOpened] = useState(true);
     const {onChangeHoveredCell,onClearHoveredCell,hoveredCellMessage} = useHoverCell();
     
@@ -50,10 +50,7 @@ export const Map = () => {
                 </Row>)}
             </Display>
             <Display style={{flexDirection:'column',gap:'10px',width:'350px',background:'#00000084',height:'600px',borderRadius:'15px',alignItems:'center',padding:'10px'}}>
-                <h1>{match?.activePlayer?.id}</h1>
-                <h1>{match?.roundNumber}</h1>
-                <h1>{user?.location?.[0]} {user?.location?.[1]}</h1>
-                {/* <Timer>{timer}</Timer> */}
+                <Timer>{timer}</Timer>
                 <ActionMessage>{hoveredCellMessage}</ActionMessage>
                 <PlayersContainer>
                     {match.alivePlayers?.map(alivePlayer => 

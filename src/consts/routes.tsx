@@ -20,9 +20,9 @@ export const PublicRoutes = [
     <Route key={routes.login} element={<Login/>} path={routes.login}/>,
     <Route key={routes.mainSearchPage} element={<MainSearchPage/>} path={routes.mainSearchPage}/>,
     <Route key={routes.match} element={<Match/>} path={routes.match}/>,
-    <Route key={routes.rating} element={<Rating/>} path={routes.rating}/>,
-    <Route key={routes.myProfile} element={<MyProfile/>} path={routes.myProfile}/>,
-    <Route key={routes.userProfile} element={<UserProfile/>} path={routes.userProfile}/>,
+    // <Route key={routes.rating} element={<Rating/>} path={routes.rating}/>,
+    // <Route key={routes.myProfile} element={<MyProfile/>} path={routes.myProfile}/>,
+    // <Route key={routes.userProfile} element={<UserProfile/>} path={routes.userProfile}/>,
 ]
 
 export const RoutesSwitch = () => {
