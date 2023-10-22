@@ -25,11 +25,11 @@ const UserHex = styled.button<{user:UserT,
     ${({user}) => `color:${user.color}`};
     ${({$invisible}) => $invisible && `color:${invisibleColorForOther}`};
     ${({$invisible,$isMe,user}) => $invisible && $isMe && user.color && `color:${invisibleColors[user.color]};`};
-    font-size: 55px;
+    font-size: 50px;
     border-radius:100%;
     transition:0.1s;
     user-select: none;
-    width:45px;
+    width:42px;
     position: relative;
     &:hover{
         opacity:0.95;

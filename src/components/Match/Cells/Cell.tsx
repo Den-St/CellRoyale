@@ -15,8 +15,8 @@ const HexSpan = styled.button<{value:number,}>`
     cursor:pointer;
     position:relative;
     ${({value}) => `color:${colors[value]}`};
-    font-size: 55px;
-    width:45px;
+    font-size: 50px;
+    width:42px;
     border-radius:100%;
     transition:0.1s;
     user-select: none;

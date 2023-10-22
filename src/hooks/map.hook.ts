@@ -21,23 +21,23 @@ import { decreaseBoosterStepsRemaining } from '../firebase/db/users/edit/decreas
 import { isAvailableCell } from '../helpers/isAvailableCell';
 
 export const useMap = () => {
-    const [MapCoords,setMapCoords] = useState<MapT>({
-        0:{0:{type:'cell',value:0,isAvailable:false}, 1:{type:'cell',value:0,isAvailable:false}, 2:{type:'cell',value:0,isAvailable:false}, 3:{type:'cell',value:0,isAvailable:false}, 4:{type:'cell',value:0,isAvailable:false}, 5:{type:'cell',value:0,isAvailable:false}, 6:{type:'cell',value:0,isAvailable:false}, 7:{type:'cell',value:0,isAvailable:false},},
-        1:{0:{type:'cell',value:0,isAvailable:false}, 1:{type:'cell',value:0,isAvailable:false}, 2:{type:'cell',value:0,isAvailable:false}, 3:{type:'cell',value:0,isAvailable:false}, 4:{type:'cell',value:0,isAvailable:false}, 5:{type:'cell',value:0,isAvailable:false}, 6:{type:'cell',value:0,isAvailable:false}, 7:{type:'cell',value:0,isAvailable:false}, 8:{type:'cell',value:0,isAvailable:false}},
-        2:{0:{type:'cell',value:0,isAvailable:false}, 1:{type:'cell',value:0,isAvailable:false}, 2:{type:'cell',value:0,isAvailable:false}, 3:{type:'cell',value:0,isAvailable:false}, 4:{type:'cell',value:0,isAvailable:false}, 5:{type:'cell',value:0,isAvailable:false}, 6:{type:'cell',value:0,isAvailable:false}, 7:{type:'cell',value:0,isAvailable:false}, 8:{type:'cell',value:0,isAvailable:false}, 9:{type:'cell',value:0,isAvailable:false}},
-        3:{0:{type:'cell',value:0,isAvailable:false}, 1:{type:'cell',value:0,isAvailable:false}, 2:{type:'cell',value:0,isAvailable:false}, 3:{type:'cell',value:0,isAvailable:false}, 4:{type:'cell',value:0,isAvailable:false}, 5:{type:'cell',value:0,isAvailable:false}, 6:{type:'cell',value:0,isAvailable:false}, 7:{type:'cell',value:0,isAvailable:false}, 8:{type:'cell',value:0,isAvailable:false}, 9:{type:'cell',value:0,isAvailable:false}, 10:{type:'cell',value:0,isAvailable:false}},
-        4:{0:{type:'cell',value:0,isAvailable:false}, 1:{type:'cell',value:0,isAvailable:false}, 2:{type:'cell',value:0,isAvailable:false}, 3:{type:'cell',value:0,isAvailable:false}, 4:{type:'cell',value:0,isAvailable:false}, 5:{type:'cell',value:0,isAvailable:false}, 6:{type:'cell',value:0,isAvailable:false}, 7:{type:'cell',value:0,isAvailable:false}, 8:{type:'cell',value:0,isAvailable:false}, 9:{type:'cell',value:0,isAvailable:false}, 10:{type:'cell',value:0,isAvailable:false}, 11:{type:'cell',value:0,isAvailable:false}},
-        5:{0:{type:'cell',value:0,isAvailable:false}, 1:{type:'cell',value:0,isAvailable:false}, 2:{type:'cell',value:0,isAvailable:false}, 3:{type:'cell',value:0,isAvailable:false}, 4:{type:'cell',value:0,isAvailable:false}, 5:{type:'cell',value:0,isAvailable:false}, 6:{type:'cell',value:0,isAvailable:false}, 7:{type:'cell',value:0,isAvailable:false}, 8:{type:'cell',value:0,isAvailable:false}, 9:{type:'cell',value:0,isAvailable:false}, 10:{type:'cell',value:0,isAvailable:false}, 11:{type:'cell',value:0,isAvailable:false}, 12:{type:'cell',value:0,isAvailable:false}},
-        6:{0:{type:'cell',value:0,isAvailable:false}, 1:{type:'cell',value:0,isAvailable:false}, 2:{type:'cell',value:0,isAvailable:false}, 3:{type:'cell',value:0,isAvailable:false}, 4:{type:'cell',value:0,isAvailable:false}, 5:{type:'cell',value:0,isAvailable:false}, 6:{type:'cell',value:0,isAvailable:false}, 7:{type:'cell',value:0,isAvailable:false}, 8:{type:'cell',value:0,isAvailable:false}, 9:{type:'cell',value:0,isAvailable:false}, 10:{type:'cell',value:0,isAvailable:false}, 11:{type:'cell',value:0,isAvailable:false}, 12:{type:'cell',value:0,isAvailable:false}, 13:{type:'cell',value:0,isAvailable:false}},
-        7:{0:{type:'cell',value:0,isAvailable:false}, 1:{type:'cell',value:0,isAvailable:false}, 2:{type:'cell',value:0,isAvailable:false}, 3:{type:'cell',value:0,isAvailable:false}, 4:{type:'cell',value:0,isAvailable:false}, 5:{type:'cell',value:0,isAvailable:false}, 6:{type:'cell',value:0,isAvailable:false}, 7:{type:'cell',value:0,isAvailable:false}, 8:{type:'cell',value:0,isAvailable:false}, 9:{type:'cell',value:0,isAvailable:false}, 10:{type:'cell',value:0,isAvailable:false}, 11:{type:'cell',value:0,isAvailable:false}, 12:{type:'cell',value:0,isAvailable:false}, 13:{type:'cell',value:0,isAvailable:false}, 14:{type:'cell',value:0,isAvailable:false}},
-        8:{0:{type:'cell',value:0,isAvailable:false}, 1:{type:'cell',value:0,isAvailable:false}, 2:{type:'cell',value:0,isAvailable:false}, 3:{type:'cell',value:0,isAvailable:false}, 4:{type:'cell',value:0,isAvailable:false}, 5:{type:'cell',value:0,isAvailable:false}, 6:{type:'cell',value:0,isAvailable:false}, 7:{type:'cell',value:0,isAvailable:false}, 8:{type:'cell',value:0,isAvailable:false}, 9:{type:'cell',value:0,isAvailable:false}, 10:{type:'cell',value:0,isAvailable:false}, 11:{type:'cell',value:0,isAvailable:false}, 12:{type:'cell',value:0,isAvailable:false}, 13:{type:'cell',value:0,isAvailable:false}},
-        9:{0:{type:'cell',value:0,isAvailable:false}, 1:{type:'cell',value:0,isAvailable:false}, 2:{type:'cell',value:0,isAvailable:false}, 3:{type:'cell',value:0,isAvailable:false}, 4:{type:'cell',value:0,isAvailable:false}, 5:{type:'cell',value:0,isAvailable:false}, 6:{type:'cell',value:0,isAvailable:false}, 7:{type:'cell',value:0,isAvailable:false}, 8:{type:'cell',value:0,isAvailable:false}, 9:{type:'cell',value:0,isAvailable:false}, 10:{type:'cell',value:0,isAvailable:false}, 11:{type:'cell',value:0,isAvailable:false}, 12:{type:'cell',value:0,isAvailable:false}},
-        10:{0:{type:'cell',value:0,isAvailable:false}, 1:{type:'cell',value:0,isAvailable:false}, 2:{type:'cell',value:0,isAvailable:false}, 3:{type:'cell',value:0,isAvailable:false}, 4:{type:'cell',value:0,isAvailable:false}, 5:{type:'cell',value:0,isAvailable:false}, 6:{type:'cell',value:0,isAvailable:false}, 7:{type:'cell',value:0,isAvailable:false}, 8:{type:'cell',value:0,isAvailable:false},9:{type:'cell',value:0,isAvailable:false}, 10:{type:'cell',value:0,isAvailable:false}, 11:{type:'cell',value:0,isAvailable:false}},
-        11:{0:{type:'cell',value:0,isAvailable:false}, 1:{type:'cell',value:0,isAvailable:false}, 2:{type:'cell',value:0,isAvailable:false}, 3:{type:'cell',value:0,isAvailable:false}, 4:{type:'cell',value:0,isAvailable:false}, 5:{type:'cell',value:0,isAvailable:false}, 6:{type:'cell',value:0,isAvailable:false}, 7:{type:'cell',value:0,isAvailable:false}, 8:{type:'cell',value:0,isAvailable:false},9:{type:'cell',value:0,isAvailable:false}, 10:{type:'cell',value:0,isAvailable:false}},
-        12:{0:{type:'cell',value:0,isAvailable:false}, 1:{type:'cell',value:0,isAvailable:false}, 2:{type:'cell',value:0,isAvailable:false}, 3:{type:'cell',value:0,isAvailable:false}, 4:{type:'cell',value:0,isAvailable:false}, 5:{type:'cell',value:0,isAvailable:false}, 6:{type:'cell',value:0,isAvailable:false}, 7:{type:'cell',value:0,isAvailable:false}, 8:{type:'cell',value:0,isAvailable:false},9:{type:'cell',value:0,isAvailable:false}},
-        13:{0:{type:'cell',value:0,isAvailable:false}, 1:{type:'cell',value:0,isAvailable:false}, 2:{type:'cell',value:0,isAvailable:false}, 3:{type:'cell',value:0,isAvailable:false}, 4:{type:'cell',value:0,isAvailable:false}, 5:{type:'cell',value:0,isAvailable:false}, 6:{type:'cell',value:0,isAvailable:false}, 7:{type:'cell',value:0,isAvailable:false}, 8:{type:'cell',value:0,isAvailable:false}},
-        14:{0:{type:'cell',value:0,isAvailable:false}, 1:{type:'cell',value:0,isAvailable:false}, 2:{type:'cell',value:0,isAvailable:false}, 3:{type:'cell',value:0,isAvailable:false}, 4:{type:'cell',value:0,isAvailable:false}, 5:{type:'cell',value:0,isAvailable:false}, 6:{type:'cell',value:0,isAvailable:false}, 7:{type:'cell',value:0,isAvailable:false},}  
-    });
+    const createMap = () => {
+        const map:MapT = {}
+        const mapSize = 19;//19
+        const mapCenter = Math.ceil(mapSize/2);
+        let rowSize;
+        //Math.ceil(Object.keys(MapCoords).length/2);
+        for(let i = 0;i < mapSize;i++){
+            map[i] = {};
+            rowSize = i < mapCenter ? mapCenter + i : mapSize - (i - mapCenter + 1);
+            for(let j = 0;j < rowSize;j++){
+                map[i][j] = {isAvailable:false,type:'cell',value:0};
+            }
+        }
+        return map;
+    }
+    const [MapCoords,setMapCoords] = useState<MapT>(createMap());
+
     const [isEliminated,setIsEliminated] = useState(false);
     const [isWinner,setIsWinner] = useState(false);
     const [isOnStep,setIsOnStep] = useState(false);
@@ -54,7 +54,7 @@ export const useMap = () => {
 
             Object.keys(prev).forEach(
                 x => Object.keys(prev[+x]).forEach(y => {
-                    if(clearedMap[+x][+y].type === 'player' || clearedMap[+x][+y].value === 1){
+                    if(clearedMap[+x][+y].type === 'player' || clearedMap[+x][+y].type === 'booster' || clearedMap[+x][+y].value === 1){
                         clearedMap[+x][+y] = {type:'cell',value:0,isAvailable:false};
                     }
                 }));
@@ -63,22 +63,22 @@ export const useMap = () => {
         });
     }
     const clearMapFromAvailableCells = () => {
-        setIsActive(false);
         setMapCoords(prev => {
             const clearedMap:MapT = prev;
 
             Object.keys(prev).forEach(
                 x => Object.keys(prev[+x]).forEach(y => {
                     if( clearedMap[+x][+y].isAvailable){
-                        console.log('cl1');
                         clearedMap[+x][+y] = {...clearedMap[+x][+y],isAvailable:false};
                     }
                 }));
-
+                
                 return clearedMap;
         });
     }
     const displayZoneCells = () => {
+        const mapSize = Object.keys(MapCoords).length;
+
         setMapCoords(prev => {
             if(!match.roundNumber || !match.id || match.roundNumber === 1) return prev;
 
@@ -100,8 +100,8 @@ export const useMap = () => {
                     }
                     newMap[i - 1][+y] = {type:'cell',value:2,isAvailable:false};
                 });
-                Object.keys(newMap[15 - i]).forEach(y => {
-                    if(user.location && 15 - i === user.location[0] && +y === user.location[1]){
+                Object.keys(newMap[mapSize - i]).forEach(y => {
+                    if(user.location && mapSize - i === user.location[0] && +y === user.location[1]){
                         if(user.id){
                             setIsEliminated(true);
                             eliminatePlayer(match.id,user.id);
@@ -113,7 +113,7 @@ export const useMap = () => {
                             });
                         }
                     } 
-                    newMap[15 - i][+y] = {type:'cell',value:2,isAvailable:false};
+                    newMap[mapSize - i][+y] = {type:'cell',value:2,isAvailable:false};
                 });
                 Object.keys(newMap).forEach(
                     x => Object.keys(newMap[+x]).forEach(y => {
@@ -168,7 +168,6 @@ export const useMap = () => {
         if(isWinner || isEliminated) return;
         if(!isActive && !isCurrentActive) return;
         if(!user.location) return;
-
         setMapCoords(prev => {
             const newMap:MapT = prev;
 
@@ -176,7 +175,7 @@ export const useMap = () => {
                 x => Object.keys(prev[+x]).forEach(y => {
                     if(user.location){
                         const stepRange = user?.activeBooster?.name === boostersTypesNames.increaseStepDistance ? 2 : 1
-                        if(isAvailableCell(user.location,[+x,+y],stepRange,7)) newMap[+x][+y] = {...newMap[+x][+y],isAvailable:true};
+                        if(isAvailableCell(user.location,[+x,+y],stepRange,mapCenter - 1)) newMap[+x][+y] = {...newMap[+x][+y],isAvailable:true};
                     }
                 }));
 
@@ -195,6 +194,8 @@ export const useMap = () => {
         setAvailableCells(match.activePlayer?.id === user.id);
     },[match.activePlayer?.id,]);
 
+    const makeUserNotActiveAtClient = () => setIsActive(false);
+
     const onStep = async (destinationCoord:number[]) => {
         if(isOnStep) return;
         if(isEliminated || isWinner) return;
@@ -204,7 +205,7 @@ export const useMap = () => {
         if(destinationCoord[0] === user.location[0] && destinationCoord[1] === user.location[1]) return;
 
         const stepRange = user?.activeBooster?.name === boostersTypesNames.increaseStepDistance ? 2 : 1
-        if(!isAvailableCell(user.location,destinationCoord,stepRange,7)) return;
+        if(!isAvailableCell(user.location,destinationCoord,stepRange,mapCenter)) return;
         
         setIsOnStep(true);
 
@@ -230,7 +231,7 @@ export const useMap = () => {
 
         dispatch(setUserLocation({location:destinationCoord}));
         //change active player on client
-        setIsActive(false);
+        makeUserNotActiveAtClient();
 
         const queries = [];
         queries.push(async () => user.id && await changePlayersLocation(user.id,destinationCoord));
@@ -275,24 +276,24 @@ export const useMap = () => {
         setIsOnStep(false);
     }
 
-    useEffect(() => {
-        if(!match.id || !user.id) return;
-        if(matchResult.playersPlaces.length === maxPlayersNumber - 1 && !matchResult.playersPlaces.some(player => player.player === user.id)){
-            setIsWinner(true);
-            addWinner(match.id,user.id);
-            return; 
-        }
-        if(matchResult.playersPlaces.some(player => player.place === 1 && player.player === user.id)){
-            setIsWinner(true);
-        }
-        if(matchResult.playersPlaces.some(player => player.player === user.id && player.place !== 1)){
-            setIsEliminated(true);
-        }
-    },[matchResult.playersPlaces,match.id,user.id]);
+    // useEffect(() => {
+    //     if(!match.id || !user.id) return;
+    //     if(matchResult.playersPlaces.length === maxPlayersNumber - 1 && !matchResult.playersPlaces.some(player => player.player === user.id)){
+    //         setIsWinner(true);
+    //         addWinner(match.id,user.id);
+    //         return; 
+    //     }
+    //     if(matchResult.playersPlaces.some(player => player.place === 1 && player.player === user.id)){
+    //         setIsWinner(true);
+    //     }
+    //     if(matchResult.playersPlaces.some(player => player.player === user.id && player.place !== 1)){
+    //         setIsEliminated(true);
+    //     }
+    // },[matchResult.playersPlaces,match.id,user.id]);
 
-    useEffect(() => {
-        if((isWinner || isEliminated) && user.id) clearPlayersMatchInfo(user.id);
-    },[isWinner,isEliminated]);
+    // useEffect(() => {
+    //     if((isWinner || isEliminated) && user.id) clearPlayersMatchInfo(user.id);
+    // },[isWinner,isEliminated]);
 
-    return {MapCoords,onStep,match,isEliminated,isWinner,matchResult,user,clearMapFromAvailableCells,mapCenter,isOnStep};
+    return {MapCoords,onStep,match,isEliminated,isWinner,matchResult,user,clearMapFromAvailableCells,mapCenter,isOnStep, makeUserNotActiveAtClient};
 }

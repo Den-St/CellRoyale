@@ -17,8 +17,8 @@ import { ActionMessage, PlayerItemContainer, PlayersContainer, Timer } from "./I
   
 const Row = styled.div<{marginleft:number,$isFirst:boolean}>`
     display:flex;
-    ${({$isFirst}) => !$isFirst && `margin-top:-24px;`};
-    ${({marginleft}) => `margin-left:${marginleft * 23}px`};
+    ${({$isFirst}) => !$isFirst && `margin-top:-22px;`};
+    ${({marginleft}) => `margin-left:${marginleft * 21}px`};
     ${Media.up.xxxl}{
         ${({marginleft}) => `margin-left:${marginleft * 25.2}px`};
         ${({$isFirst}) => !$isFirst && `margin-top:-40px;`};
@@ -32,13 +32,13 @@ const ActivePlayerCell = styled.span<{color?:string}>`
 `;
 
 export const Map = () => {
-    const {MapCoords,onStep,match,isEliminated,isWinner,matchResult,user,clearMapFromAvailableCells,mapCenter,isOnStep} = useMap();
-    const {timer} = useStepTimer(clearMapFromAvailableCells);
-    const [isModalOpened,setIsModalOpened] = useState(true);
+    const {MapCoords,onStep,match,isEliminated,isWinner,matchResult,user,clearMapFromAvailableCells,mapCenter,isOnStep,makeUserNotActiveAtClient} = useMap();
+    // const {timer} = useStepTimer(clearMapFromAvailableCells,makeUserNotActiveAtClient);
+    // const [isModalOpened,setIsModalOpened] = useState(true);
     const {onChangeHoveredCell,onClearHoveredCell,hoveredCellMessage} = useHoverCell();
     
     return  <Display style={{display:'flex',gap:'50px',alignItems:'center',padding:'0 30px',justifyContent:'space-between',width:'100%'}}>   
-            <MatchResultModal isWinner={isWinner} isModalOpened={isModalOpened} matchResult={matchResult} open={(isWinner || isEliminated) && isModalOpened} onClose={() => setIsModalOpened(false)}/>
+            {/* <MatchResultModal isWinner={isWinner} isModalOpened={isModalOpened} matchResult={matchResult} open={(isWinner || isEliminated) && isModalOpened} onClose={() => setIsModalOpened(false)}/> */}
             <Display style={{flexDirection:"column"}}>
                 {Object.entries(MapCoords).map((row,i) => 
                 <Row $isFirst={i === 0} marginleft={i < mapCenter ? (mapCenter - 1 - i) : (i - (mapCenter - 1))} >
@@ -50,8 +50,8 @@ export const Map = () => {
                 </Row>)}
             </Display>
             <Display style={{flexDirection:'column',gap:'10px',width:'350px',background:'#00000084',height:'600px',borderRadius:'15px',alignItems:'center',padding:'10px'}}>
-                <Timer>{timer}</Timer>
-                <ActionMessage>{hoveredCellMessage}</ActionMessage>
+                {/* <Timer>{timer}</Timer> */}
+                {/* <ActionMessage>{hoveredCellMessage}</ActionMessage> */}
                 <PlayersContainer>
                     {match.alivePlayers?.map(alivePlayer => 
                         <PlayerItemContainer $isActivePlayer={alivePlayer?.id === match?.activePlayer?.id}>
@@ -59,8 +59,8 @@ export const Map = () => {
                         </PlayerItemContainer>)
                     }
                 </PlayersContainer>
-                {match.id && <Chat matchId={match.id}/>}
-                {isEliminated && !isWinner && !isModalOpened && <button onClick={() => setIsModalOpened(true)}>open modal</button>}
+                {/* {match.id && <Chat matchId={match.id}/>} */}
+                {/* {isEliminated && !isWinner && !isModalOpened && <button onClick={() => setIsModalOpened(true)}>open modal</button>} */}
             </Display>
         </Display>
 }

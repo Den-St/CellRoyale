@@ -34,14 +34,14 @@ export const Header = () => {
                 <Display style={{gap:'10px',alignItems:'center'}}>
                     <Avatar src={user.photoURL || defaultAvatar}/>
                     <UserNameLink to={'/myProfile'}>{user.displayName}</UserNameLink>
-                    {/* <Popconfirm
+                    <Popconfirm
                         title="Logout from account"
                         description="Are you sure to logout from account?"
                         onConfirm={onLogout}
                         okText="Yes"
                         cancelText="No">
                         <Button danger style={{'background':'white'}} ><LogoutOutlined /></Button>
-                    </Popconfirm> */}
+                    </Popconfirm>
                 </Display>
                 : <Spin/>}
         </Display>

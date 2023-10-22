@@ -11,10 +11,10 @@ const BoosterHex = styled.button<{booster:BoosterT}>`
     cursor:pointer;
     color:orange;
     color:;
-    font-size: 55px;
+    font-size: 50px;
     border-radius:100%;
     transition:0.1s;
-    width:45px;
+    width:42px;
 
     user-select: none;
     position:relative;

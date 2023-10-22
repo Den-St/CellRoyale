@@ -5,7 +5,7 @@ import { decreaseBoosterStepsRemaining } from "../firebase/db/users/edit/decreas
 import { decrementBoosterStepsRemainingLocally } from "../store/userSlice";
 import { useAppDispacth, useAppSelector } from "./redux";
 
-export const useStepTimer = (clearAvailableCells:() => void) => {
+export const useStepTimer = (clearAvailableCells:() => void,makeNotActiveAtClient:() => void) => {
     const [timer,setTimer] = useState(0);
     const intervalRef = useRef<NodeJS.Timer>();
     const match = useAppSelector(state => state.match);
@@ -33,12 +33,13 @@ export const useStepTimer = (clearAvailableCells:() => void) => {
       useEffect(() => {
         if(match.isEnded) return;
         if(user.id === match.activePlayer?.id && timer <= 0 && match.id && user.id){
-            console.log('clear')
+            console.count('clear')
             nextTurn(match.id,user.id);
             if(user.boosterStepsRemaining){
                 decreaseBoosterStepsRemaining(user.id);
                 dispatch(decrementBoosterStepsRemainingLocally());
             }
+            makeNotActiveAtClient();
             clearAvailableCells();
             clearInterval(intervalRef.current);
         }else if(timer <= 0) {
