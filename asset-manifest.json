@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/CellRoyale/static/js/main.e368730c.js",
+    "main.js": "/CellRoyale/static/js/main.ed5d9350.js",
     "index.html": "/CellRoyale/index.html",
-    "main.e368730c.js.map": "/CellRoyale/static/js/main.e368730c.js.map"
+    "main.ed5d9350.js.map": "/CellRoyale/static/js/main.ed5d9350.js.map"
   },
   "entrypoints": [
-    "static/js/main.e368730c.js"
+    "static/js/main.ed5d9350.js"
   ]
 }
