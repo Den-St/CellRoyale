@@ -19,7 +19,7 @@ export const addBoosters = async (matchId:string) => {
         const boostersQ = boostersLocations.map(async (boostersLocation,i) => {
             return await createBooster({
                 location:boostersLocation,
-                type:boosterTypes[i].id,
+                type:boosterTypes[i],
             });
         });
         const boosters = await Promise.all(boostersQ);

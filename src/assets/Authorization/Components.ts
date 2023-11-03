@@ -35,11 +35,16 @@ export const PasswordInput = styled.input`
     color:#494949;
 `;
 
-export const GoogleAuthButton = styled.button`
+export const GoogleAuthButton = styled.span`
     border:none;
     width:fit-content;
     background:none;
     font-size:35px;
+    cursor:pointer;
+    transition:0.2s;
+    &:hover{
+        color:#d322c7;
+    }
     
 `;
 

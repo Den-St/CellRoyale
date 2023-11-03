@@ -7,7 +7,7 @@ export const decreaseBoosterStepsRemaining = async (userId:string) => {
         const user = (await getDoc(userDoc)).data();
         await updateDoc(userDoc,{
             boosterStepsRemaining:user?.boosterStepsRemaining - 1,
-            activeBooster:user?.boosterStepsRemaining !== 1 ? user?.activeBooster : ''
+            activeBooster:user?.boosterStepsRemaining !== 1 ? user?.activeBooster : {}
         });
     }catch(err){
         console.error(err);

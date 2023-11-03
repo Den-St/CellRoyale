@@ -28,6 +28,7 @@ export const useMatch = () => {
     const userId = useAppSelector(state => state.user.id);
     const match = useAppSelector(state => state.match);
     const dispatch = useAppDispacth();
+
     useEffect(() => {
         if(match.alivePlayers?.length === maxPlayersNumber && matchId && match.alivePlayers[0].id && !match.activePlayer) {
             setLoading(true);
@@ -71,8 +72,8 @@ export const useMatch = () => {
             const alivePlayersQ = match.alivePlayers.map(async (alivePlayer:string) => await getUserById(alivePlayer));
             match.alivePlayers = await Promise.all(alivePlayersQ);
 
-            const boostersQ = match.boosters.map(async (booster:string) => await getBoosterById(booster));
-            match.boosters = await Promise.all(boostersQ);
+            // const boostersQ = match.boosters.map(async (booster:string) => await getBoosterById(booster));
+            // match.boosters = await Promise.all(boostersQ);
             match.id = doc.id;
             dispatch(setMatch(match));
             setLoading(false);

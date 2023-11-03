@@ -7,6 +7,7 @@ import {GoogleOutlined} from '@ant-design/icons';
 import { useEffect } from "react";
 import { Display } from "../../assets/Display";
 import { ChangeSignType, GoogleAuthButton, GoToLogIn, Header, Input, SubmitButton } from "../../assets/Authorization/Components";
+import { wrappedRoutes } from "../../consts/routes";
 
 export const Login = () => {
     const {success,contextHolder,onSubmit,signInWithGoogle,showError,clearError} = useLogin();
@@ -35,7 +36,7 @@ export const Login = () => {
         }
     },[errors.email, errors.password]);
 
-    if(success) return <Navigate to={'/'}/>
+    if(success) return <Navigate to={wrappedRoutes.mainSearchPage}/>
     return <Display>
         <form onSubmit={handleSubmit(onSubmit)}>
             {contextHolder}
@@ -46,7 +47,7 @@ export const Login = () => {
                         minLength:{message:"Password must be longer than 10 symbols.",value:10}})}
                         type={"password"} placeholder="Password"/>
                 <SubmitButton type={'submit'} value={'Submit'}/>
-                <ChangeSignType>Dont have an account?<GoToLogIn to={'/registration'}>Create account</GoToLogIn></ChangeSignType>
+                <ChangeSignType>Dont have an account?<GoToLogIn to={wrappedRoutes.registration}>Create account</GoToLogIn></ChangeSignType>
                 <GoogleAuthButton onClick={signInWithGoogle}><GoogleOutlined/></GoogleAuthButton>
             </Display>
         </form>

@@ -7,6 +7,7 @@ import { useRegistration } from "../../hooks/registration.hook";
 import { RegistrationInterface } from "../../types/registration";
 import { ChangeSignType, GoogleAuthButton, GoToLogIn, Header, Input, PasswordInput, SubmitButton } from "./../../assets/Authorization/Components";
 import GoogleOutlined from "@ant-design/icons/GoogleOutlined";
+import { wrappedRoutes } from "../../consts/routes";
 
 export const Registration = () => {
     const [confirmPassword,setConfirmPassword] = useState('');
@@ -38,7 +39,7 @@ export const Registration = () => {
         }
     },[errors.email, errors.password, errors.displayName]);
     
-    if(success) return <Navigate to={'/'}/>
+    if(success) return <Navigate to={wrappedRoutes.mainSearchPage}/>
 
     return <Display>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -55,7 +56,7 @@ export const Registration = () => {
                 <Display style={{alignItems:'center',width:'100%',flexDirection:'column',gap:'10px'}}>
                     <SubmitButton type={'submit'} value={'Sign up'}/>
                     <GoogleAuthButton onClick={signInWithGoogle}><GoogleOutlined /></GoogleAuthButton>
-                    <ChangeSignType>Already a member? <GoToLogIn to={'/login'}>Log in</GoToLogIn></ChangeSignType>
+                    <ChangeSignType>Already a member? <GoToLogIn to={wrappedRoutes.login}>Log in</GoToLogIn></ChangeSignType>
                 </Display>
             </Display>
         </form>

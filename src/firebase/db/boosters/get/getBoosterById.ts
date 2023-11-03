@@ -11,8 +11,8 @@ export const getBoosterById = async (id:string) => {
         const boosterDoc = (await getDoc(document));
         const booster = boosterDoc.data();
         if(!booster) return;
-        const boosterType = await getBoosterTypeById(booster.type);
-        booster.type = boosterType;
+        // const boosterType = await getBoosterTypeById(booster.type);
+        // booster.type = boosterType;
         booster.id = boosterDoc.id;
         
         return booster as BoosterT;

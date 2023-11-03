@@ -1,10 +1,12 @@
 import { boosterCollection } from './../boosterCollection';
 import { addDoc } from 'firebase/firestore';
-import { CreateBoosterT } from "../../../../types/booster";
+import { BoosterT, CreateBoosterT } from "../../../../types/booster";
 
 export const createBooster = async (data:CreateBoosterT) => {
     try{
-        return (await addDoc(boosterCollection,data)).id;
+        const booster = await addDoc(boosterCollection,data);
+        console.log(booster)
+        return {id:booster.id,type:data.type,location:data.location} as BoosterT;
     }catch(err){
         console.error(err);
     }

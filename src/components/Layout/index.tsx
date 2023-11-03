@@ -1,5 +1,6 @@
 import { useLocation, useParams } from "react-router-dom"
 import { Display } from "../../assets/Display"
+import { wrappedRoutes } from "../../consts/routes"
 import { Header } from "../Header"
 import { Background } from "./Background"
 import { Container } from "./styles"
@@ -9,8 +10,8 @@ type Props = {
 }
 
 export const Layout:React.FC<Props> = ({children}) => {
-    const headerExcludedRoutes = ['/login', '/registration', '/match'];
-    const backgroundExcludedRoutes = ['/match'];
+    const headerExcludedRoutes = [wrappedRoutes.login, wrappedRoutes.registration, wrappedRoutes.match.replace('/:id','')];
+    const backgroundExcludedRoutes = [wrappedRoutes.match.replace('/:id','')];
     const route = useLocation().pathname;
     const isOnHeaderExcludedRoute = !headerExcludedRoutes.some(exRoute => route.includes(exRoute));
     const isOnBackgroundExcludedRoute = !backgroundExcludedRoutes.some(exRoute => route.includes(exRoute));

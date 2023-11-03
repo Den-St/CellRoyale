@@ -2,6 +2,7 @@ import { Avatar, Table } from "antd"
 import { Display } from "../../assets/Display"
 import { UserNameLink } from "../../assets/UserNameLink";
 import { defaultAvatar } from "../../consts/defaultAvatar";
+import { wrappedRoutes } from "../../consts/routes";
 import { useRating } from "../../hooks/rating.hook";
 
 export const Rating = () => {
@@ -12,7 +13,7 @@ export const Rating = () => {
             index:i + 1,
             player:<Display style={{gap:'10px'}}>
                 <Avatar src={user.photoURL || defaultAvatar}/>
-                <UserNameLink to={'/users/'+user.id}>{user.displayName}</UserNameLink>
+                <UserNameLink to={wrappedRoutes.userProfile.replace(':id',user?.id || '')}>{user.displayName}</UserNameLink>
             </Display>,
             numberOfMatches:user.numberOfMatches,
             numberOfWins: user.numberOfWins,

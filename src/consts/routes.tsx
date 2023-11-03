@@ -4,8 +4,11 @@ import { Login, MainSearchPage, Match, Registration,UserProfile,Rating,MyProfile
 export const navRoutes = {
 
 }
+const baseRoute = '/CellRoyale';
+const routeWrap = (route:string) => baseRoute + route;
 
-export const routes = {
+export type routesKeysType = 'registration' | 'login' | 'mainSearchPage' | 'match' | 'rating' | 'myProfile' | 'userProfile';
+export const routes:Record<routesKeysType,string> = {
     registration:"/registration",
     login:"/login",
     mainSearchPage:`/`,
@@ -13,22 +16,28 @@ export const routes = {
     rating:`/rating`,
     myProfile:'/myProfile',
     userProfile:'/users/:id',
-    ghInitPage:'/CellRoyale'
 };
 
-const RerouteFromGHInitPage = () => {
-    return <Navigate to={routes.mainSearchPage}/>
-}
+export const wrappedRoutes:Record<routesKeysType,string>  = {
+    registration:"",
+    login:"",
+    mainSearchPage:``,
+    match:``,
+    rating:``,
+    myProfile:'',
+    userProfile:'',
+};
+Object.keys(routes).forEach(key => wrappedRoutes[key as routesKeysType] = routeWrap(routes[key as routesKeysType]));
+
 
 export const PublicRoutes = [
-    <Route key={routes.registration} element={<Registration/>} path={routes.registration}/>,
-    <Route key={routes.login} element={<Login/>} path={routes.login}/>,
-    <Route key={routes.mainSearchPage} element={<MainSearchPage/>} path={routes.mainSearchPage}/>,
-    <Route key={routes.match} element={<Match/>} path={routes.match}/>,
-    <Route key={routes.ghInitPage} element={<RerouteFromGHInitPage/>} path={routes.ghInitPage}/>,
-    // <Route key={routes.rating} element={<Rating/>} path={routes.rating}/>,
-    // <Route key={routes.myProfile} element={<MyProfile/>} path={routes.myProfile}/>,
-    // <Route key={routes.userProfile} element={<UserProfile/>} path={routes.userProfile}/>,
+    <Route key={wrappedRoutes.registration} element={<Registration/>} path={wrappedRoutes.registration}/>,
+    <Route key={wrappedRoutes.login} element={<Login/>} path={wrappedRoutes.login}/>,
+    <Route key={wrappedRoutes.mainSearchPage} element={<MainSearchPage/>} path={wrappedRoutes.mainSearchPage}/>,
+    <Route key={wrappedRoutes.match} element={<Match/>} path={wrappedRoutes.match}/>,
+    <Route key={wrappedRoutes.rating} element={<Rating/>} path={wrappedRoutes.rating}/>,
+    <Route key={wrappedRoutes.myProfile} element={<MyProfile/>} path={wrappedRoutes.myProfile}/>,
+    <Route key={wrappedRoutes.userProfile} element={<UserProfile/>} path={wrappedRoutes.userProfile}/>,
 ]
 
 export const RoutesSwitch = () => {

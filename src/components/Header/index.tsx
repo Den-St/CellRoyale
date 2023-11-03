@@ -7,6 +7,7 @@ import { useLogout } from "../../hooks/logout"
 import { useAppSelector } from "../../hooks/redux"
 import { HeaderLink, LogoLink, LogoText } from "./styles"
 import {LogoutOutlined} from '@ant-design/icons';
+import { wrappedRoutes } from "../../consts/routes"
 
 const Logo = () => <svg xmlns="http://www.w3.org/2000/svg" width="65" height="73" viewBox="0 0 65 73" fill="none">
     <path d="M5.89007 21.1368L32.5 5.7735L59.1099 21.1368V51.8632L32.5 67.2265L5.89007 51.8632V21.1368Z" fill="white" stroke="url(#paint0_angular_5_30)" strokeWidth="10"/>
@@ -24,16 +25,16 @@ export const Header = () => {
     const user = useAppSelector(state => state.user);
     const {logout,onLogout} = useLogout();
 
-    if(logout) return <Navigate to={'/registration'}/>
+    if(logout) return <Navigate to={wrappedRoutes.registration}/>
 
     return <Display style={{justifyContent:"space-between",padding:"0 100px",zIndex:'1',position:'fixed',top:0,width:"100vw",height:"87px",background:"white",alignItems:"center"}}>
-        <LogoLink to={'/'}><Logo/><LogoText>CR</LogoText></LogoLink>
+        <LogoLink to={wrappedRoutes.mainSearchPage}><Logo/><LogoText>CR</LogoText></LogoLink>
         <Display style={{gap:'30px',alignItems:'center'}}>
-            <HeaderLink to={'/rating'}>Rating</HeaderLink>
+            <HeaderLink to={wrappedRoutes.rating}>Rating</HeaderLink>
             {user ?
                 <Display style={{gap:'10px',alignItems:'center'}}>
                     <Avatar src={user.photoURL || defaultAvatar}/>
-                    <UserNameLink to={'/myProfile'}>{user.displayName}</UserNameLink>
+                    <UserNameLink to={wrappedRoutes.myProfile}>{user.displayName}</UserNameLink>
                     <Popconfirm
                         title="Logout from account"
                         description="Are you sure to logout from account?"

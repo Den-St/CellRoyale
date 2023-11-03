@@ -1,13 +1,14 @@
 import { Navigate } from "react-router-dom";
 import { Display } from "../../assets/Display"
 import { maxPlayersNumber } from "../../consts/maxPlayersNumber";
+import { wrappedRoutes } from "../../consts/routes";
 import { useSearchMatch } from "../../hooks/searchMatch"
 import { GameRulesLink, NumberOfPlayers, Rating, SupportLink, ToogleSearchButton } from "./styles";
 
 export const MainSearchPage = () => {
     const {onStartSearch,isSearchStarted,localMatch,matchId,loading,onCancelSearch,isMatchReady,rating} = useSearchMatch();
 
-    if(isMatchReady) return <Navigate to={`/match/${matchId}`}/>
+    if(isMatchReady) return <Navigate to={`${wrappedRoutes.match.replace(':id',matchId)}`}/>
     return <Display style={{alignItems:"center",width:"300px",height:'400px',flexDirection:'column',gap:'70px',padding:"40px 20px",background:'white',borderRadius:'20px'}}>
         <Rating>Rating: 1000
            {/* {rating} */}
@@ -18,6 +19,5 @@ export const MainSearchPage = () => {
             </Display>
             <ToogleSearchButton $search={!isSearchStarted || loading} onClick={isSearchStarted ? onCancelSearch : onStartSearch}>{isSearchStarted ? `Cancel` : `Search`}</ToogleSearchButton>
         </Display>
-        {/* <Display style={{gap:'10px'}}><GameRulesLink to={'/gameRules'}></GameRulesLink><SupportLink to={'/support'}></SupportLink></Display> */}
     </Display>
 }

@@ -8,6 +8,6 @@ export type BoosterT = {
 
 export type CreateBoosterT = {
     location:number[],
-    type:string,
+    type:BoosterTypeT,
     // match:string
 }

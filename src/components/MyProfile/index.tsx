@@ -11,6 +11,7 @@ import { googleAuthProvider } from "../../firebase/firebaseInit";
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { useLogout } from "../../hooks/logout";
+import { wrappedRoutes } from "../../consts/routes";
 
 export const MyProfile = () => {
     const user = useAppSelector(state => state.user);
@@ -40,7 +41,7 @@ export const MyProfile = () => {
       },
     ]; 
 
-    if(logout) return <Navigate to={'/registration'}/>
+    if(logout) return <Navigate to={wrappedRoutes.registration}/>
     return <Display style={{flexDirection:'column',gap:'10px',width:'700px',background:'white',borderRadius:'20px',padding:'20px',height:'95%'}}>
         {!isEditingUserInfo 
         ? <Display style={{justifyContent:'space-between',alignItems:'center'}}>
@@ -86,7 +87,7 @@ export const MyProfile = () => {
                 </Col>
         </Row>
         <Display style={{overflowY:'scroll'}}>
-          <Table dataSource={dataSource} columns={columns} pagination={false}/>
+          <Table style={{width:'100%'}} dataSource={dataSource} columns={columns} pagination={false}/>
         </Display>
     </Display>
 }

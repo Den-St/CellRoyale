@@ -4,7 +4,7 @@ import { updateDoc, doc } from 'firebase/firestore';
 export const clearUserBoosterInfo = async (userId:string) => {
     try{
         await updateDoc(doc(db,collectionsKeys.users,userId),{
-            activeBooster:'',
+            activeBooster:{},
             boosterStepsRemaining:0
         })
     }catch(err){

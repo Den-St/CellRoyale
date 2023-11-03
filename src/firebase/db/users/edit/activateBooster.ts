@@ -6,7 +6,7 @@ export const activateBooster = async (userId:string,boosterType:BoosterTypeT) =>
     try{
         const userDoc = doc(db,collectionsKeys.users,userId);
         await updateDoc(userDoc,{
-            activeBooster:boosterType.id,
+            activeBooster:boosterType,
             boosterStepsRemaining:boosterType.duration
         });
     }catch(err){

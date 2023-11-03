@@ -1,5 +1,6 @@
 import { Tag } from "antd";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { styled } from "styled-components";
 import { Media } from "../../assets/breakpoints";
 import { Display } from "../../assets/Display";
@@ -14,7 +15,9 @@ import { BoosterCell } from "./Cells/Booster";
 import { Cell } from "./Cells/Cell";
 import {PlayerCell} from './Cells/PlayerCell';
 import { ActionMessage, PlayerItemContainer, PlayersContainer, Timer } from "./InformationBlock";
-  
+import {RedoOutlined} from '@ant-design/icons';
+import { wrappedRoutes } from "../../consts/routes";
+
 const Row = styled.div<{marginleft:number,$isFirst:boolean}>`
     display:flex;
     ${({$isFirst}) => !$isFirst && `margin-top:-22px;`};
@@ -32,13 +35,14 @@ const ActivePlayerCell = styled.span<{color?:string}>`
 `;
 
 export const Map = () => {
-    const {MapCoords,onStep,match,isEliminated,isWinner,matchResult,user,clearMapFromAvailableCells,mapCenter,isOnStep,makeUserNotActiveAtClient} = useMap();
+    const {MapCoords,onStep,match,isEliminated,isWinner,matchResult,user,clearMapFromAvailableCells,mapCenter,isOnStep,makeUserNotActiveAtClient,} = useMap();
     // const {timer} = useStepTimer(clearMapFromAvailableCells,makeUserNotActiveAtClient);
     // const [isModalOpened,setIsModalOpened] = useState(true);
     const {onChangeHoveredCell,onClearHoveredCell,hoveredCellMessage} = useHoverCell();
     
     return  <Display style={{display:'flex',gap:'50px',alignItems:'center',padding:'0 30px',justifyContent:'space-between',width:'100%'}}>   
             {/* <MatchResultModal isWinner={isWinner} isModalOpened={isModalOpened} matchResult={matchResult} open={(isWinner || isEliminated) && isModalOpened} onClose={() => setIsModalOpened(false)}/> */}
+            <Link to={wrappedRoutes.mainSearchPage}>Leave match</Link>
             <Display style={{flexDirection:"column"}}>
                 {Object.entries(MapCoords).map((row,i) => 
                 <Row $isFirst={i === 0} marginleft={i < mapCenter ? (mapCenter - 1 - i) : (i - (mapCenter - 1))} >
