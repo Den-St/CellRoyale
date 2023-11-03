@@ -1,1 +1,1 @@
-export const maxPlayersNumber = 5;
+export const maxPlayersNumber = 6;

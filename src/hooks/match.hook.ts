@@ -1,3 +1,4 @@
+import { UserT } from './../types/user';
 import { maxPlayersNumber } from './../consts/maxPlayersNumber';
 import { limit } from 'firebase/firestore';
 import { where } from 'firebase/firestore';
@@ -15,17 +16,18 @@ import { loadUser } from '../firebase/db/matches/edit/loadUser';
 import { getUserById } from '../firebase/db/users/get/getUserById';
 import { getBoosterById } from '../firebase/db/boosters/get/getBoosterById';
 import { setMatch } from '../store/matchSlice';
-import { setPlayerMatchInfo } from '../store/userSlice';
+import { setPlayerMatchInfo, setUser } from '../store/userSlice';
 import { setMatchResult } from '../store/matchResultSlice';
 import { MatchResultT } from '../types/matchResult';
 import { setStepEndTime } from '../firebase/db/matches/edit/setStepEndTime';
 import { setActivePlayer } from '../firebase/db/matches/edit/setActivePlayer';
+import { giveUsersMatchInfo } from '../firebase/db/users/edit/giveUserMatchInfo';
 
 export const useMatch = () => {
     const [boosters,setBoosters] = useState(false);
     const [loading,setLoading] = useState(false);
     const matchId = useParams().id;
-    const userId = useAppSelector(state => state.user.id);
+    const user = useAppSelector(state => state.user);
     const match = useAppSelector(state => state.match);
     const dispatch = useAppDispacth();
 
@@ -38,11 +40,16 @@ export const useMatch = () => {
     },[match.alivePlayers?.length])
 
     useEffect(() => {
-        if(!matchId || !userId || match?.loadedPlayers?.includes(userId) || match?.alivePlayers?.some(user => user.id === userId)) return;
+        if(!matchId || !user.id || match?.loadedPlayers?.includes(user.id) || match?.alivePlayers?.some(aliveUser => aliveUser.id === user.id)) return;
         setLoading(true);
-        loadUser(matchId,userId).then(res => res && dispatch(setPlayerMatchInfo(res)));
+        loadUser(matchId,user.id);
         setLoading(false);
-    },[matchId,userId,match.loadedPlayers]);
+    },[matchId,user.id,match.loadedPlayers]);
+
+    useEffect(() => {
+        if(match.loadedPlayers?.length !== maxPlayersNumber || !match.id || match.alivePlayers?.some(alivePlayer => alivePlayer?.location?.[0] || alivePlayer?.location?.[1])) return;
+        giveUsersMatchInfo(match.id);
+    },[match.loadedPlayers?.length,]);
 
     useEffect(() => {
         if(!matchId) return;
@@ -53,13 +60,29 @@ export const useMatch = () => {
     },[match.loadedPlayers]);
 
     useEffect(() => {
-        if(boosters || !match?.id || match.boosters?.length || boosters || !userId || match.creator !== userId || (match?.roundNumber || 0) > 1) return;
+        if(boosters || !match?.id || match.boosters?.length || boosters || !user.id || match.creator !== user.id || (match?.roundNumber || 0) > 1) return;
         setLoading(true);
         addBoosters(match?.id);
         setBoosters(true);
         createMatchResult(match.id);
         setLoading(false);
-    },[match,userId]);
+    },[match,user.id]);
+
+    useEffect(() => {
+        if(!matchId || !user.id) return;
+        if(user?.location?.[0] || user?.location?.[1]) return;
+        const unsubscribe = onSnapshot(doc(db,collectionsKeys.users,user.id),async (doc) => {
+            setLoading(true);
+            const user = doc.data();
+            if(!user) return;
+
+            user.id = doc.id;
+            dispatch(setUser(user as UserT));
+            setLoading(false);
+        });
+
+        return () => unsubscribe();
+    },[match.loadedPlayers]);
 
     useEffect(() => {
         if(!matchId) return;
@@ -72,8 +95,6 @@ export const useMatch = () => {
             const alivePlayersQ = match.alivePlayers.map(async (alivePlayer:string) => await getUserById(alivePlayer));
             match.alivePlayers = await Promise.all(alivePlayersQ);
 
-            // const boostersQ = match.boosters.map(async (booster:string) => await getBoosterById(booster));
-            // match.boosters = await Promise.all(boostersQ);
             match.id = doc.id;
             dispatch(setMatch(match));
             setLoading(false);

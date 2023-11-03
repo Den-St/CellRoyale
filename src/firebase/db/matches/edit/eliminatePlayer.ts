@@ -42,7 +42,8 @@ export const eliminatePlayer = async (matchId?:string,userId?:string) => {
         }));
         
         queries.push(async () => await updateDoc(userDoc,{
-            rating:user?.data()?.rating + placeToRating[place]
+            rating:user?.data()?.rating + placeToRating[place],
+            numberOfMatches:user?.data()?.numberOfMatches + 1
         }));
 
         // queries.push(async () => await updateDoc(matchDoc,{
