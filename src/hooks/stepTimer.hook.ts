@@ -32,9 +32,9 @@ export const useStepTimer = (clearAvailableCells:() => void,makeNotActiveAtClien
 
       useEffect(() => {
         if(match.isEnded) return;
-        if(user.id === match.activePlayer?.id && timer <= 0 && match.id && user.id){
+        if(user.id === match.creator && timer <= 0 && match.id && user.id && match?.activePlayer?.id){
             console.count('clear')
-            nextTurn(match.id,user.id);
+            nextTurn(match.id,match.activePlayer.id);
             if(user.boosterStepsRemaining){
                 decreaseBoosterStepsRemaining(user.id);
                 dispatch(decrementBoosterStepsRemainingLocally());

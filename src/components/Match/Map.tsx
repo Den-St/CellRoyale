@@ -1,4 +1,4 @@
-import { Tag } from "antd";
+import { Button, Popconfirm, Spin, Tag } from "antd";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { styled } from "styled-components";
@@ -17,6 +17,7 @@ import {PlayerCell} from './Cells/PlayerCell';
 import { ActionMessage, PlayerItemContainer, PlayersContainer, Timer } from "./InformationBlock";
 import {RedoOutlined} from '@ant-design/icons';
 import { wrappedRoutes } from "../../consts/routes";
+import { TimerComponent } from "./TimerComponent";
 
 const Row = styled.div<{marginleft:number,$isFirst:boolean}>`
     display:flex;
@@ -31,18 +32,17 @@ const Row = styled.div<{marginleft:number,$isFirst:boolean}>`
 
 const ActivePlayerCell = styled.span<{color?:string}>`
     font-size:40px;
+    height:50px;
     ${({color}) => `color:${color}`};
 `;
 
-export const Map = () => {
+export const Map:React.FC<{loading:boolean}> = ({loading}) => {
     const {MapCoords,onStep,match,isEliminated,isWinner,matchResult,user,clearMapFromAvailableCells,mapCenter,isOnStep,makeUserNotActiveAtClient,} = useMap();
-    // const {timer} = useStepTimer(clearMapFromAvailableCells,makeUserNotActiveAtClient);
-    // const [isModalOpened,setIsModalOpened] = useState(true);
+    const [isModalOpened,setIsModalOpened] = useState(true);
     const {onChangeHoveredCell,onClearHoveredCell,hoveredCellMessage} = useHoverCell();
     
     return  <Display style={{display:'flex',gap:'50px',alignItems:'center',padding:'0 30px',justifyContent:'space-between',width:'100%'}}>   
-            {/* <MatchResultModal isWinner={isWinner} isModalOpened={isModalOpened} matchResult={matchResult} open={(isWinner || isEliminated) && isModalOpened} onClose={() => setIsModalOpened(false)}/> */}
-            <Link to={wrappedRoutes.mainSearchPage}>Leave match</Link>
+            <MatchResultModal isWinner={isWinner} isModalOpened={isModalOpened} matchResult={matchResult} open={(isWinner || isEliminated) && isModalOpened} onClose={() => setIsModalOpened(false)}/>
             <Display style={{flexDirection:"column"}}>
                 {Object.entries(MapCoords).map((row,i) => 
                 <Row $isFirst={i === 0} marginleft={i < mapCenter ? (mapCenter - 1 - i) : (i - (mapCenter - 1))} >
@@ -53,18 +53,24 @@ export const Map = () => {
                     })}
                 </Row>)}
             </Display>
-            <Display style={{flexDirection:'column',gap:'10px',width:'350px',background:'#00000084',height:'600px',borderRadius:'15px',alignItems:'center',padding:'10px'}}>
-                {/* <Timer>{timer}</Timer> */}
-                {/* <ActionMessage>{hoveredCellMessage}</ActionMessage> */}
-                <PlayersContainer>
-                    {match.alivePlayers?.map(alivePlayer => 
-                        <PlayerItemContainer $isActivePlayer={alivePlayer?.id === match?.activePlayer?.id}>
-                            <ActivePlayerCell color={alivePlayer?.color || ''}>&#x2B22;</ActivePlayerCell> {alivePlayer?.displayName} 
-                        </PlayerItemContainer>)
-                    }
-                </PlayersContainer>
-                {/* {match.id && <Chat matchId={match.id}/>} */}
-                {/* {isEliminated && !isWinner && !isModalOpened && <button onClick={() => setIsModalOpened(true)}>open modal</button>} */}
+            <Display style={{flexDirection:'column',gap:'10px',width:'450px',background:'#00000084',height:'420px',borderRadius:'15px',alignItems:'center',padding:'10px',justifyContent:'center'}}>
+                {match.alivePlayers?.length !== 1 && <ActionMessage>{hoveredCellMessage}</ActionMessage>}
+                <Display style={{flexDirection:'row',gap:'10px'}}>
+                    <Display style={{flexDirection:'column',gap:'10px',width:'35%',alignItems:'center'}}>
+                        {match.alivePlayers?.length !== 1 && <TimerComponent clearMapFromAvailableCells={clearMapFromAvailableCells} makeUserNotActiveAtClient={makeUserNotActiveAtClient}/>}
+                        {!loading ? <PlayersContainer>
+                            {match.alivePlayers?.length !== 1 && match.alivePlayers?.map(alivePlayer => 
+                                <PlayerItemContainer $isActivePlayer={alivePlayer?.id === match?.activePlayer?.id}>
+                                    <ActivePlayerCell color={alivePlayer?.color || ''}>&#x2B22;</ActivePlayerCell> {alivePlayer?.displayName} 
+                                </PlayerItemContainer>)
+                            }
+                        </PlayersContainer> : <Spin/>}
+                    </Display>
+                    <Display style={{flexDirection:'column',gap:'10px'}}>
+                        {match.id && <Chat matchId={match.id}/>}
+                        {isEliminated && !isWinner && !isModalOpened && <Button type="primary" onClick={() => setIsModalOpened(true)}>Back to menu</Button>}
+                    </Display>
+                </Display>
             </Display>
         </Display>
 }

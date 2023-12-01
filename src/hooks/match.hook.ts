@@ -30,20 +30,20 @@ export const useMatch = () => {
     const user = useAppSelector(state => state.user);
     const match = useAppSelector(state => state.match);
     const dispatch = useAppDispacth();
-
+    
     useEffect(() => {
         if(match.alivePlayers?.length === maxPlayersNumber && matchId && match.alivePlayers[0].id && !match.activePlayer) {
-            setLoading(true);
+            // setLoading(true);
             setActivePlayer(matchId,match.alivePlayers[0].id);
-            setLoading(false);
+            // setLoading(false);
         }
     },[match.alivePlayers?.length])
 
     useEffect(() => {
         if(!matchId || !user.id || match?.loadedPlayers?.includes(user.id) || match?.alivePlayers?.some(aliveUser => aliveUser.id === user.id)) return;
-        setLoading(true);
+        // setLoading(true);
         loadUser(matchId,user.id);
-        setLoading(false);
+        // setLoading(false);
     },[matchId,user.id,match.loadedPlayers]);
 
     useEffect(() => {
@@ -54,31 +54,35 @@ export const useMatch = () => {
     useEffect(() => {
         if(!matchId) return;
         if(match.loadedPlayers?.length !== maxPlayersNumber || match.stepEndTime) return;
-        setLoading(true);
+        // setLoading(true);
         setStepEndTime(matchId);
-        setLoading(false);
+        // setLoading(false);
     },[match.loadedPlayers]);
 
     useEffect(() => {
         if(boosters || !match?.id || match.boosters?.length || boosters || !user.id || match.creator !== user.id || (match?.roundNumber || 0) > 1) return;
-        setLoading(true);
+        // setLoading(true);
         addBoosters(match?.id);
         setBoosters(true);
         createMatchResult(match.id);
-        setLoading(false);
+        // setLoading(false);
     },[match,user.id]);
+
+    useEffect(() => {
+        setLoading(user.location?.[0] === undefined);
+    },[user?.location?.[0],user?.location?.[1]]);
 
     useEffect(() => {
         if(!matchId || !user.id) return;
         if(user?.location?.[0] || user?.location?.[1]) return;
         const unsubscribe = onSnapshot(doc(db,collectionsKeys.users,user.id),async (doc) => {
-            setLoading(true);
+            // setLoading(true);
             const user = doc.data();
             if(!user) return;
 
             user.id = doc.id;
             dispatch(setUser(user as UserT));
-            setLoading(false);
+            // setLoading(false);
         });
 
         return () => unsubscribe();
@@ -88,7 +92,7 @@ export const useMatch = () => {
         if(!matchId) return;
 
         const unsubscribe = onSnapshot(doc(db,collectionsKeys.matches,matchId),async (doc) => {
-            setLoading(true);
+            // setLoading(true);
             const match = doc.data();
             if(!match) return;
             match.activePlayer = await getUserById(match.activePlayer);
@@ -97,7 +101,7 @@ export const useMatch = () => {
 
             match.id = doc.id;
             dispatch(setMatch(match));
-            setLoading(false);
+            // setLoading(false);
         });
 
         return () => unsubscribe();
@@ -108,15 +112,17 @@ export const useMatch = () => {
 
         const unsubscribe = onSnapshot(query(matchResultsCollection,where('match','==',matchId),limit(1)),async (doc) => {
             if(!doc?.docs?.[0]) return;
-            setLoading(true);
+            // setLoading(true);
             const matchResult = doc.docs[0].data();
             if(!matchResult) return;
             matchResult.id = doc.docs[0].id;
 
             dispatch(setMatchResult(matchResult as MatchResultT));
-            setLoading(false);
+            // setLoading(false);
         });
 
         return () => unsubscribe();
     },[matchId]);
+
+    return {loading}
 }

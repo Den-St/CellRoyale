@@ -4,6 +4,7 @@ import { defaultAvatar } from "../../consts/defaultAvatar";
 import { useGetUser } from "../../hooks/getUser";
 import { useGetMyLastMatches } from "../../hooks/getUsersLastMatches"
 import { UserName } from "../MyProfile/styles";
+import './styles.css';
 
 export const UserProfile = () => {
     const {matches,loading} = useGetMyLastMatches();

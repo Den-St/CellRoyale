@@ -1,5 +1,5 @@
 import { Tag } from "antd"
-import { ChatContainer, MessagesContainer, MessageItemContainer, SystemMessage, MessageControllerContainer, MessageInput, MessageSendButton } from "./styles"
+import { ChatContainer, MessagesContainer, MessageItemContainer, SystemMessage, MessageControllerContainer, MessageInput, MessageSendButton, MessageText } from "./styles"
 import {ExclamationCircleOutlined} from '@ant-design/icons';
 import { useChat } from "../../hooks/chat";
 import { useAppSelector } from "../../hooks/redux";
@@ -21,7 +21,7 @@ export const Chat:React.FC<Props> = ({matchId}) => {
             {
                 messages.map(message => message.isSystem 
                 ? <SystemMessage key={message.id}><Tag color={'warning'} icon={<ExclamationCircleOutlined/>}>{message.text}</Tag></SystemMessage>
-                : <MessageItemContainer key={message.id} $isMineMessage={message.sender === myId}>{message.text}</MessageItemContainer>)
+                : <MessageItemContainer $isMineMessage={message.sender.id === myId}>{message.sender.id !== myId ? message.sender.displayName + `:` : ''}<MessageText key={message.id}>{message.text}</MessageText></MessageItemContainer>)
             }
         </MessagesContainer>
         <MessageControllerContainer onSubmit={handleSubmit(onCreateMessage)}>

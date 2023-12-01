@@ -42,7 +42,7 @@ export const eliminatePlayer = async (matchId?:string,userId?:string) => {
         }));
         
         queries.push(async () => await updateDoc(userDoc,{
-            rating:user?.data()?.rating + placeToRating[place],
+            rating:(user?.data()?.rating < Math.abs(placeToRating[place]) && placeToRating[place] < 0) ? 0 : user?.data()?.rating + placeToRating[place],
             numberOfMatches:user?.data()?.numberOfMatches + 1
         }));
 

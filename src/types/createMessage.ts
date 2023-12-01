@@ -1,5 +1,5 @@
 export type CreateMessageT = {
-    sender:string,
+    sender:{id:string,displayName:string},
     match:string,
     text:string,
     isSystem:boolean

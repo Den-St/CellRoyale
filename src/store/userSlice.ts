@@ -46,8 +46,8 @@ const userSlice = createSlice({
         setUserLocation(state,payload:PayloadAction<{location:number[]}>){
             state.location = payload.payload.location;
         },
-        setNewRating(state,payload:PayloadAction<{newRating:number}>){
-            state.rating = payload.payload.newRating;
+        addRating(state,payload:PayloadAction<{newRating:number}>){
+            state.rating = Number(state?.rating) + payload.payload.newRating;
         },
         setNewBooster(state,payload:PayloadAction<{boosterType:BoosterTypeT}>){
             state.boosterStepsRemaining = payload.payload.boosterType.duration;
@@ -65,7 +65,7 @@ const userSlice = createSlice({
 
 export const {setUser} = userSlice.actions;
 export const {setPlayerMatchInfo} = userSlice.actions;
-export const {setNewRating} = userSlice.actions;
+export const {addRating} = userSlice.actions;
 export const {decrementBoosterStepsRemainingLocally} = userSlice.actions;
 export const {setNewBooster} = userSlice.actions;
 export const {setUserLocation} = userSlice.actions;

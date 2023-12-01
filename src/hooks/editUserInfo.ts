@@ -25,13 +25,19 @@ export const useEditUserInfo = () => {
 
     const onConfirmEditUserInfo = async () => {
         if(!newUserInfo || !user.id) return;
+        console.log('1',newUserInfo);
         changePhoto().then(async (newImageUrl) => {
             if(!user.id || !newUserInfo.displayName) return;
             dispatch(setUser({
                 ...newUserInfo,
                 photoURL:newImage ? URL.createObjectURL(newImage) : newUserInfo.photoURL
             }));
-            await changeUserInfo(user.id,{...newUserInfo, photoURL:newImageUrl});
+            console.log('2',{
+                ...newUserInfo,
+                photoURL:newImage ? URL.createObjectURL(newImage) : newUserInfo.photoURL
+            });
+            console.log('3',{...newUserInfo, photoURL:newImageUrl});
+            await changeUserInfo(user.id,{...newUserInfo, photoURL:newImageUrl || newUserInfo.photoURL});
         });
         setIsEditingUserInfo(false);
         
@@ -42,9 +48,14 @@ export const useEditUserInfo = () => {
             return ({...prev,displayName:text});
         });
     }
+    const onCancel = () => {
+        setIsEditingUserInfo(false);
+        setNewUserInfo(user);
+        setNewImage(null);
+    }
     useEffect(() => {
         if(user) setNewUserInfo(user);
     },[user]);
 
-    return {onConfirmEditUserInfo,changeNameUserInfo,isEditingUserInfo,setIsEditingUserInfo,setNewImage,newImage,newUserInfo};
+    return {onConfirmEditUserInfo,changeNameUserInfo,isEditingUserInfo,setIsEditingUserInfo,setNewImage,newImage,newUserInfo,onCancel};
 }

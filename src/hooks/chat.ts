@@ -6,7 +6,7 @@ import { messageCollection } from '../firebase/db/messages/messagesCollection';
 import { MessageT } from '../types/message';
 
 export const useChat = (matchId:string) => {
-    const myId = useAppSelector(state => state).user.id;
+    const me = useAppSelector(state => state).user;
 
     const [messages,setMessages] = useState<MessageT[]>([]);
     const [loading,setLoading] = useState<{messages:boolean,create:boolean}>({create:false,messages:false});
@@ -33,7 +33,7 @@ export const useChat = (matchId:string) => {
         if(!text) return;
         setLoading(prev => ({...prev,create:true}));
         await createMessage({
-            sender:myId || '',
+            sender:{id:me.id || '',displayName:me.displayName || ''},
             match:matchId,
             isSystem:false,
             text

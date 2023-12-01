@@ -6,7 +6,6 @@ import { collectionsKeys } from "../../collectionsKeys";
 
 export const loadUser = async (matchId:string,playerId:string) => {
     try{
-        console.log('loading start');
         const documentMatch = doc(db,collectionsKeys.matches,matchId);
         const documentUser = doc(db,collectionsKeys.users,playerId);
         const match = (await getDoc(documentMatch)).data();

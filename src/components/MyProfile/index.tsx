@@ -12,10 +12,11 @@ import { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { useLogout } from "../../hooks/logout";
 import { wrappedRoutes } from "../../consts/routes";
+import './styles.css';
 
 export const MyProfile = () => {
     const user = useAppSelector(state => state.user);
-    const {onConfirmEditUserInfo,changeNameUserInfo,setIsEditingUserInfo,isEditingUserInfo,setNewImage,newImage,newUserInfo} = useEditUserInfo();
+    const {onConfirmEditUserInfo,changeNameUserInfo,setIsEditingUserInfo,isEditingUserInfo,setNewImage,newImage,newUserInfo,onCancel} = useEditUserInfo();
     const onImageChange = (e:React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             setNewImage(e.target.files[0]);
@@ -71,7 +72,7 @@ export const MyProfile = () => {
             <Button type="primary"  onClick={onConfirmEditUserInfo}>
               <CheckOutlined />
             </Button>
-            <Button type={'dashed'} danger onClick={() => setIsEditingUserInfo(false)}>
+            <Button type={'dashed'} danger onClick={onCancel}>
               <CloseOutlined />
             </Button>
           </Display>}

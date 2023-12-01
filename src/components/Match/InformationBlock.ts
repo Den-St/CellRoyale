@@ -1,6 +1,7 @@
 import { styled } from 'styled-components';
-export const Timer = styled.h1`
+export const Timer = styled.h1<{time:number}>`
     margin:0;
+    ${({time}) => time > 5 ? 'color:green' : 'color:red'};
 `;
 export const ActionMessage = styled.h1`
     margin:0;
@@ -13,10 +14,12 @@ export const PlayersContainer = styled.div`
 export const PlayerItemContainer = styled.div<{$isActivePlayer:boolean}>`
     display:flex;
     gap:10px;
+    font-size:20px;
     align-items:center;
-    ${({$isActivePlayer}) => $isActivePlayer && `background:blue`};
+    ${({$isActivePlayer}) => $isActivePlayer && `background:#1677ff`};
     border-radius:7px;
-    width:100%;
+    width:150px;
+    overflow:hidden;
 `;
 
 

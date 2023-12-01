@@ -17,7 +17,7 @@ import { maxPlayersNumber } from '../consts/maxPlayersNumber';
 import { BoosterT } from '../types/booster';
 import { activateBooster } from '../firebase/db/users/edit/activateBooster';
 import { removeBoosterFromMatch } from '../firebase/db/matches/edit/removeBoosterFromMatch';
-import { clearUserBooster, decrementBoosterStepsRemainingLocally, setNewBooster, setUserLocation } from '../store/userSlice';
+import { addRating, clearUserBooster, decrementBoosterStepsRemainingLocally, setNewBooster, setUserLocation } from '../store/userSlice';
 import { decreaseBoosterStepsRemaining } from '../firebase/db/users/edit/decreaseBoosterStepsRemaining';
 import { isAvailableCell } from '../helpers/isAvailableCell';
 import { boostersAvailableCellsFunctions } from '../helpers/isAvailableCell';
@@ -82,55 +82,57 @@ export const useMap = () => {
     }
     const displayZoneCells = () => {
         const mapSize = Object.keys(MapCoords).length;
-
         setMapCoords(prev => {
             if(!match.roundNumber || !match.id || match.roundNumber === 1) return prev;
-
+            let isLocalyEliminated = false;
             const newMap = prev;
             for(let i = 1; i < match.roundNumber; i++)
             {
-                Object.keys(newMap[i - 1]).forEach(y => {
+                Object.keys(newMap[i - 1]).forEach(async y => {
                     if(user.location && i - 1 === user.location[0] && +y === user.location[1]){
-                        if(user.id){
+                        if(user.id && !isLocalyEliminated && !isEliminated && !isWinner){
+                            isLocalyEliminated = true;
                             setIsEliminated(true);
-                            eliminatePlayer(match.id,user.id)
+                            eliminatePlayer(match.id,user.id);
                             createMessage({
-                                sender:user.id,
+                                sender:{id:user.id,displayName:user.displayName || ''},
                                 match:match.id || '',
                                 isSystem:true,
-                                text:user.displayName + ' eliminated by zone'
+                                text:user.displayName + ' eliminated by zone1'
                             });
                         }
                     }
                     newMap[i - 1][+y] = {type:'cell',value:2,isAvailable:false};
                 });
-                Object.keys(newMap[mapSize - i]).forEach(y => {
+            Object.keys(newMap[mapSize - i]).forEach(async y => {
                     if(user.location && mapSize - i === user.location[0] && +y === user.location[1]){
-                        if(user.id){
+                        if(user.id && !isLocalyEliminated  && !isEliminated && !isWinner){
+                            isLocalyEliminated = true;
                             setIsEliminated(true);
                             eliminatePlayer(match.id,user.id);
                             createMessage({
-                                sender:user.id,
+                                sender:{id:user.id,displayName:user.displayName || ''},
                                 match:match.id || '',
                                 isSystem:true,
-                                text:user.displayName + ' eliminated by zone'
+                                text:user.displayName + ' eliminated by zone2'
                             });
                         }
                     } 
                     newMap[mapSize - i][+y] = {type:'cell',value:2,isAvailable:false};
                 });
                 Object.keys(newMap).forEach(
-                    x => Object.keys(newMap[+x]).forEach(y => {
+                    x => Object.keys(newMap[+x]).forEach(async y => {
                         if(match.roundNumber !== undefined && (+y < match.roundNumber - 1 || +y > Object.keys(newMap[+x]).length - match.roundNumber)){
                             if(user.location && +x === user.location[0] && +y === user.location[1]){
-                                if(user.id) {
+                                if(user.id && !isLocalyEliminated  && !isEliminated && !isWinner) {
+                                    isLocalyEliminated = true;
                                     setIsEliminated(true);
                                     eliminatePlayer(match.id,user.id);
                                     createMessage({
-                                        sender:user.id,
+                                        sender:{id:user.id,displayName:user.displayName || ''},
                                         match:match.id || '',
                                         isSystem:true,
-                                        text:user.displayName + ' eliminated by zone'
+                                        text:user.displayName + ' eliminated by zone3'
                                     });
                                 }
                             }
@@ -163,12 +165,13 @@ export const useMap = () => {
         if(!match) return;
 
         clearMap();
-        // displayZoneCells();
+        displayZoneCells();
         displayAlivePlayers();
-        // displayBoosters();
+        displayBoosters();
         setAvailableCells();
     }
     const setAvailableCells = (isCurrentActive?:boolean) => {
+        if(match?.activePlayer?.id !== user.id) return;
         if(isWinner || isEliminated) return;
         if(!isActive && !isCurrentActive) return;
         if(!user.location) return;
@@ -181,12 +184,12 @@ export const useMap = () => {
                     if(user.location){
                         // const stepRange = user?.activeBooster?.name === boostersTypesNames.increaseStepDistance ? 2 : 1
                         // if(isAvailableCell(user.location,[+x,+y],stepRange,mapCenter - 1)) newMap[+x][+y] = {...newMap[+x][+y],isAvailable:true};
-                        if(user?.activeBooster?.name && user?.activeBooster?.name !== boostersTypesNames.invisibility){
+                        if(user?.activeBooster?.name && user?.activeBooster?.name !== boostersTypesNames.invisibility && prev[+x][+y].value !== 2){
                             if(boostersAvailableCellsFunctions[user?.activeBooster?.name]?.(user.location,[+x,+y],mapCenter - 1)) {
                                 newMap[+x][+y] = {...newMap[+x][+y],isAvailable:true};
                             }
                         }else{
-                            if(isAvailableCell(user.location,[+x,+y],1,mapCenter - 1)){
+                            if(isAvailableCell(user.location,[+x,+y],1,mapCenter - 1) && prev[+x][+y].value !== 2){
                                 newMap[+x][+y] = {...newMap[+x][+y],isAvailable:true};
                             }
                         }
@@ -196,13 +199,20 @@ export const useMap = () => {
                 return newMap;
         });
     };
+    // useEffect(() => {
+    //     console.log('ff',match.activePlayer?.id , user.id);
+    //     if(match.activePlayer?.id !== user.id) {
+    //         makeUserNotActiveAtClient();
+    //         clearMapFromAvailableCells();
+    //     }
+    // },[match.activePlayer?.id])
     useEffect(() => {
         loadMap();
     },[match,]);
     
     useEffect(() => {
         setIsActive(match.activePlayer?.id === user.id);
-        if(!isActive || match.activePlayer?.id !== user.id){
+        if(match.activePlayer?.id !== user.id){
             clearMapFromAvailableCells();
         }
         setAvailableCells(match.activePlayer?.id === user.id);
@@ -217,13 +227,13 @@ export const useMap = () => {
         if(!match.id || !user.id) return;
         if(!isActive) return;
         if(destinationCoord[0] === user.location[0] && destinationCoord[1] === user.location[1]) return;
-
-        // const stepRange = user?.activeBooster?.name === boostersTypesNames.increaseStepDistance ? 2 : 1;
-        // if(user?.activeBooster?.name && user?.activeBooster?.name !== boostersTypesNames.invisibility){
-        //     if(!boostersAvailableCellsFunctions[user?.activeBooster?.name]?.(user.location,destinationCoord,mapCenter)) return;
-        // }else{
+        if(!MapCoords[destinationCoord[0]][destinationCoord[1]].isAvailable) return;
+        const stepRange = user?.activeBooster?.name === boostersTypesNames.increaseStepDistance ? 2 : 1;
+        if(user?.activeBooster?.name && user?.activeBooster?.name !== boostersTypesNames.invisibility){
+            if(!boostersAvailableCellsFunctions[user?.activeBooster?.name]?.(user.location,destinationCoord,mapCenter)) return;
+        }else{
             if(!isAvailableCell(user.location,destinationCoord,1,mapCenter - 1)) return;
-        // }
+        }
         
         setIsOnStep(true);
 
@@ -253,45 +263,46 @@ export const useMap = () => {
 
         const queries = [];
         queries.push(async () => user.id && await changePlayersLocation(user.id,destinationCoord));
-        // if(user.boosterStepsRemaining){
-        //     queries.push(async () => user.id && await decreaseBoosterStepsRemaining(user.id));
-        // }
-        // if(booster) {
-        //     queries.push(async () => user.id && booster?.type && await activateBooster(user.id,booster?.type));
-        //     // queries.push(async () => user.id && match.id && booster && 
-        // await removeBoosterFromMatch(match.id,booster.id)
-        //     // );
-        //     queries.push(async () => user.id && booster && await removeBoosterById(booster.id));
-        // } 
-        // else if(enemyId) queries.push(async () => enemyId && await eliminatePlayer(match.id,enemyId));
+        if(user.boosterStepsRemaining){
+            queries.push(async () => user.id && await decreaseBoosterStepsRemaining(user.id));
+        }
+        if(booster) {
+            queries.push(async () => user.id && booster?.type && await activateBooster(user.id,booster?.type));
+            // queries.push(async () => user.id && match.id && booster && 
+            await removeBoosterFromMatch(match.id,booster.id)
+            // );
+            queries.push(async () => user.id && booster && await removeBoosterById(booster.id));
+        } 
+        else if(enemyId) 
+        queries.push(async () => enemyId && await eliminatePlayer(match.id,enemyId));
 
         await Promise.all(queries.map(q => q()));
 
-        // if(booster) {
-        //     dispatch(setNewBooster({boosterType:booster.type}));
-        // }
-        // if(user.boosterStepsRemaining){
-        //     dispatch(decrementBoosterStepsRemainingLocally());
-        // }
-        // if(user.boosterStepsRemaining === 1) dispatch(clearUserBooster());
+        if(booster) {
+            dispatch(setNewBooster({boosterType:booster.type}));
+        }
+        if(user.boosterStepsRemaining){
+            dispatch(decrementBoosterStepsRemainingLocally());
+        }
+        if(user.boosterStepsRemaining === 1) dispatch(clearUserBooster());
         await nextTurn(match.id,user.id);
         
-        // if(booster){
-        //     createMessage({
-        //         sender:user.id,
-        //         match:match.id,
-        //         isSystem:true,
-        //         text:user.displayName + ' activated ' + booster.type.name
-        //     });
-        // }
-        // if(enemyName){
-        //     createMessage({
-        //         sender:user.id,
-        //         match:match.id,
-        //         isSystem:true,
-        //         text:user.displayName + ' eliminated ' + enemyName
-        //     });
-        // }
+        if(booster){
+            createMessage({
+                sender:{displayName:user?.displayName || '',id:user.id},
+                match:match.id,
+                isSystem:true,
+                text:user.displayName + ' activated ' + booster.type.name
+            });
+        }
+        if(enemyName){
+            createMessage({
+                sender:{id:user.id,displayName:user.displayName || ''},
+                match:match.id,
+                isSystem:true,
+                text:user.displayName + ' eliminated ' + enemyName
+            });
+        }
         setIsOnStep(false);
     }
 

@@ -9,6 +9,7 @@ export const searchMatch = async (userId:string) => {
         const q = query(matchesCollection,where('numberOfPlayers', "!=", maxPlayersNumber),limit(1));
         const docs = await getDocs(q);
         const matchDoc = docs.docs[0];
+        if((matchDoc?.data()?.playersInQueue as string[])?.includes(userId)) return null;
         if(matchDoc){
             await addUserInQueue(matchDoc.id,userId);
             return matchDoc.id;

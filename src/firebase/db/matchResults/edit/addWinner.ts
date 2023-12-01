@@ -26,6 +26,7 @@ export const addWinner = async (matchId:string,userId:string) => {
             await updateDoc(userDoc,{
                 rating:user.rating + placeToRating[1],
                 numberOfWins:user.numberOfWins + 1,
+                numberOfMatches:user?.numberOfMatches + 1
             }),
             await updateDoc(matchDoc,{
                 isEnded:true

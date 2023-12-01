@@ -7,7 +7,7 @@ export const createUser = async (user:CreateUserT) => {
         await addDoc(usersCollection,
             {
                 ...user,
-                rating:0,
+                rating:500,
                 numberOfMatches:0,
                 numberOfWins:0,
                 boosterStepsRemaining:0,

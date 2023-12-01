@@ -1,11 +1,11 @@
 import { MatchResultT } from './../../../../types/matchResult';
-import { getDocs, limit } from 'firebase/firestore';
+import { getDocs, limit, orderBy } from 'firebase/firestore';
 import { where } from 'firebase/firestore';
 import { query } from 'firebase/firestore';
 import { matchResultsCollection } from '../matchResult.collection';
 export const getLastMatches = async (userId:string) => {
     try{
-        const q = query(matchResultsCollection,where('players','array-contains',userId),limit(15));
+        const q = query(matchResultsCollection,where('players','array-contains',userId),orderBy('createdAt','desc'),limit(15));
         const docs = (await getDocs(q)).docs;
         const matchResults = docs.map(doc => doc.data());
         matchResults.forEach((matchResult,i) => {

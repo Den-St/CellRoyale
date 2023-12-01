@@ -5,9 +5,9 @@ import { useMatch } from "../../hooks/match.hook";
 import {Map} from "./Map";
 
 export const Match = () => {
-    useMatch();
+    const {loading} = useMatch();
 
     return <Display style={{width:'100vw',height:'100vh'}}>
-        <Map />
+        <Map loading={loading}/>
     </Display>
 }

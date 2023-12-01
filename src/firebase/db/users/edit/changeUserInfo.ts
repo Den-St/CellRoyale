@@ -8,6 +8,7 @@ import { UserT } from '../../../../types/user';
 export const changeUserInfo = async (userId:string,newInfo:UserT) => {
     try{
         const userDoc = doc(db,collectionsKeys.users,userId);
+        console.log('3',newInfo)
         if(newInfo.photoURL?.includes('profileImage')){
             getDownloadURL(ref(storage,newInfo.photoURL)).then(async (url) => {
                 await updateDoc(userDoc,{

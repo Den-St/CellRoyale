@@ -13,16 +13,21 @@ export const MessagesContainer = styled.div`
     display:flex;
     flex-direction:column;
     gap:5px;
-    height: 220px;
+    height: 260px;
     overflow-y:scroll;
 `;
 
 export const MessageItemContainer = styled.div<{$isMineMessage:boolean}>`
+    display:flex;
+    gap:3px;
+    align-items:center;
+    ${({$isMineMessage}) => $isMineMessage && `align-self:flex-end`};
+`;
+export const MessageText = styled.div`
     border-radius:10px;
     background:lightblue;
     padding:3px 5px;
     width:fit-content;
-    ${({$isMineMessage}) => $isMineMessage && `align-self:flex-end`};
 `;
 export const SystemMessage = styled.div`
     width:100%;
@@ -35,14 +40,15 @@ export const MessageControllerContainer = styled.form`
     gap:5px;
     align-item:center;
     width:100%;
+    margin-top:5px;
 `;
 
 export const MessageInput = styled.input`
-
+    width:80%;
 `;
 
 export const MessageSendButton = styled.input`
-    background:blue;
+    background:#1677ff;;
     border:none;
     outline:none;
     border-radius:5px;
