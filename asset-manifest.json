@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/CellRoyale/static/css/main.e64e7976.css",
-    "main.js": "/CellRoyale/static/js/main.cb80099a.js",
+    "main.js": "/CellRoyale/static/js/main.a657aaf1.js",
     "index.html": "/CellRoyale/index.html",
     "main.e64e7976.css.map": "/CellRoyale/static/css/main.e64e7976.css.map",
-    "main.cb80099a.js.map": "/CellRoyale/static/js/main.cb80099a.js.map"
+    "main.a657aaf1.js.map": "/CellRoyale/static/js/main.a657aaf1.js.map"
   },
   "entrypoints": [
     "static/css/main.e64e7976.css",
-    "static/js/main.cb80099a.js"
+    "static/js/main.a657aaf1.js"
   ]
 }
